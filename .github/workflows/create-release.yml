@@ -1,0 +1,168 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      prerelease:
+        description: 'Create a prerelease (beta)'
+        required: false
+        default: false
+        type: boolean
+      no_version_bump:
+        description: 'Create release without bumping version'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: '22'
+
+      - name: Calculate new version
+        id: version
+        env:
+          NO_VERSION_BUMP: ${{ github.event.inputs.no_version_bump }}
+          PRERELEASE: ${{ github.event.inputs.prerelease }}
+          BUMP_TYPE: ${{ github.event.inputs.bump_type }}
+        run: |
+          current=$(node -p "require('./package.json').version")
+          echo "Current: $current"
+
+          if [[ "$NO_VERSION_BUMP" == "true" ]]; then
+            # No version bump - use current version
+            new_version="$current"
+            echo "No version bump requested - using current version: $new_version"
+          elif [[ "$PRERELEASE" == "true" ]]; then
+            # Handle prerelease versions
+            if [[ "$current" == *"-beta"* ]]; then
+              # Current version is already a prerelease, increment the prerelease number
+              new_version=$(npx semver@7.6.3 -i prerelease "$current")
+            else
+              # Current version is stable, create first prerelease
+              new_version=$(npx semver@7.6.3 -i "pre${BUMP_TYPE}" "$current" --preid beta)
+            fi
+          else
+            # Handle stable releases
+            if [[ "$current" == *"-beta"* ]]; then
+              # Current version is prerelease, graduate to stable
+              case "$BUMP_TYPE" in
+                major) new_version=$(npx semver@7.6.3 -i major "$current") ;;
+                minor) new_version=$(npx semver@7.6.3 -i minor "$current") ;;
+                patch) new_version=$(npx semver@7.6.3 -i patch "$current") ;;
+              esac
+            else
+              # Current version is stable, increment normally
+              new_version=$(npx semver@7.6.3 -i "$BUMP_TYPE" "$current")
+            fi
+          fi
+
+          echo "New: $new_version"
+          echo "current=$current" >> $GITHUB_OUTPUT
+          echo "new=$new_version" >> $GITHUB_OUTPUT
+
+      - name: Create version branch
+        id: branch
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.new }}
+        run: |
+          branch_name="release/v${NEW_VERSION}"
+          echo "name=$branch_name" >> $GITHUB_OUTPUT
+
+      - name: Update files
+        env:
+          NO_VERSION_BUMP: ${{ github.event.inputs.no_version_bump }}
+          NEW_VERSION: ${{ steps.version.outputs.new }}
+        run: |
+          if [[ "$NO_VERSION_BUMP" == "true" ]]; then
+            echo "Skipping package.json update - no version bump requested"
+            # Create minimal change by adding a single space to .gitignore
+            echo " " >> .gitignore
+            echo "Added minimal change to .gitignore to create a signed commit"
+          else
+            # Update package.json
+            node -e "
+              const fs = require('fs');
+              const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+              pkg.version = process.env.NEW_VERSION;
+              fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+            "
+            echo "Updated package.json to version ${NEW_VERSION}"
+
+            # Update package-lock.json with the new version
+            npm install --package-lock-only
+            echo "Updated package-lock.json to reflect new version"
+          fi
+
+      - name: Generate PR body
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.new }}
+          CURRENT_VERSION: ${{ steps.version.outputs.current }}
+          BUMP_TYPE: ${{ github.event.inputs.bump_type }}
+          PRERELEASE: ${{ github.event.inputs.prerelease }}
+          NO_VERSION_BUMP: ${{ github.event.inputs.no_version_bump }}
+        run: |
+          cat > /tmp/pr_body.md << EOF
+          # Release v${NEW_VERSION}
+
+          This PR prepares a new release of @auth0/actions.
+
+          ## Release Information
+
+          - **Version Bump:** ${BUMP_TYPE}
+          - **Prerelease:** ${PRERELEASE}
+          - **No Version Bump:** ${NO_VERSION_BUMP}
+          - **Previous Version:** ${CURRENT_VERSION}
+          - **New Version:** ${NEW_VERSION}
+
+          EOF
+
+          # Add specific messaging for no version bump releases
+          if [[ "$NO_VERSION_BUMP" == "true" ]]; then
+            cat >> /tmp/pr_body.md << EOF
+          ## No Version Bump
+
+          This release is for publication without bumping the version.
+          The package will be published with the current version (${NEW_VERSION}).
+
+          A minimal change was made to .gitignore to create a signed commit for this release.
+
+          EOF
+          fi
+
+      - name: Create Pull Request with verified commits
+        id: pr
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: bump version to v${{ steps.version.outputs.new }}"
+          title: "chore: release v${{ steps.version.outputs.new }}"
+          body-path: /tmp/pr_body.md
+          branch: ${{ steps.branch.outputs.name }}
+          branch-suffix: ""
+          sign-commits: true
+          delete-branch: false
+          labels: release

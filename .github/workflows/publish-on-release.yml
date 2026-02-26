@@ -1,0 +1,240 @@
+name: Publish Release to NPM
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: write
+  id-token: write # Required for OIDC
+
+jobs:
+  publish:
+    # Only run if the PR was merged and came from a release branch
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/v')
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Validate release branch
+        id: validate_branch
+        env:
+          BRANCH_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          branch_name="$BRANCH_REF"
+          echo "Validating release branch: $branch_name"
+
+          # Validate branch follows release/vX.Y.Z(-prerelease) pattern
+          if [[ "$branch_name" =~ ^release/v([0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*)?)$ ]]; then
+            extracted_version="${BASH_REMATCH[1]}"
+            echo "✅ Valid release branch format"
+            echo "Branch version: $extracted_version"
+            echo "branch_version=$extracted_version" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Invalid release branch format: $branch_name"
+            echo "Expected format: release/vX.Y.Z or release/vX.Y.Z-prerelease"
+            exit 1
+          fi
+
+      - name: Get release version
+        id: version_info
+        env:
+          BRANCH_VERSION: ${{ steps.validate_branch.outputs.branch_version }}
+        run: |
+          # Get current version from package.json
+          current_version=$(node -p "require('./package.json').version")
+
+          echo "Release version: $current_version"
+          echo "version=$current_version" >> $GITHUB_OUTPUT
+
+          # Validate that package.json version matches branch version
+          branch_version="$BRANCH_VERSION"
+          if [[ "$current_version" == "$branch_version" ]]; then
+            echo "✅ Package version matches branch version"
+          else
+            echo "❌ Version mismatch:"
+            echo "  Package.json: $current_version"
+            echo "  Branch name:  $branch_version"
+            exit 1
+          fi
+
+      - name: Update npm
+        run: npm install -g npm@11 # supported OIDC version of NPM
+
+      - name: Publish to NPM
+        id: publish
+        env:
+          VERSION: ${{ steps.version_info.outputs.version }}
+        run: |
+          echo "📦 Publishing @auth0/actions@${VERSION} to NPM..."
+
+          # Capture output so we can distinguish "already published" (E403) from real failures
+          set +e
+          npm_output=$(npm publish --access public 2>&1)
+          npm_exit_code=$?
+          set -e
+
+          echo "$npm_output"
+
+          if [ $npm_exit_code -eq 0 ]; then
+            echo "Successfully published to NPM"
+            echo "published=true" >> $GITHUB_OUTPUT
+          elif echo "$npm_output" | grep -qi "E403" && echo "$npm_output" | grep -qi "previously published"; then
+            # Version already on npm (e.g. manually published or re-run) — not a real error.
+            # We check for both E403 and "previously published" to avoid matching other 403s
+            # (e.g. permission errors). Treat as success so tag and release steps still run.
+            echo "Package version already exists on npm - proceeding with tag and release"
+            echo "published=true" >> $GITHUB_OUTPUT
+          else
+            echo "Publish failed (exit code $npm_exit_code)"
+            echo "published=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+      - name: Verify publication
+        if: steps.publish.outputs.published == 'true'
+        env:
+          VERSION: ${{ steps.version_info.outputs.version }}
+        run: |
+          echo "🔍 Verifying publication was successful..."
+
+          # Retry verification with exponential backoff
+          for attempt in {1..3}; do
+            echo "Attempt $attempt/3: Checking package availability..."
+
+            if npm view "@auth0/actions@${VERSION}"; then
+              echo "✅ Package successfully published and accessible"
+              exit 0
+            else
+              if [ $attempt -lt 3 ]; then
+                echo "⏳ Package not yet available, waiting 10 seconds before retry..."
+                sleep 10
+              else
+                echo "❌ Package not accessible after 3 attempts"
+                echo "This might indicate a publication issue"
+                exit 1
+              fi
+            fi
+          done
+
+      - name: Cleanup NPM configuration
+        if: always()
+        run: |
+          echo "🧹 Cleaning up .npmrc file..."
+          rm -f ~/.npmrc || true
+
+      - name: Create git tag
+        if: steps.publish.outputs.published == 'true'
+        id: create_tag
+        env:
+          VERSION: ${{ steps.version_info.outputs.version }}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          tag_name="v${VERSION}"
+
+          # Check if tag already exists
+          if git rev-parse "$tag_name" >/dev/null 2>&1; then
+            echo "⚠️ Tag $tag_name already exists"
+            echo "tag_created=false" >> $GITHUB_OUTPUT
+          else
+            git tag -a "$tag_name" -m "Release $tag_name"
+            git push origin "$tag_name"
+            echo "✅ Created and pushed tag $tag_name"
+            echo "tag_created=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create GitHub Release
+        if: steps.publish.outputs.published == 'true'
+        id: github_release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version_info.outputs.version }}
+        run: |
+          tag_name="v${VERSION}"
+          release_name="Release v${VERSION}"
+
+          # Determine if this is a prerelease
+          prerelease_flag=""
+          if [[ "$VERSION" == *"beta"* ]] || [[ "$VERSION" == *"alpha"* ]] || [[ "$VERSION" == *"rc"* ]]; then
+            prerelease_flag="--prerelease"
+          fi
+
+          # Guard against duplicate release — may already exist if a previous run
+          # published to npm but failed before creating the release.
+          if gh release view "$tag_name" >/dev/null 2>&1; then
+            echo "⚠️ GitHub release $tag_name already exists"
+            echo "release_created=false" >> $GITHUB_OUTPUT
+          else
+            # Create release with auto-generated notes
+            gh release create "$tag_name" \
+              --title "$release_name" \
+              --generate-notes \
+              $prerelease_flag
+
+            echo "✅ GitHub release created successfully"
+            echo "release_created=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Cleanup on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version_info.outputs.version }}
+          RELEASE_CREATED: ${{ steps.github_release.outputs.release_created }}
+          TAG_CREATED: ${{ steps.create_tag.outputs.tag_created }}
+        run: |
+          echo "🧹 Cleaning up after failure..."
+
+          tag_name="v${VERSION}"
+
+          # Only remove artifacts that THIS run created — avoid destroying
+          # pre-existing tags or releases from a previous successful run.
+          if [ "$RELEASE_CREATED" = "true" ]; then
+            echo "Removing GitHub release $tag_name created by this run"
+            gh release delete "$tag_name" --yes || true
+          fi
+
+          if [ "$TAG_CREATED" = "true" ]; then
+            echo "Removing tag $tag_name created by this run"
+            git tag -d "$tag_name" || true
+            git push --delete origin "$tag_name" || true
+          fi
+
+          # Note: We cannot automatically unpublish from the registry
+          # This would need to be done manually if the package was published
+          # but subsequent steps failed
+
+          echo "⚠️ Manual cleanup may be required:"
+          echo "   - Check registry for published package"
+          echo "   - Verify git tags are cleaned up"
+          echo "   - Verify GitHub release was removed"
+
+      - name: Success summary
+        if: steps.publish.outputs.published == 'true'
+        env:
+          VERSION: ${{ steps.version_info.outputs.version }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          echo "🎉 RELEASE COMPLETE"
+          echo "✅ Published @auth0/actions@${VERSION}"
+          echo "✅ Created tag v${VERSION}"
+          echo "✅ Created GitHub release"
+          echo ""
+          echo "📋 Release Summary:"
+          echo "   Package: @auth0/actions@${VERSION}"
+          echo "   Tag: v${VERSION}"
+          echo "   Release URL: https://github.com/${REPOSITORY}/releases/tag/v${VERSION}"
+          echo "   NPM URL: https://www.npmjs.com/package/@auth0/actions"

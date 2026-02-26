@@ -1,0 +1,9 @@
+# Development files
+.git/
+.github/
+.gitignore
+.npmignore
+
+# Development tools
+utils/
+scripts/

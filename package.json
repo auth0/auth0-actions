@@ -1,0 +1,100 @@
+{
+  "name": "@auth0/actions",
+  "version": "0.15.0",
+  "description": "Official Auth0 Actions TypeScript definitions, which will help you code and test your project's Actions on external editors and IDEs.",
+  "main": "index.js",
+  "keywords": [
+    "auth0",
+    "actions",
+    "types",
+    "beta"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "notice": "node utils/generate-notice.js"
+  },
+  "author": "auth0",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://support.auth0.com"
+  },
+  "homepage": "https://auth0.com/docs/customize/actions/actions-npm",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    "./credentials-exchange/v1": {
+      "types": "./src/credentials-exchange/v1/index.d.ts",
+      "default": null
+    },
+    "./credentials-exchange/v2": {
+      "types": "./src/credentials-exchange/v2/index.d.ts",
+      "default": null
+    },
+    "./custom-email-provider/v1": {
+      "types": "./src/custom-email-provider/v1/index.d.ts",
+      "default": null
+    },
+    "./custom-phone-provider/v1": {
+      "types": "./src/custom-phone-provider/v1/index.d.ts",
+      "default": null
+    },
+    "./custom-token-exchange/v1": {
+      "types": "./src/custom-token-exchange/v1/index.d.ts",
+      "default": null
+    },
+    "./event-stream/v1": {
+      "types": "./src/event-stream/v1/index.d.ts",
+      "default": null
+    },
+    "./password-reset-post-challenge/v1": {
+      "types": "./src/password-reset-post-challenge/v1/index.d.ts",
+      "default": null
+    },
+    "./post-change-password/v1": {
+      "types": "./src/post-change-password/v1/index.d.ts",
+      "default": null
+    },
+    "./post-change-password/v2": {
+      "types": "./src/post-change-password/v2/index.d.ts",
+      "default": null
+    },
+    "./post-login/v1": {
+      "types": "./src/post-login/v1/index.d.ts",
+      "default": null
+    },
+    "./post-login/v2": {
+      "types": "./src/post-login/v2/index.d.ts",
+      "default": null
+    },
+    "./post-login/v3": {
+      "types": "./src/post-login/v3/index.d.ts",
+      "default": null
+    },
+    "./post-user-registration/v1": {
+      "types": "./src/post-user-registration/v1/index.d.ts",
+      "default": null
+    },
+    "./post-user-registration/v2": {
+      "types": "./src/post-user-registration/v2/index.d.ts",
+      "default": null
+    },
+    "./pre-user-registration/v1": {
+      "types": "./src/pre-user-registration/v1/index.d.ts",
+      "default": null
+    },
+    "./pre-user-registration/v2": {
+      "types": "./src/pre-user-registration/v2/index.d.ts",
+      "default": null
+    },
+    "./send-phone-message/v1": {
+      "types": "./src/send-phone-message/v1/index.d.ts",
+      "default": null
+    },
+    "./send-phone-message/v2": {
+      "types": "./src/send-phone-message/v2/index.d.ts",
+      "default": null
+    }
+  }
+}
