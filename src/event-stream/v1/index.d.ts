@@ -1,6 +1,6 @@
 /** EventStreamV1Event */
 type EventStreamV1Event = {
-  /** The CloudEvent message containing all event properties. */
+  /** [Limited Early Access] The CloudEvent message containing all event properties. */
   message: {
     /** Identifies the event. */
     id: string;
@@ -124,6 +124,7 @@ interface CacheAPI {
  */
 interface EventStreamAPI {
   /**
+   * [Limited Early Access]
    * Store and retrieve data that persists across executions.
    */
   readonly cache: CacheAPI;

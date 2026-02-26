@@ -540,7 +540,7 @@ type PostLoginV3Event = {
     ui_locales?: string[];
     /** Correlation ID can be provided in the initial authentication request when the application redirects to Universal Login. You can use value to correlate logs and requests from your Action code with the user flow. */
     correlation_id?: string;
-    /** [Limited Early Access] An object containing shared data across custom Actions for the duration of a transaction. */
+    /** An object containing shared data across custom Actions for the duration of a transaction. */
     metadata: {
       [additionalProperties: string]: string | number | boolean;
     };
@@ -824,7 +824,7 @@ interface AuthenticationAPI {
    * select another factor if they choose to._
    *
    * @param factor An object describing the type of factor its options that should be used for the initial challenge.
-   * @param options Additional options which can also specify `additionalFactors` as a property.
+   * @param options Additional options which can also specify `additionalFactors` as a property. Factor-specific options (for example `otpFallback` for `push-notification`) belong on `factor.options`.
    *
    * @example
    * Challenge with a specific factor:
@@ -846,6 +846,15 @@ interface AuthenticationAPI {
    *   }, {
    *     type: 'phone'
    *   }]
+   * });
+   * ```
+   *
+   * @example
+   * Challenge with push notification and disable OTP fallback:
+   * ```js
+   * api.authentication.challengeWith({
+   *   type: 'push-notification',
+   *   options: { otpFallback: false }
    * });
    * ```
    */
@@ -1164,7 +1173,7 @@ interface SAMLResponseAPI {
    */
   setPassthroughClaimsWithNoMapping(passthroughClaimsWithNoMapping: boolean): void;
   /**
-   * If passthroughClaimsWithNoMapping is true and this is false (default), for each claim not mapped to the common profile Auth0 adds a prefix http://schema.auth0.com.
+   * If passthroughClaimsWithNoMapping is true and this is false (default), for each claim not mapped to the common profile Auth0 adds a prefix `http://schema.auth0.com`.
    * If true it will pass through the claim as-is.
    */
   setMapUnknownClaimsAsIs(mapUnknownClaimsAsIs: boolean): void;
