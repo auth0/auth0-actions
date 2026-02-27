@@ -156,7 +156,6 @@ type PostLoginV3Event = {
       confidence: 'low' | 'medium' | 'high' | 'neutral';
       /** [Limited Early Access] Supplemental risk assessment. */
       supplemental?: {
-        /** [Limited Early Access] Supplemental risk assessment. */
         akamai?: {
           /** The bot detection results as forwarded by Akamai Bot Manager. */
           akamaiBot?: {
