@@ -15,6 +15,10 @@
   },
   "author": "auth0",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/auth0/auth0-actions.git"
+  },
   "bugs": {
     "url": "https://support.auth0.com"
   },
