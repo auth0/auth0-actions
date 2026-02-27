@@ -154,6 +154,7 @@ type PostLoginV3Event = {
       };
       /** Overall risk score */
       confidence: 'low' | 'medium' | 'high' | 'neutral';
+      /** [Limited Early Access] Supplemental risk assessment. */
       supplemental?: {
         /** [Limited Early Access] Supplemental risk assessment. */
         akamai?: {
@@ -425,11 +426,11 @@ type PostLoginV3Event = {
     idle_expires_at?: string;
     /** [Enterprise Customers] The date and time when the session was last successfully interacted with. */
     last_interacted_at?: string;
-    /** [Enterprise Customers] Session Metadata */
+    /** [Enterprise Customers] [Limited Early Access] Session Metadata */
     metadata?: {
       [additionalProperties: string]: any;
     };
-    /** [Enterprise Customers] This object is defined when the session is created from a session transfer token (Native to Web SSO), undefined otherwise. */
+    /** [Enterprise Customers] [Limited Early Access] This object is defined when the session is created from a session transfer token (Native to Web SSO), undefined otherwise. */
     session_transfer?: {
       /** [Enterprise Customers] This object is defined when the refresh token is created from a session initiated as a result of session transfer (Native to Web SSO), undefined otherwise. */
       parent_refresh_token?: {
@@ -1334,7 +1335,7 @@ interface SessionAPI {
    */
   setIdleExpiresAt(inactivity: number): void;
   /**
-   * [Enterprise Customers] Sets the cookie mode for the current session, allowing it to be either 'persistent' or 'non-persistent' (ephemeral).
+   * [Enterprise Customers] [Early Access] Sets the cookie mode for the current session, allowing it to be either 'persistent' or 'non-persistent' (ephemeral).
    * This determines how the session cookie is handled in the browser:
    * - 'persistent': The cookie will be stored until it expires or is deleted by the user.
    * - 'non-persistent' (ephemeral): The cookie will be deleted when the browser is closed.
@@ -1347,7 +1348,7 @@ interface SessionAPI {
    */
   setCookieMode(mode: 'persistent' | 'non-persistent'): void;
   /**
-   * [Enterprise Customers] Sets a key value pair in the metadata object of the current session.
+   * [Enterprise Customers] [Limited Early Access] Sets a key value pair in the metadata object of the current session.
    *
    * @param key Required, the key to set in the metadata object.
    * @param value Required, the value to set for the key in the metadata object, null values will delete the provided metadata key.
@@ -1355,13 +1356,13 @@ interface SessionAPI {
    */
   setMetadata(key: string, value: string | null): void;
   /**
-   * [Enterprise Customers] Deletes a key in the metadata object of the current session.
+   * [Enterprise Customers] [Limited Early Access] Deletes a key in the metadata object of the current session.
    *
    * @param key Required, the key to delete from the metadata object.
    */
   deleteMetadata(key: string): void;
   /**
-   * [Enterprise Customers] Deletes all keys from the metadata object of the current session.
+   * [Enterprise Customers] [Limited Early Access] Deletes all keys from the metadata object of the current session.
    *
    */
   evictMetadata(): void;
