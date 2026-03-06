@@ -425,7 +425,7 @@ type PostLoginV3Event = {
     idle_expires_at?: string;
     /** [Enterprise Customers] The date and time when the session was last successfully interacted with. */
     last_interacted_at?: string;
-    /** [Enterprise Customers] [Limited Early Access] Session Metadata */
+    /** [Enterprise Customers] [Early Access] Session Metadata */
     metadata?: {
       [additionalProperties: string]: any;
     };
