@@ -99,6 +99,10 @@
     "./send-phone-message/v2": {
       "types": "./src/send-phone-message/v2/index.d.ts",
       "default": null
+    },
+    "./signup-post-identifier/v1": {
+      "types": "./src/signup-post-identifier/v1/index.d.ts",
+      "default": null
     }
   }
 }
