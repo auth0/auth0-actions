@@ -11,6 +11,15 @@ type CustomTokenExchangeV1Event = {
     /** The name of the application (as defined in the Dashboard). */
     name: string;
   };
+  /** Details about the custom domain associated with the current transaction. */
+  custom_domain?: {
+    /** The custom domain name. */
+    domain: string;
+    /** Custom domain metadata as key-value pairs. */
+    domain_metadata?: {
+      [additionalProperties: string]: string;
+    };
+  };
   /** Details about the Organization associated with the current transaction. */
   organization?: {
     /** The Organization identifier. */
