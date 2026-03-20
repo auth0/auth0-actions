@@ -747,6 +747,14 @@ interface ValidationAPI {
    */
   error(errorCode: string, errorMessage: string): PostLoginAPI;
 }
+interface RulesAPI {
+  /**
+   * Check whether a Rule with a specific ID has been executed in the current transaction.
+   *
+   * @param ruleId The Rule ID.
+   */
+  wasExecuted(ruleId: string): boolean;
+}
 interface Secrets {
   [secretName: string]: string;
 }
@@ -1135,14 +1143,6 @@ interface RefreshTokenAPI {
    * if it is not used during this period.
    */
   setIdleExpiresAt(inactivity: number): void;
-}
-interface RulesAPI {
-  /**
-   * Check whether a Rule with a specific ID has been executed in the current transaction.
-   *
-   * @param ruleId The Rule ID.
-   */
-  wasExecuted(ruleId: string): boolean;
 }
 interface SAMLResponseAPI {
   /**
