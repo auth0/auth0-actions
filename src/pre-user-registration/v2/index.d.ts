@@ -364,12 +364,6 @@ interface UserAPI {
    * metadata property.
    */
   setUserMetadata(key: string, value: unknown): PreUserRegistrationAPI;
-  /**
-   * Set user_id for the user that is logging in.
-   *
-   * @param user_id The user_id to assign to user
-   */
-  setUserId(user_id: string): PreUserRegistrationAPI;
 }
 /**
  * Methods and utilities to help change the behavior of the login flow.
