@@ -1,29 +1,5 @@
-/** EventStreamV1Event */
-type EventStreamV1Event = {
-  /** [Limited Early Access] The CloudEvent message containing all event properties. */
-  message: {
-    /** Identifies the event. */
-    id: string;
-    /** Describes the type of event related to the originating occurrence. */
-    type: string;
-    /** The event payload. */
-    data?: {
-      [additionalProperties: string]: any;
-    } | null;
-    /** Identifies the context in which an event happened. */
-    source: string;
-    /** The version of the CloudEvents specification which the event uses. */
-    specversion: string;
-    /** Timestamp of when the occurrence happened. Must adhere to RFC 3339. */
-    time?: string | null;
-  };
-};
-interface InternalCommandAddError {
-  type: 'error';
-  code: 'MaxSideEffectsExceeded';
-}
 type CacheWriteErrorCode =
-  | InternalCommandAddError['code']
+  | 'MaxSideEffectsExceeded'
   | 'CacheKeySizeExceeded'
   | 'CacheValueSizeExceeded'
   | 'CacheSizeExceeded'
@@ -119,6 +95,26 @@ interface CacheAPI {
    */
   set(key: string, value: string, options?: CacheSetOptions): CacheWriteResult;
 }
+/** EventStreamV1Event */
+type EventStreamV1Event = {
+  /** [Limited Early Access] The CloudEvent message containing all event properties. */
+  message: {
+    /** Identifies the event. */
+    id: string;
+    /** Describes the type of event related to the originating occurrence. */
+    type: string;
+    /** The event payload. */
+    data?: {
+      [additionalProperties: string]: any;
+    } | null;
+    /** Identifies the context in which an event happened. */
+    source: string;
+    /** The version of the CloudEvents specification which the event uses. */
+    specversion: string;
+    /** Timestamp of when the occurrence happened. Must adhere to RFC 3339. */
+    time?: string | null;
+  };
+};
 /**
  * Methods and utilities to help change the behaviour of the event stream flow.
  */
