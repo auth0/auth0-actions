@@ -1,103 +1,5 @@
-/** CredentialsExchangeV2Event */
-type CredentialsExchangeV2Event = {
-  /** Information about the access token to be issued. */
-  accessToken: {
-    customClaims: {
-      [additionalProperties: string]: any;
-    };
-    scope: string[];
-  };
-  /** Information about the Client used during this token exchange. */
-  client: {
-    /** The client id of the application the user is logging in to. */
-    client_id: string;
-    /** An object for holding other application properties. */
-    metadata: {
-      [additionalProperties: string]: string;
-    };
-    /** The name of the application (as defined in the Dashboard). */
-    name: string;
-  };
-  /** Details about the custom domain associated with the current transaction. */
-  custom_domain?: {
-    /** The custom domain name. */
-    domain: string;
-    /** Custom domain metadata as key-value pairs. */
-    domain_metadata: {
-      [additionalProperties: string]: string;
-    };
-  };
-  /** Details about the Organization associated with the current transaction. */
-  organization?: {
-    /** The Organization identifier. */
-    id: string;
-    /** The friendly name of the Organization. */
-    display_name: string;
-    /** Metadata associated with the Organization. */
-    metadata: {
-      [additionalProperties: string]: string;
-    };
-    /** The name of the Organization. */
-    name: string;
-  } & {
-    [additionalProperties: string]: any;
-  };
-  /** Details about the request that initiated the transaction. */
-  request: {
-    /** The body of the POST request. This data will only be available during refresh token, Client Credential Exchange flows and PreUserRegistration Action. */
-    body: {
-      [additionalProperties: string]: any;
-    };
-    geoip: {
-      cityName?: string;
-      continentCode?: string;
-      countryCode?: string;
-      countryCode3?: string;
-      countryName?: string;
-      latitude?: number;
-      longitude?: number;
-      subdivisionCode?: string;
-      subdivisionName?: string;
-      timeZone?: string;
-    } & {
-      [additionalProperties: string]: any;
-    };
-    /** The hostname that is being used for the authentication flow. */
-    hostname?: string;
-    /** The originating IP address of the request. */
-    ip: string;
-    /** The language requested by the browser. */
-    language?: string;
-    /** The HTTP method used for the request */
-    method: string;
-    /** The value of the `User-Agent` header received when initiating the transaction. */
-    user_agent?: string;
-  };
-  /** Information about the Resource Server that is issuing the access token. */
-  resource_server: {
-    /** The identifier of the resource server. For example: `https://your-api.example.com`. */
-    identifier: string;
-  };
-  /** Information about the Tenant used during this token exchange. */
-  tenant: {
-    /** The name of the tenant. */
-    id: string;
-  };
-  /** Information about the Credentials Exchange transaction. */
-  transaction: {
-    /** Correlation ID can be provided in the initial authentication request when the application redirects to Universal Login. You can use value to correlate logs and requests from your Action code with the user flow. */
-    correlation_id?: string;
-    /** The scopes specified (if any) when requesting the access token. */
-    requested_scopes: string[];
-  };
-};
-type AccessDeniedErrorCode = 'invalid_scope' | 'invalid_request' | 'server_error';
-interface InternalCommandAddError {
-  type: 'error';
-  code: 'MaxSideEffectsExceeded';
-}
 type CacheWriteErrorCode =
-  | InternalCommandAddError['code']
+  | 'MaxSideEffectsExceeded'
   | 'CacheKeySizeExceeded'
   | 'CacheValueSizeExceeded'
   | 'CacheSizeExceeded'
@@ -193,6 +95,100 @@ interface CacheAPI {
    */
   set(key: string, value: string, options?: CacheSetOptions): CacheWriteResult;
 }
+/** CredentialsExchangeV2Event */
+type CredentialsExchangeV2Event = {
+  /** Information about the access token to be issued. */
+  accessToken: {
+    customClaims: {
+      [additionalProperties: string]: any;
+    };
+    scope: string[];
+  };
+  /** Information about the Client used during this token exchange. */
+  client: {
+    /** The client id of the application the user is logging in to. */
+    client_id: string;
+    /** An object for holding other application properties. */
+    metadata: {
+      [additionalProperties: string]: string;
+    };
+    /** The name of the application (as defined in the Dashboard). */
+    name: string;
+  };
+  /** Details about the custom domain associated with the current transaction. */
+  custom_domain?: {
+    /** The custom domain name. */
+    domain: string;
+    /** Custom domain metadata as key-value pairs. */
+    domain_metadata: {
+      [additionalProperties: string]: string;
+    };
+  };
+  /** Details about the Organization associated with the current transaction. */
+  organization?: {
+    /** The Organization identifier. */
+    id: string;
+    /** The friendly name of the Organization. */
+    display_name: string;
+    /** Metadata associated with the Organization. */
+    metadata: {
+      [additionalProperties: string]: string;
+    };
+    /** The name of the Organization. */
+    name: string;
+  } & {
+    [additionalProperties: string]: any;
+  };
+  /** Details about the request that initiated the transaction. */
+  request: {
+    /** The body of the POST request. This data will only be available during refresh token, Client Credential Exchange flows and PreUserRegistration Action. */
+    body: {
+      [additionalProperties: string]: any;
+    };
+    geoip: {
+      cityName?: string;
+      continentCode?: string;
+      countryCode?: string;
+      countryCode3?: string;
+      countryName?: string;
+      latitude?: number;
+      longitude?: number;
+      subdivisionCode?: string;
+      subdivisionName?: string;
+      timeZone?: string;
+    } & {
+      [additionalProperties: string]: any;
+    };
+    /** The hostname that is being used for the authentication flow. */
+    hostname?: string;
+    /** The originating IP address of the request. */
+    ip: string;
+    /** The language requested by the browser. */
+    language?: string;
+    /** The HTTP method used for the request */
+    method: string;
+    /** The value of the `User-Agent` header received when initiating the transaction. */
+    user_agent?: string;
+  };
+  /** Information about the Resource Server that is issuing the access token. */
+  resource_server: {
+    /** The identifier of the resource server. For example: `https://your-api.example.com`. */
+    identifier: string;
+  };
+  /** Information about the Tenant used during this token exchange. */
+  tenant: {
+    /** The name of the tenant. */
+    id: string;
+  };
+  /** Information about the Credentials Exchange transaction. */
+  transaction: {
+    /** Correlation ID can be provided in the initial authentication request when the application redirects to Universal Login. You can use value to correlate logs and requests from your Action code with the user flow. */
+    correlation_id?: string;
+    /** The scopes specified (if any) when requesting the access token. */
+    requested_scopes: string[];
+  };
+};
+type AccessDeniedErrorCode = 'invalid_scope' | 'invalid_request' | 'server_error';
 interface AccessAPI {
   /**
    * Mark the current token exchange as denied.
