@@ -70,7 +70,7 @@ jobs:
           fi
 
       - name: Update npm
-        run: npm install -g npm@11 # supported OIDC version of NPM
+        run: npm install -g npm@11.10.0 # supported OIDC version of NPM, pinned to 11.10.0 work around https://github.com/nodejs/node/issues/62425
 
       - name: Publish to NPM
         id: publish
