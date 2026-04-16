@@ -641,6 +641,8 @@ type PostLoginV3Event = {
     metadata: {
       [additionalProperties: string]: string | number | boolean;
     };
+    /** The type of the subject token in a token exchange request. */
+    subject_token_type?: string;
   } & {
     [additionalProperties: string]: any;
   };
