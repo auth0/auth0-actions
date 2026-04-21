@@ -635,12 +635,41 @@ type PostLoginV3Event = {
     state?: string;
     /** The ui_locales provided in the original authentication request. */
     ui_locales?: string[];
+    /** The actor in a token exchange request. */
+    actor?: {
+      act?: {
+        act?: {
+          act?: {
+            act?: {
+              act?: never;
+              sub: string;
+            } & {
+              [additionalProperties: string]: any;
+            };
+            sub: string;
+          } & {
+            [additionalProperties: string]: any;
+          };
+          sub: string;
+        } & {
+          [additionalProperties: string]: any;
+        };
+        sub: string;
+      } & {
+        [additionalProperties: string]: any;
+      };
+      sub: string;
+    } & {
+      [additionalProperties: string]: any;
+    };
     /** Correlation ID can be provided in the initial authentication request when the application redirects to Universal Login. You can use value to correlate logs and requests from your Action code with the user flow. */
     correlation_id?: string;
     /** An object containing shared data across custom Actions for the duration of a transaction. */
     metadata: {
       [additionalProperties: string]: string | number | boolean;
     };
+    /** The type of the subject token in a token exchange request. */
+    subject_token_type?: string;
   } & {
     [additionalProperties: string]: any;
   };

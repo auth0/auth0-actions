@@ -95,6 +95,15 @@ interface CacheAPI {
    */
   set(key: string, value: string, options?: CacheSetOptions): CacheWriteResult;
 }
+/**
+ * Methods and utilities to help change the behavior after a user changes their password.
+ */
+interface PostChangePasswordAPI {
+  /**
+   * Store and retrieve data that persists across executions.
+   */
+  readonly cache: CacheAPI;
+}
 /** PostChangePasswordV2Event */
 type PostChangePasswordV2Event = {
   /** Details about supplemental authentication signals obtained during the password change flow. */
@@ -236,15 +245,6 @@ type PostChangePasswordV2Event = {
 } & {
   [additionalProperties: string]: any;
 };
-/**
- * Methods and utilities to help change the behavior after a user changes their password.
- */
-interface PostChangePasswordAPI {
-  /**
-   * Store and retrieve data that persists across executions.
-   */
-  readonly cache: CacheAPI;
-}
 interface Configuration {}
 interface Secrets {
   [secretName: string]: string;
