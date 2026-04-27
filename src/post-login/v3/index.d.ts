@@ -1327,6 +1327,30 @@ interface SAMLResponseAPI {
    * Default is urn:auth0:TENANT
    */
   setIssuer(issuer: string): void;
+  /**
+   * Set encryption algorithm for SAML assertion.
+   * Default is aes256-cbc.
+   *
+   * @param encryptionAlgorithm - The algorithm to use (aes256-gcm is recommended)
+   *
+   * @example
+   * Set the encryption algorithm to aes256-gcm (recommended)
+   * ```js
+   * api.samlResponse.setEncryptionAlgorithm('aes256-gcm');
+   * ```
+   */
+  setEncryptionAlgorithm(encryptionAlgorithm: 'aes256-gcm'): void;
+  /**
+   * @deprecated Use 'aes256-gcm' instead, 'aes256-cbc' is not recommended and insecure.
+   * @param encryptionAlgorithm - The algorithm to use (aes256-cbc is deprecated)
+   *
+   * @example
+   * Set encryption algorithm to aes256-cbc (not recommended)
+   * ```js
+   * api.samlResponse.setEncryptionAlgorithm('aes256-cbc');
+   * ```
+   */
+  setEncryptionAlgorithm(encryptionAlgorithm: 'aes256-cbc'): void;
 }
 interface SessionRevocationOptions {
   /** Default to false. If true, the system ends the session and keeps the refresh tokens. The application may continue to get access tokens for the duration of the refresh token lifetime. */
