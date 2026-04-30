@@ -189,6 +189,20 @@ type CredentialsExchangeV2Event = {
   };
 };
 type AccessDeniedErrorCode = 'invalid_scope' | 'invalid_request' | 'server_error';
+interface Configuration {}
+interface Secrets {
+  [secretName: string]: string;
+}
+interface Event extends CredentialsExchangeV2Event {
+  /**
+   * @private Configuration values associated with this Action.
+   */
+  configuration: Configuration;
+  /**
+   * Secret values securely associated with this Action.
+   */
+  secrets: Secrets;
+}
 interface AccessAPI {
   /**
    * Mark the current token exchange as denied.
@@ -223,20 +237,6 @@ interface CredentialsExchangeAPI {
    * Make changes to the cache.
    */
   readonly cache: CacheAPI;
-}
-interface Configuration {}
-interface Secrets {
-  [secretName: string]: string;
-}
-interface Event extends CredentialsExchangeV2Event {
-  /**
-   * @private Configuration values associated with this Action.
-   */
-  configuration: Configuration;
-  /**
-   * Secret values securely associated with this Action.
-   */
-  secrets: Secrets;
 }
 interface CredentialsExchangeAction {
   (event: Event, api: CredentialsExchangeAPI): Promise<void>;

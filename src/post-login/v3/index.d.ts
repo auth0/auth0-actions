@@ -413,6 +413,10 @@ type PostLoginV3Event = {
     idle_expires_at?: string;
     /** [Enterprise Customers] Timestamp of when the refresh token was last successfully exchanged. */
     last_exchanged_at?: string;
+    /** Refresh Token Metadata */
+    metadata?: {
+      [additionalProperties: string]: any;
+    };
     resource_servers?: {
       /** [Enterprise Customers] The audience of the refresh token. */
       audience: string;
@@ -1177,6 +1181,24 @@ interface RefreshTokenAPI {
    * if it is not used during this period.
    */
   setIdleExpiresAt(inactivity: number): void;
+  /**
+   * Sets a key value pair in the metadata object of the current refresh token.
+   *
+   * @param key Required, the key to set in the metadata object.
+   * @param value Required, the value to set for the key in the metadata object, null values will delete the provided metadata key.
+   * @throws Will throw an error if the resulting metadata object is invalid.
+   */
+  setMetadata(key: string, value: string | null): void;
+  /**
+   * Deletes a key in the metadata object of the current refresh token.
+   *
+   * @param key Required, the key to delete from the metadata object.
+   */
+  deleteMetadata(key: string): void;
+  /**
+   * Deletes all keys from the metadata object of the current refresh token.
+   */
+  evictMetadata(): void;
 }
 interface SAMLResponseAPI {
   /**
