@@ -95,6 +95,37 @@ interface CacheAPI {
    */
   set(key: string, value: string, options?: CacheSetOptions): CacheWriteResult;
 }
+interface NotificationsAPI {
+  /**
+   * When called, the notification event is considered failed without recovery:
+   * We will log an error for this event, but won't be sending it again to the action in the future.
+   * If you need this notification event to be retried, consider calling retry instead.
+   * @param reason this reason will be part of the log entry, this will help you analyze the error further. Please note that this field is limited to 1024 characters and will be truncated if larger.
+   */
+  drop(reason: string): void;
+  /**
+   * When called, the notification event is considered failed, but recoverable:
+   * We will log an error for this event, but we will retry it up to 5 times in the next minutes.
+   * If you consider that this notification event should not be retried, consider calling drop instead.
+   * @param reason this reason will be part of the log entry, this will help you analyze the error further. Please note that this field is limited to 1024 characters and will be truncated if larger.
+   */
+  retry(reason: string): void;
+}
+/**
+ * Methods and utilities to inform whether or not the event message should be treated as an error or not.
+ */
+interface CustomPhoneProviderAPI {
+  /**
+   * Make changes to the cache.
+   */
+  readonly cache: CacheAPI;
+  /**
+   * Informs if we should consider the notification event as to be retried or to be dropped.
+   * See each of these methods for further details on the actual behaviour.
+   * If several calls are made, only the last one is considered.
+   */
+  readonly notification: NotificationsAPI;
+}
 /** CustomPhoneProviderV1Event */
 type CustomPhoneProviderV1Event = {
   /** Information about the Client with which this login transaction was initiated. */
@@ -273,37 +304,6 @@ type CustomPhoneProviderV1Event = {
     [additionalProperties: string]: any;
   };
 };
-interface NotificationsAPI {
-  /**
-   * When called, the notification event is considered failed without recovery:
-   * We will log an error for this event, but won't be sending it again to the action in the future.
-   * If you need this notification event to be retried, consider calling retry instead.
-   * @param reason this reason will be part of the log entry, this will help you analyze the error further. Please note that this field is limited to 1024 characters and will be truncated if larger.
-   */
-  drop(reason?: string): void;
-  /**
-   * When called, the notification event is considered failed, but recoverable:
-   * We will log an error for this event, but we will retry it up to 5 times in the next minutes.
-   * If you consider that this notification event should not be retried, consider calling drop instead.
-   * @param reason this reason will be part of the log entry, this will help you analyze the error further. Please note that this field is limited to 1024 characters and will be truncated if larger.
-   */
-  retry(reason?: string): void;
-}
-/**
- * Methods and utilities to inform whether or not the event message should be treated as an error or not.
- */
-interface CustomPhoneProviderAPI {
-  /**
-   * Make changes to the cache.
-   */
-  readonly cache: CacheAPI;
-  /**
-   * Informs if we should consider the notification event as to be retried or to be dropped.
-   * See each of these methods for further details on the actual behaviour.
-   * If several calls are made, only the last one is considered.
-   */
-  readonly notification: NotificationsAPI;
-}
 interface Configuration {}
 interface Secrets {
   [secretName: string]: string;
