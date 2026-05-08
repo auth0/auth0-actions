@@ -214,7 +214,7 @@ interface AccessAPI {
 }
 interface AccessTokenAPI {
   /**
-   * Set a custom claim on the Access Token that will be issed.
+   * Set a custom claim on the Access Token that will be issued.
    *
    * @param key Name of the claim (note that this may need to be a fully-qualified url).
    * @param value The value of the claim.
