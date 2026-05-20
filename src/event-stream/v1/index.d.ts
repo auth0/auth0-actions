@@ -95,6 +95,16 @@ interface CacheAPI {
    */
   set(key: string, value: string, options?: CacheSetOptions): CacheWriteResult;
 }
+/**
+ * Methods and utilities to help change the behaviour of the event stream flow.
+ */
+interface EventStreamAPI {
+  /**
+   * [Limited Early Access]
+   * Store and retrieve data that persists across executions.
+   */
+  readonly cache: CacheAPI;
+}
 /** EventStreamV1Event */
 type EventStreamV1Event = {
   /** [Limited Early Access] The CloudEvent message containing all event properties. */
@@ -115,16 +125,6 @@ type EventStreamV1Event = {
     time?: string | null;
   };
 };
-/**
- * Methods and utilities to help change the behaviour of the event stream flow.
- */
-interface EventStreamAPI {
-  /**
-   * [Limited Early Access]
-   * Store and retrieve data that persists across executions.
-   */
-  readonly cache: CacheAPI;
-}
 interface Configuration {}
 interface Secrets {
   [secretName: string]: string;

@@ -95,34 +95,6 @@ interface CacheAPI {
    */
   set(key: string, value: string, options?: CacheSetOptions): CacheWriteResult;
 }
-/** FactorSelector */
-type FactorSelector =
-  | {
-      /** A type of authentication factor such as `push-notification`, `phone`, `email`, `otp`, `webauthn-roaming`, `webauthn-platform`, and `recovery-code`. */
-      type: 'otp' | 'email' | 'webauthn-platform' | 'webauthn-roaming' | 'recovery-code';
-      /** Additional options for configuring a factor of a given type. */
-      options?: {
-        [property: string]: any;
-      };
-    }
-  | {
-      /** A type of authentication factor such as `phone`. */
-      type: 'phone';
-      /** Additional options for configuring the phone factor. */
-      options?: {
-        /** The method passed in this filed will be preferred over the others if available. */
-        preferredMethod?: 'sms' | 'voice' | 'both';
-      };
-    }
-  | {
-      /** A type of authentication factor such as `push-notification`. */
-      type: 'push' | 'push-notification';
-      /** Additional options for configuring the push factor. */
-      options?: {
-        /** If this is set to false, the OTP fallback method for the push factor will not be available for the user. */
-        otpFallback?: boolean;
-      };
-    };
 /**
  * PasswordResetPostChallengeV1Event
  *
@@ -428,19 +400,27 @@ type PromptOptions = {
 };
 type RenderPromptId = PromptId;
 type RenderPromptOptions = PromptOptions;
-interface Secrets {
-  [secretName: string]: string;
-}
-interface Configuration {}
-interface Event extends PasswordResetPostChallengeV1Event {
-  /**
-   * @private Configuration values associated with this Action.
-   */
-  readonly configuration: Configuration;
-  /**
-   * Secret values securely associated with this Action.
-   */
-  readonly secrets: Secrets;
+type FactorSelector =
+  | {
+      type: 'otp' | 'email' | 'webauthn-platform' | 'webauthn-roaming' | 'recovery-code';
+      options?: {
+        [key: string]: unknown;
+      };
+    }
+  | {
+      type: 'phone';
+      options?: {
+        preferredMethod?: 'sms' | 'voice' | 'both';
+      };
+    }
+  | {
+      type: 'push' | 'push-notification';
+      options?: {
+        otpFallback?: boolean;
+      };
+    };
+interface ChallengeWithOptions {
+  additionalFactors?: FactorSelector[];
 }
 interface AccessAPI {
   /**
@@ -453,9 +433,6 @@ interface AccessAPI {
    * directly in end-user interfaces.
    */
   deny(reason: string): void;
-}
-interface ChallengeWithOptions {
-  additionalFactors?: FactorSelector[];
 }
 interface AuthenticationAPI {
   /**
@@ -632,6 +609,20 @@ interface PasswordResetPostChallengeAPI {
    * Configure the transaction.
    */
   readonly transaction: TransactionAPI;
+}
+interface Secrets {
+  [secretName: string]: string;
+}
+interface Configuration {}
+interface Event extends PasswordResetPostChallengeV1Event {
+  /**
+   * @private Configuration values associated with this Action.
+   */
+  readonly configuration: Configuration;
+  /**
+   * Secret values securely associated with this Action.
+   */
+  readonly secrets: Secrets;
 }
 interface PasswordResetPostChallengeAction {
   (event: Event, api: PasswordResetPostChallengeAPI): Promise<void>;
