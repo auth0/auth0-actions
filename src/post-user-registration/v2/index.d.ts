@@ -95,6 +95,15 @@ interface CacheAPI {
    */
   set(key: string, value: string, options?: CacheSetOptions): CacheWriteResult;
 }
+/**
+ * Methods and utilities to help change the behavior after a signup.
+ */
+interface PostUserRegistrationAPI {
+  /**
+   * Store and retrieve data that persists across executions.
+   */
+  readonly cache: CacheAPI;
+}
 /** PostUserRegistrationV2Event */
 type PostUserRegistrationV2Event = {
   /** Details about supplemental authentication signals obtained during the registration flow. */
@@ -306,15 +315,6 @@ type PostUserRegistrationV2Event = {
 } & {
   [additionalProperties: string]: any;
 };
-/**
- * Methods and utilities to help change the behavior after a signup.
- */
-interface PostUserRegistrationAPI {
-  /**
-   * Store and retrieve data that persists across executions.
-   */
-  readonly cache: CacheAPI;
-}
 interface Configuration {}
 interface Secrets {
   [secretName: string]: string;
