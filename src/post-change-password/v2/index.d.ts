@@ -83,7 +83,7 @@ interface CacheAPI {
    *
    * Values stored in this way will have lifetimes of _up to_ the specified
    * `ttl` or `expires_at` values. If no lifetime is specified, a default of
-   * lifetime of 24 hours will be used. Lifetimes may not exceed the maximum
+   * lifetime of 15 minutes will be used. Lifetimes may not exceed the maximum
    * duration listed at {@link https://auth0.com/docs/customize/actions/limitations Actions Cache Limits}.
    *
    * **Important**: This cache is designed for short-lived, ephemeral data. Items may not be
@@ -112,7 +112,7 @@ type PostChangePasswordV2Event = {
     riskAssessment?: {
       /** Supplemental signals sent from third party providers to assist in risk assessments. */
       supplemental?: {
-        /** [Limited Early Access] Supplemental risk assessment. This is available only if Akamai Account Protector is enabled and Akamai forwards the headers for the transaction. */
+        /** [Early Access] Supplemental risk assessment. This is available only if Akamai Account Protector is enabled and Akamai forwards the headers for the transaction. */
         akamai?: {
           /** The bot detection results as forwarded by Akamai Bot Manager. */
           akamaiBot?: {
