@@ -186,6 +186,8 @@ type CredentialsExchangeV2Event = {
     correlation_id?: string;
     /** The scopes specified (if any) when requesting the access token. */
     requested_scopes: string[];
+    /** The live target scope set for the access token. Initialized from the client grants and immediately updated by api.transaction target scope methods across current and subsequent Actions. After all Actions complete, these scopes are intersected with the client grant. Scopes not present in the grant are silently dropped from the final access token. */
+    target_scopes?: string[];
   };
 };
 type AccessDeniedErrorCode = 'invalid_scope' | 'invalid_request' | 'server_error';
@@ -202,6 +204,65 @@ interface Event extends CredentialsExchangeV2Event {
    * Secret values securely associated with this Action.
    */
   secrets: Secrets;
+}
+interface TransactionAPI {
+  /**
+   * Add a scope to the target scope set. Added scopes are intersected with the
+   * client grant after all Actions complete. Scopes not present in the grant
+   * are silently dropped from the final access token.
+   *
+   * @param scope The scope to add.
+   * @throws Will throw an error if the scope is invalid.
+   *
+   * @example
+   * ```js
+   * exports.onExecuteCredentialsExchange = async (event, api) => {
+   *   api.transaction.addTargetScope('read:reports');
+   * };
+   * ```
+   */
+  addTargetScope(scope: string): void;
+  /**
+   * Remove a scope from the target scope set.
+   *
+   * @param scope The scope to remove.
+   * @throws Will throw an error if the scope is invalid.
+   *
+   * @example
+   * ```js
+   * exports.onExecuteCredentialsExchange = async (event, api) => {
+   *   api.transaction.removeTargetScope('admin:full');
+   * };
+   * ```
+   */
+  removeTargetScope(scope: string): void;
+  /**
+   * Replace the entire target scope set. The new scopes are intersected with
+   * the client grant after all Actions complete. Scopes not present in the
+   * grant are silently dropped from the final access token.
+   *
+   * @param scopes The new target scope set.
+   * @throws Will throw an error if any scope is invalid.
+   *
+   * @example
+   * ```js
+   * exports.onExecuteCredentialsExchange = async (event, api) => {
+   *   api.transaction.setTargetScopes(['read:users', 'write:users']);
+   * };
+   * ```
+   */
+  setTargetScopes(scopes: string[]): void;
+  /**
+   * Remove all scopes from the target scope set.
+   *
+   * @example
+   * ```js
+   * exports.onExecuteCredentialsExchange = async (event, api) => {
+   *   api.transaction.clearTargetScopes();
+   * };
+   * ```
+   */
+  clearTargetScopes(): void;
 }
 interface AccessAPI {
   /**
@@ -237,6 +298,11 @@ interface CredentialsExchangeAPI {
    * Make changes to the cache.
    */
   readonly cache: CacheAPI;
+  /**
+   * Modify the target scope set for the access token. Target scopes are
+   * evaluated by the authorization pipeline after all Actions complete.
+   */
+  readonly transaction: TransactionAPI;
 }
 interface CredentialsExchangeAction {
   (event: Event, api: CredentialsExchangeAPI): Promise<void>;
