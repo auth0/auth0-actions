@@ -83,7 +83,7 @@ interface CacheAPI {
    *
    * Values stored in this way will have lifetimes of _up to_ the specified
    * `ttl` or `expires_at` values. If no lifetime is specified, a default of
-   * lifetime of 24 hours will be used. Lifetimes may not exceed the maximum
+   * lifetime of 15 minutes will be used. Lifetimes may not exceed the maximum
    * duration listed at {@link https://auth0.com/docs/customize/actions/limitations Actions Cache Limits}.
    *
    * **Important**: This cache is designed for short-lived, ephemeral data. Items may not be
@@ -100,14 +100,14 @@ interface CacheAPI {
  */
 interface EventStreamAPI {
   /**
-   * [Limited Early Access]
+   * [Early Access]
    * Store and retrieve data that persists across executions.
    */
   readonly cache: CacheAPI;
 }
 /** EventStreamV1Event */
 type EventStreamV1Event = {
-  /** [Limited Early Access] The CloudEvent message containing all event properties. */
+  /** [Early Access] The CloudEvent message containing all event properties. */
   message: {
     /** Identifies the event. */
     id: string;

@@ -83,7 +83,7 @@ interface CacheAPI {
    *
    * Values stored in this way will have lifetimes of _up to_ the specified
    * `ttl` or `expires_at` values. If no lifetime is specified, a default of
-   * lifetime of 24 hours will be used. Lifetimes may not exceed the maximum
+   * lifetime of 15 minutes will be used. Lifetimes may not exceed the maximum
    * duration listed at {@link https://auth0.com/docs/customize/actions/limitations Actions Cache Limits}.
    *
    * **Important**: This cache is designed for short-lived, ephemeral data. Items may not be
@@ -351,10 +351,17 @@ interface AccessAPI {
    */
   rejectInvalidSubjectToken(reason: string): void;
 }
-/** Nested actor representing a delegation chain. Max 5 levels (root + 4 nested) enforced at runtime. */
+/** Recursively defines nested actor levels, terminating when the depth tuple is exhausted. */
+type NestedActor<D extends unknown[] = [1, 2, 3, 4]> = D extends [unknown, ...infer Rest]
+  ? {
+      sub: string;
+      act?: NestedActor<Rest>;
+    } & Record<string, any>
+  : never;
+/** Nested actor representing a delegation chain. Max 5 levels (root + 4 nested). */
 type ActorParams = {
   sub: string;
-  act?: ActorParams;
+  act?: NestedActor;
 } & Record<string, any>;
 interface AuthenticationAPI {
   /**
@@ -519,10 +526,13 @@ interface AuthenticationAPI {
    */
   setOrganization(organization_id_or_name: string): void;
   /**
-   * Set the actor for the token exchange, representing the entity acting on behalf of the subject.
-   * This may be called 0 or 1 times. Can be used alongside setUserById and other authentication commands.
+   * Set the actor for the token exchange to represent the entity acting on behalf of the subject.
+   * Must be used alongside the setUserById or SetUserByConnection commands. Calling setActor is optional.
+   * Receiving an actor_token in the request does not automatically produce an act claim; the Action must explicitly call this method.
+   * Refresh tokens are not issued when an actor is set for the transaction.
    *
-   * @param actor An object describing the actor. The `sub` field is required; up to 5 additional
+   * @param actor A nested object representing a delegation chain. Up to 4 additional act levels are allowed
+   * (5 actors total, including the root actor).  For each level, the `sub` field is required; up to 5 additional
    * custom properties (string, boolean, or number values) may be provided.
    *
    * @example

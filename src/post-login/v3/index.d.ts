@@ -83,7 +83,7 @@ interface CacheAPI {
    *
    * Values stored in this way will have lifetimes of _up to_ the specified
    * `ttl` or `expires_at` values. If no lifetime is specified, a default of
-   * lifetime of 24 hours will be used. Lifetimes may not exceed the maximum
+   * lifetime of 15 minutes will be used. Lifetimes may not exceed the maximum
    * duration listed at {@link https://auth0.com/docs/customize/actions/limitations Actions Cache Limits}.
    *
    * **Important**: This cache is designed for short-lived, ephemeral data. Items may not be
@@ -251,7 +251,7 @@ type PostLoginV3Event = {
       };
       /** Overall risk score */
       confidence: 'low' | 'medium' | 'high' | 'neutral';
-      /** [Limited Early Access] Supplemental risk assessment. */
+      /** [Early Access] Supplemental risk assessment. */
       supplemental?: {
         akamai?: {
           /** The bot detection results as forwarded by Akamai Bot Manager. */
@@ -324,11 +324,11 @@ type PostLoginV3Event = {
     };
     /** The name of the application (as defined in the Dashboard). */
     name: string;
-    /** [Private Early Access] An object for holding refresh token configuration properties. */
+    /** [Early Access] An object for holding refresh token configuration properties. */
     refresh_token?: {
-      /** [Private Early Access] A collection of policies governing multi-resource refresh token exchange (MRRT), defining how refresh tokens can be used across different resource servers */
+      /** [Early Access] A collection of policies governing multi-resource refresh token exchange (MRRT), defining how refresh tokens can be used across different resource servers */
       policies?: {
-        /** [Private Early Access] The specific resource server (audience) to which this MRRT policy applies. */
+        /** [Early Access] The specific resource server (audience) to which this MRRT policy applies. */
         audience?: string;
         /** The scopes of access that are authorized for the resource server (audience). */
         scope?: string[];
@@ -526,11 +526,11 @@ type PostLoginV3Event = {
     idle_expires_at?: string;
     /** [Enterprise Customers] The date and time when the session was last successfully interacted with. */
     last_interacted_at?: string;
-    /** [Enterprise Customers] [Limited Early Access] Session Metadata */
+    /** [Enterprise Customers] [Early Access] Session Metadata */
     metadata?: {
       [additionalProperties: string]: any;
     };
-    /** [Enterprise Customers] [Limited Early Access] This object is defined when the session is created from a session transfer token (Native to Web SSO), undefined otherwise. */
+    /** [Enterprise Customers] [Early Access] This object is defined when the session is created from a session transfer token (Native to Web SSO), undefined otherwise. */
     session_transfer?: {
       /** [Enterprise Customers] This object is defined when the refresh token is created from a session initiated as a result of session transfer (Native to Web SSO), undefined otherwise. */
       parent_refresh_token?: {
@@ -547,13 +547,13 @@ type PostLoginV3Event = {
     /** [Enterprise Customers] ID of the user which can be used when interacting with other APIs. */
     user_id?: string;
   };
-  /** [Private Early Access] Details of the current session transfer token being used to establish Single Sign-On (SSO) from a native application to a web application. */
+  /** [Early Access] Details of the current session transfer token being used to establish Single Sign-On (SSO) from a native application to a web application. */
   session_transfer_token?: {
-    /** [Private Early Access] The client identifier of the application that issued the token. */
+    /** [Early Access] The client identifier of the application that issued the token. */
     client_id: string;
-    /** [Private Early Access] Details about the request that issued the token. */
+    /** [Early Access] Details about the request that issued the token. */
     request: {
-      /** [Private Early Access] The Autonomous System Number (ASN) associated with the request that issued the token. */
+      /** [Early Access] The Autonomous System Number (ASN) associated with the request that issued the token. */
       asn?: string;
       geoip?: {
         cityName?: string;
@@ -569,12 +569,12 @@ type PostLoginV3Event = {
       } & {
         [additionalProperties: string]: any;
       };
-      /** [Private Early Access] The IP address associated with the request that issued the token. */
+      /** [Early Access] The IP address associated with the request that issued the token. */
       ip: string;
-      /** [Private Early Access] The User-Agent string of the device that issued the token. */
+      /** [Early Access] The User-Agent string of the device that issued the token. */
       user_agent?: string;
     };
-    /** [Private Early Access] The scopes requested when the token was issued. */
+    /** [Early Access] The scopes requested when the token was issued. */
     scope: string[];
   };
   /** Login statistics for the current user. */
@@ -1429,7 +1429,7 @@ interface SessionAPI {
    */
   setCookieMode(mode: 'persistent' | 'non-persistent'): void;
   /**
-   * [Enterprise Customers] [Limited Early Access] Sets a key value pair in the metadata object of the current session.
+   * [Enterprise Customers] [Early Access] Sets a key value pair in the metadata object of the current session.
    *
    * @param key Required, the key to set in the metadata object.
    * @param value Required, the value to set for the key in the metadata object, null values will delete the provided metadata key.
@@ -1437,13 +1437,13 @@ interface SessionAPI {
    */
   setMetadata(key: string, value: string | null): void;
   /**
-   * [Enterprise Customers] [Limited Early Access] Deletes a key in the metadata object of the current session.
+   * [Enterprise Customers] [Early Access] Deletes a key in the metadata object of the current session.
    *
    * @param key Required, the key to delete from the metadata object.
    */
   deleteMetadata(key: string): void;
   /**
-   * [Enterprise Customers] [Limited Early Access] Deletes all keys from the metadata object of the current session.
+   * [Enterprise Customers] [Early Access] Deletes all keys from the metadata object of the current session.
    *
    */
   evictMetadata(): void;
