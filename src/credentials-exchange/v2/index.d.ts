@@ -186,7 +186,7 @@ type CredentialsExchangeV2Event = {
     correlation_id?: string;
     /** The scopes specified (if any) when requesting the access token. */
     requested_scopes: string[];
-    /** The live target scope set for the access token. Initialized from the client grants and immediately updated by api.transaction target scope methods across current and subsequent Actions. After all Actions complete, these scopes are intersected with the client grant. Scopes not present in the grant are silently dropped from the final access token. */
+    /** [Early Access] The live target scope set for the access token. Initialized from the client grants and immediately updated by api.transaction target scope methods across current and subsequent Actions. After all Actions complete, these scopes are intersected with the client grant. Scopes not present in the grant are silently dropped from the final access token. */
     target_scopes?: string[];
   };
 };
@@ -207,7 +207,7 @@ interface Event extends CredentialsExchangeV2Event {
 }
 interface TransactionAPI {
   /**
-   * Add a scope to the target scope set. Added scopes are intersected with the
+   * [Early Access] Add a scope to the target scope set. Added scopes are intersected with the
    * client grant after all Actions complete. Scopes not present in the grant
    * are silently dropped from the final access token.
    *
@@ -223,7 +223,7 @@ interface TransactionAPI {
    */
   addTargetScope(scope: string): void;
   /**
-   * Remove a scope from the target scope set.
+   * [Early Access] Remove a scope from the target scope set.
    *
    * @param scope The scope to remove.
    * @throws Will throw an error if the scope is invalid.
@@ -237,7 +237,7 @@ interface TransactionAPI {
    */
   removeTargetScope(scope: string): void;
   /**
-   * Replace the entire target scope set. The new scopes are intersected with
+   * [Early Access] Replace the entire target scope set. The new scopes are intersected with
    * the client grant after all Actions complete. Scopes not present in the
    * grant are silently dropped from the final access token.
    *
@@ -253,7 +253,7 @@ interface TransactionAPI {
    */
   setTargetScopes(scopes: string[]): void;
   /**
-   * Remove all scopes from the target scope set.
+   * [Early Access] Remove all scopes from the target scope set.
    *
    * @example
    * ```js
@@ -299,8 +299,7 @@ interface CredentialsExchangeAPI {
    */
   readonly cache: CacheAPI;
   /**
-   * Modify the target scope set for the access token. Target scopes are
-   * evaluated by the authorization pipeline after all Actions complete.
+   * [Early Access] Make changes to the transaction.
    */
   readonly transaction: TransactionAPI;
 }
