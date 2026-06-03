@@ -251,18 +251,18 @@ type CustomTokenExchangeV1Event = {
     subject_token_type: string;
   };
 };
-/** An object containing the user profile attributes to set. */
-type SetUserByConnectionOptions = {
-  /** Behaviour to apply if no user with the specified user_id exists in the connection. Can be 'create_if_not_exists', which will cause a new user to be created using the supplied user attributes; or 'none', which will result in no user being created and an error being returned if no user exists. */
+/** Options to control the behavior of the setUserByConnection command. */
+type CustomTokenExchangeSetUserByConnectionOptions = {
+  /** Behavior to apply if no user with the specified user_id exists in the connection. */
   creationBehavior: 'create_if_not_exists' | 'none';
-  /** Behaviour to apply if a user with specified user_id already exists in the connection. Can be 'replace', which results in the existing user's attributes being replaced with the specified user attributes; or 'none' which means the existing user will not be modified. */
+  /** Behavior to apply if a user with specified user_id already exists in the connection. */
   updateBehavior: 'replace' | 'none';
 };
 /** An object containing the user profile attributes to set. */
-type SetUserByConnectionUserAttributes = {
+type CustomTokenExchangeSetUserByConnectionUserAttributes = {
   /** The user's email. */
   email?: string;
-  /** Whether this email address is verified (true) or unverified (false). User will receive a verification email after creation if email_verified is false or not specified. */
+  /** Whether this email address is verified (true) or unverified (false). */
   email_verified?: boolean;
   /** The user's family name(s). */
   family_name?: string;
@@ -282,11 +282,23 @@ type SetUserByConnectionUserAttributes = {
   user_id: string;
   /** The user's username. */
   username?: string;
-  /** Whether the user will receive a verification email after creation (true) or no email (false). Overrides behavior of email_verified parameter. */
+  /** Whether the user will receive a verification email after creation (true) or no email (false). */
   verify_email?: boolean;
 } & {
   [additionalProperties: string]: any;
 };
+/** Recursively defines nested actor levels, terminating when the depth tuple is exhausted. */
+type NestedActor<D extends unknown[] = [1, 2, 3, 4]> = D extends [unknown, ...infer Rest]
+  ? {
+      sub: string;
+      act?: NestedActor<Rest>;
+    } & Record<string, any>
+  : never;
+/** Nested actor representing a delegation chain. Max 5 levels (root + 4 nested). */
+type ActorParams = {
+  sub: string;
+  act?: NestedActor;
+} & Record<string, any>;
 interface AccessAPI {
   /**
    * Mark the current token exchange as denied.
@@ -351,18 +363,6 @@ interface AccessAPI {
    */
   rejectInvalidSubjectToken(reason: string): void;
 }
-/** Recursively defines nested actor levels, terminating when the depth tuple is exhausted. */
-type NestedActor<D extends unknown[] = [1, 2, 3, 4]> = D extends [unknown, ...infer Rest]
-  ? {
-      sub: string;
-      act?: NestedActor<Rest>;
-    } & Record<string, any>
-  : never;
-/** Nested actor representing a delegation chain. Max 5 levels (root + 4 nested). */
-type ActorParams = {
-  sub: string;
-  act?: NestedActor;
-} & Record<string, any>;
 interface AuthenticationAPI {
   /**
    * Indicate the user corresponding to the subject_token, by providing the userId. The token exchange request will issue tokens for this user.
@@ -493,8 +493,8 @@ interface AuthenticationAPI {
    */
   setUserByConnection(
     connection_name: string,
-    user_attributes: SetUserByConnectionUserAttributes,
-    options: SetUserByConnectionOptions
+    user_attributes: CustomTokenExchangeSetUserByConnectionUserAttributes,
+    options: CustomTokenExchangeSetUserByConnectionOptions
   ): void;
   /**
    * Set the organization for the user associated with the token exchange.

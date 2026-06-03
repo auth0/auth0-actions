@@ -95,6 +95,15 @@ interface CacheAPI {
    */
   set(key: string, value: string, options?: CacheSetOptions): CacheWriteResult;
 }
+/**
+ * Methods and utilities to help change the behavior of sending a phone message.
+ */
+interface SendPhoneMessageAPI {
+  /**
+   * Store and retrieve data that persists across executions.
+   */
+  readonly cache: CacheAPI;
+}
 /** SendPhoneMessageV2Event */
 type SendPhoneMessageV2Event = {
   /** Information about the Client with which this transaction was initiated. */
@@ -233,15 +242,6 @@ type SendPhoneMessageV2Event = {
     [additionalProperties: string]: any;
   };
 };
-/**
- * Methods and utilities to help change the behavior of sending a phone message.
- */
-interface SendPhoneMessageAPI {
-  /**
-   * Store and retrieve data that persists across executions.
-   */
-  readonly cache: CacheAPI;
-}
 interface Configuration {}
 interface Secrets {
   [secretName: string]: string;

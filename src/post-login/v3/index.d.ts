@@ -1017,6 +1017,74 @@ interface AuthenticationAPI {
    */
   setPrimaryUser(primary_user_id: string): void;
 }
+interface GroupsAPI {
+  /**
+   * Get the paginated list of the groups the user belongs to.
+   *
+   * @param params - An object containing pagination options.
+   * @param params.take - The number of groups to retrieve.
+   * @param params.from - The cursor for pagination.
+   */
+  getUserGroups(params?: GetUserGroupsParams): Promise<ListUserGroupsResponse>;
+  /**
+   * Checks if the user is a member of any of the specified groups and provides details
+   * about the matching groups if the user is a member.
+   * @param groups - An array of group identifiers (IDs or names) to check membership against.
+   */
+  hasGroupMembership(groups: string[]): Promise<CheckGroupMembershipResponse>;
+}
+type GetUserGroupsParams = {
+  take?: number;
+  from?: string;
+};
+type ListUserGroupsResponse = {
+  /** The list of user groups. */
+  groups: UserGroupMembership[];
+  /** A cursor for pagination. */
+  next?: string;
+};
+type UserGroupMembership = {
+  /** Unique identifier of the group. */
+  id: string;
+  /** Name of the Group */
+  name: string;
+  /** External identifier of the group, often used for SCIM synchronization. */
+  external_id?: string;
+  /** Identifier of the connection this group belongs to (if a connection group). */
+  connection_id?: string;
+  /** Identifier of the tenant this group belongs to. */
+  tenant_name: string;
+  /** Timestamp of when the group was created. */
+  created_at: string;
+  /** Timestamp of when the group was updated. */
+  updated_at: string;
+  /** Timestamp of when the group membership was added. */
+  membership_created_at: string;
+  /** The method with which the group was assigned to the user. */
+  assignment: string;
+};
+type CheckGroupMembershipResponse = {
+  /** Map of group identifiers (ID or name) to membership details including status and matching groups */
+  memberships: {
+    [key: string]: {
+      /** Whether the user is a member of this group */
+      is_member: boolean;
+      /** Array of matching groups when is_member is true */
+      matches?: {
+        /** Unique identifier of the group. */
+        id: string;
+        /** Name of the Group */
+        name: string;
+        /** Can be `connection`, `organization` or `tenant` */
+        group_type: string;
+      }[];
+    };
+  };
+  /** Map of group identifiers to error codes for groups that couldn't be checked */
+  errors?: {
+    [key: string]: string;
+  };
+};
 interface IdTokenAPI {
   /**
    * Set a custom claim on the ID Token that will be issued upon completion of the login flow.
@@ -1553,6 +1621,10 @@ interface PostLoginAPI {
    * Make changes to the transaction.
    */
   readonly transaction: TransactionAPI;
+  /**
+   * Get information about user groups membership.
+   */
+  readonly groups: GroupsAPI;
 }
 interface PostLoginAction {
   (event: Event, api: PostLoginAPI): Promise<void>;
