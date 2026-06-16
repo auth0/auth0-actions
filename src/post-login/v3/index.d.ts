@@ -200,6 +200,14 @@ type PostLoginV3Event = {
     /** Details about risk assessments obtained during the login or password reset flow. */
     riskAssessment?: {
       assessments: {
+        /** Determines if the user is logging in as a known agent. */
+        AgentDetection?: {
+          code: 'unknown' | 'verified_agent';
+          confidence: 'low' | 'medium' | 'high' | 'neutral';
+          details?: {
+            provider?: string;
+          };
+        };
         /** Determines if the user is logging in from a location signaling impossible travel. */
         ImpossibleTravel?: {
           code:
