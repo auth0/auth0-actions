@@ -1,6 +1,6 @@
 {
   "name": "@auth0/actions",
-  "version": "0.25.0",
+  "version": "0.26.0",
   "description": "Official Auth0 Actions TypeScript definitions, which will help you code and test your project's Actions on external editors and IDEs.",
   "main": "index.js",
   "keywords": [
