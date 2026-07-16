@@ -499,6 +499,13 @@ type PostLoginV3Event = {
   session?: {
     /** The ID of the current session. */
     id: string;
+    /** The actor for sessions established using Session transfer tokens from Custom Token Exchange. Contains a required 'sub' property and up to 5 additional properties set via the Custom Token Exchange action. The actor will be defined for delegated sessions only. */
+    actor?: {
+      /** The subject identifier of the actor. A unique identifier for the entity acting in this role. */
+      sub: string;
+    } & {
+      [additionalProperties: string]: string | number | boolean | null;
+    };
     /** [Enterprise Customers] The date and time when the session was last authenticated. */
     authenticated_at?: string;
     /** [Enterprise Customers] List of client details for the session. */
