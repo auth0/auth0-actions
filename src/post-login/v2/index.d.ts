@@ -38,7 +38,7 @@ interface CacheSetOptions {
   /**
    * The absolute expiry time in milliseconds since the unix epoch.
    * While cached records may be evicted earlier, they will
-   * never remain beyond the the supplied `expires_at`.
+   * never remain beyond the supplied `expires_at`.
    *
    * *Note*: This value should not be supplied if a value was also
    * provided for `ttl`. If both options are supplied, the
@@ -48,7 +48,7 @@ interface CacheSetOptions {
   /**
    * The time-to-live value of this cache entry in milliseconds.
    * While cached values may be evicted earlier, they will
-   * never remain beyond the the supplied `ttl`.
+   * never remain beyond the supplied `ttl`.
    *
    * *Note*: This value should not be supplied if a value was also
    * provided for `expires_at`. If both options are supplied, the

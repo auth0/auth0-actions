@@ -38,7 +38,7 @@ interface CacheSetOptions {
   /**
    * The absolute expiry time in milliseconds since the unix epoch.
    * While cached records may be evicted earlier, they will
-   * never remain beyond the the supplied `expires_at`.
+   * never remain beyond the supplied `expires_at`.
    *
    * *Note*: This value should not be supplied if a value was also
    * provided for `ttl`. If both options are supplied, the
@@ -48,7 +48,7 @@ interface CacheSetOptions {
   /**
    * The time-to-live value of this cache entry in milliseconds.
    * While cached values may be evicted earlier, they will
-   * never remain beyond the the supplied `ttl`.
+   * never remain beyond the supplied `ttl`.
    *
    * *Note*: This value should not be supplied if a value was also
    * provided for `expires_at`. If both options are supplied, the
@@ -95,31 +95,6 @@ interface CacheAPI {
    */
   set(key: string, value: string, options?: CacheSetOptions): CacheWriteResult;
 }
-/** EnrollmentFactorSelector */
-type EnrollmentFactorSelector =
-  | {
-      /** A type of authentication factor such as `push-notification`, `phone`, `otp`, `webauthn-roaming`, `webauthn-platform`, and `recovery-code`. */
-      type:
-        | 'otp'
-        | 'webauthn-platform'
-        | 'webauthn-roaming'
-        | 'push'
-        | 'push-notification'
-        | 'recovery-code';
-      /** Additional options for configuring a factor of a given type. */
-      options?: {
-        [property: string]: any;
-      };
-    }
-  | {
-      /** A type of authentication factor such as `phone`. */
-      type: 'phone';
-      /** Additional options for configuring the phone factor. */
-      options?: {
-        /** The method passed in this filed will be preferred over the others if available. */
-        preferredMethod?: 'sms' | 'voice' | 'both';
-      };
-    };
 /** FactorSelector */
 type FactorSelector =
   | {
@@ -146,6 +121,31 @@ type FactorSelector =
       options?: {
         /** If this is set to false, the OTP fallback method for the push factor will not be available for the user. */
         otpFallback?: boolean;
+      };
+    };
+/** EnrollmentFactorSelector */
+type EnrollmentFactorSelector =
+  | {
+      /** A type of authentication factor such as `push-notification`, `phone`, `otp`, `webauthn-roaming`, `webauthn-platform`, and `recovery-code`. */
+      type:
+        | 'otp'
+        | 'webauthn-platform'
+        | 'webauthn-roaming'
+        | 'push'
+        | 'push-notification'
+        | 'recovery-code';
+      /** Additional options for configuring a factor of a given type. */
+      options?: {
+        [property: string]: any;
+      };
+    }
+  | {
+      /** A type of authentication factor such as `phone`. */
+      type: 'phone';
+      /** Additional options for configuring the phone factor. */
+      options?: {
+        /** The method passed in this filed will be preferred over the others if available. */
+        preferredMethod?: 'sms' | 'voice' | 'both';
       };
     };
 /** RequireMultifactorAuth */
