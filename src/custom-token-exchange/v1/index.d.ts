@@ -299,6 +299,20 @@ type ActorParams = {
   sub: string;
   act?: NestedActor;
 } & Record<string, any>;
+interface Configuration {}
+interface Secrets {
+  [secretName: string]: string;
+}
+interface Event extends CustomTokenExchangeV1Event {
+  /**
+   * @private Configuration values associated with this Action.
+   */
+  configuration: Configuration;
+  /**
+   * Secret values securely associated with this Action.
+   */
+  secrets: Secrets;
+}
 interface AccessAPI {
   /**
    * Mark the current token exchange as denied.
@@ -625,20 +639,6 @@ interface CustomTokenExchangeAPI {
    * Store and retrieve data that persists across executions.
    */
   readonly cache: CacheAPI;
-}
-interface Configuration {}
-interface Secrets {
-  [secretName: string]: string;
-}
-interface Event extends CustomTokenExchangeV1Event {
-  /**
-   * @private Configuration values associated with this Action.
-   */
-  configuration: Configuration;
-  /**
-   * Secret values securely associated with this Action.
-   */
-  secrets: Secrets;
 }
 interface CustomTokenExchangeAction {
   (event: Event, api: CustomTokenExchangeAPI): Promise<void>;
