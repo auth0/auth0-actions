@@ -1285,6 +1285,107 @@ interface RefreshTokenAPI {
    */
   evictMetadata(): void;
 }
+interface RolesAPI {
+  /**
+   * Returns all roles assigned to a user, directly or through group membership,
+   * optionally scoped to an organization, using checkpoint pagination.
+   *
+   * @param params - Checkpoint pagination parameters.
+   * @param params.take - The maximum number of roles to return (up to 100).
+   * @param params.from - Pagination token from the previous response's `next` field.
+   * @returns An object containing up to 100 effective roles and a pagination cursor
+   *
+   * @example
+   * Fetch the first page of roles:
+   * ```js
+   * const result = await api.roles.getUserEffectiveRoles({ take: 50 });
+   * console.log(result.roles);
+   * ```
+   *
+   * @example
+   * Paginate through roles:
+   * ```js
+   * let cursor;
+   * do {
+   *   const result = await api.roles.getUserEffectiveRoles({ take: 100, from: cursor });
+   *   console.log(result.roles);
+   *   cursor = result.next;
+   * } while (cursor);
+   * ```
+   */
+  getUserEffectiveRoles(
+    params?: GetUserEffectiveRolesParams
+  ): Promise<GetUserEffectiveRolesResponse>;
+  /**
+   * Returns roles assigned to a user, directly or through group membership,
+   * optionally scoped to an organization, filtered by role IDs.
+   *
+   * @param ids - Array of role IDs to filter by (up to 100).
+   * @returns An object containing the filtered list of effective roles.
+   *
+   * @example
+   * Filter roles by specific IDs:
+   * ```js
+   * const result = await api.roles.getUserEffectiveRolesByIds([
+   *   'rol_1234567890',
+   *   'rol_0987654321'
+   * ]);
+   * console.log(result.roles);
+   * ```
+   */
+  getUserEffectiveRolesByIds(ids: string[]): Promise<FilteredUserEffectiveRolesResponse>;
+  /**
+   * Returns roles assigned to a user, directly or through group membership,
+   * optionally scoped to an organization, filtered by role names.
+   *
+   * @param names - Array of role names to filter by (up to 50).
+   * @returns An object containing the filtered list of effective roles.
+   *
+   * @example
+   * Filter roles by specific names:
+   * ```js
+   * const result = await api.roles.getUserEffectiveRolesByNames([
+   *   'Admin',
+   *   'Editor'
+   * ]);
+   * console.log(result.roles);
+   * ```
+   */
+  getUserEffectiveRolesByNames(names: string[]): Promise<FilteredUserEffectiveRolesResponse>;
+}
+/**
+ * Parameters for fetching user effective roles with checkpoint pagination.
+ */
+type GetUserEffectiveRolesParams = {
+  /** The maximum number of roles to return (up to 100). */
+  take?: number;
+  /** Pagination token from the previous response's `next` field. Use this to retrieve the next page of results. */
+  from?: string;
+};
+/**
+ * Response type for fetching user effective roles with checkpoint pagination.
+ */
+type GetUserEffectiveRolesResponse = {
+  /** The list of user roles. */
+  roles: Role[];
+  /** A cursor for pagination. */
+  next?: string;
+};
+/**
+ * Response type for fetching user effective roles filtered by IDs or names.
+ */
+type FilteredUserEffectiveRolesResponse = {
+  /** The list of user roles. */
+  roles: Role[];
+};
+type Role = {
+  /** Unique identifier of the role. */
+  id: string;
+  /** Name of the Role. */
+  name: string;
+  /** Type of the Role. */
+  type: string;
+};
 interface SAMLResponseAPI {
   /**
    * Set attributes on the SAML assertion being issued to the authenticated user.
@@ -1640,6 +1741,10 @@ interface PostLoginAPI {
    * Get information about user groups membership.
    */
   readonly groups: GroupsAPI;
+  /**
+   * Get information about user roles assignments.
+   */
+  readonly roles: RolesAPI;
 }
 interface PostLoginAction {
   (event: Event, api: PostLoginAPI): Promise<void>;
