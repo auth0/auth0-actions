@@ -95,79 +95,105 @@ interface CacheAPI {
    */
   set(key: string, value: string, options?: CacheSetOptions): CacheWriteResult;
 }
-/** FactorSelector */
-type FactorSelector =
-  | {
-      /** A type of authentication factor such as `push-notification`, `phone`, `email`, `otp`, `webauthn-roaming`, `webauthn-platform`, and `recovery-code`. */
-      type: 'otp' | 'email' | 'webauthn-platform' | 'webauthn-roaming' | 'recovery-code';
-      /** Additional options for configuring a factor of a given type. */
-      options?: {
-        [property: string]: any;
-      };
-    }
-  | {
-      /** A type of authentication factor such as `phone`. */
-      type: 'phone';
-      /** Additional options for configuring the phone factor. */
-      options?: {
-        /** The method passed in this filed will be preferred over the others if available. */
-        preferredMethod?: 'sms' | 'voice' | 'both';
-      };
-    }
-  | {
-      /** A type of authentication factor such as `push-notification`. */
-      type: 'push' | 'push-notification';
-      /** Additional options for configuring the push factor. */
-      options?: {
-        /** If this is set to false, the OTP fallback method for the push factor will not be available for the user. */
-        otpFallback?: boolean;
-      };
+/** Pagination options for fetching the groups a user belongs to. */
+type GetUserGroupsParams = {
+  take?: number;
+  from?: string;
+};
+type ListUserGroupsResponse = {
+  /** The list of user groups. */
+  groups: UserGroupMembership[];
+  /** A cursor for pagination. */
+  next?: string;
+};
+type UserGroupMembership = {
+  /** Unique identifier of the group. */
+  id: string;
+  /** Name of the Group */
+  name: string;
+  /** External identifier of the group, often used for SCIM synchronization. */
+  external_id?: string;
+  /** Identifier of the connection this group belongs to (if a connection group). */
+  connection_id?: string;
+  /** Identifier of the tenant this group belongs to. */
+  tenant_name: string;
+  /** Timestamp of when the group was created. */
+  created_at: string;
+  /** Timestamp of when the group was updated. */
+  updated_at: string;
+  /** Timestamp of when the group membership was added. */
+  membership_created_at: string;
+  /** The method with which the group was assigned to the user. */
+  assignment: string;
+};
+type CheckGroupMembershipResponse = {
+  /** Map of group identifiers (ID or name) to membership details including status and matching groups */
+  memberships: {
+    [key: string]: {
+      /** Whether the user is a member of this group */
+      is_member: boolean;
+      /** Array of matching groups when is_member is true */
+      matches?: {
+        /** Unique identifier of the group. */
+        id: string;
+        /** Name of the Group */
+        name: string;
+        /** Can be `connection`, `organization` or `tenant` */
+        group_type: string;
+      }[];
     };
-/** EnrollmentFactorSelector */
-type EnrollmentFactorSelector =
-  | {
-      /** A type of authentication factor such as `push-notification`, `phone`, `otp`, `webauthn-roaming`, `webauthn-platform`, and `recovery-code`. */
-      type:
-        | 'otp'
-        | 'webauthn-platform'
-        | 'webauthn-roaming'
-        | 'push'
-        | 'push-notification'
-        | 'recovery-code';
-      /** Additional options for configuring a factor of a given type. */
-      options?: {
-        [property: string]: any;
-      };
-    }
-  | {
-      /** A type of authentication factor such as `phone`. */
-      type: 'phone';
-      /** Additional options for configuring the phone factor. */
-      options?: {
-        /** The method passed in this filed will be preferred over the others if available. */
-        preferredMethod?: 'sms' | 'voice' | 'both';
-      };
-    };
-/** RequireMultifactorAuth */
-type RequireMultifactorAuth =
-  | {
-      type: 'RequireMultifactorAuth';
-      allowRememberBrowser?: boolean;
-      provider: 'duo';
-      providerOptions?: {
-        host: string;
-        ikey: string;
-        skey: string;
-        username?: string;
-      };
-    }
-  | {
-      type: 'RequireMultifactorAuth';
-      allowRememberBrowser?: boolean;
-      provider: 'none' | 'guardian' | 'google-authenticator' | 'any';
-    };
+  };
+  /** Map of group identifiers to error codes for groups that couldn't be checked */
+  errors?: {
+    [key: string]: string;
+  };
+};
+/**
+ * Parameters for fetching user effective roles with checkpoint pagination.
+ */
+type GetUserEffectiveRolesParams = {
+  /** The maximum number of roles to return (up to 100). */
+  take?: number;
+  /** Pagination token from the previous response's `next` field. Use this to retrieve the next page of results. */
+  from?: string;
+};
+/**
+ * Response type for fetching user effective roles with checkpoint pagination.
+ */
+type GetUserEffectiveRolesResponse = {
+  /** The list of user roles. */
+  roles: Role[];
+  /** A cursor for pagination. */
+  next?: string;
+};
+/**
+ * Response type for fetching user effective roles filtered by IDs or names.
+ */
+type FilteredUserEffectiveRolesResponse = {
+  /** The list of user roles. */
+  roles: Role[];
+};
+type Role = {
+  /** Unique identifier of the role. */
+  id: string;
+  /** Name of the Role. */
+  name: string;
+  /** Type of the Role. */
+  type: string;
+};
 /** PostLoginV3Event */
 type PostLoginV3Event = {
+  /** [Early Access] Information about the agent acting in this flow. Set when the authenticating client is linked to an agent and the tenant has agents as principals enabled; `undefined` otherwise. */
+  agent?: {
+    /** [Early Access] The stable identifier for the agent, prefixed with `agt_` (for example, `agt_2hVk6JxPxbRgNZDKfJQqmn`). */
+    agent_id: string;
+    /** [Early Access] Free-form key-value metadata associated with the agent. Always defined when `agent` is present; an empty object when the agent has no metadata. */
+    agent_metadata: {
+      [additionalProperties: string]: any;
+    };
+    /** [Early Access] The human-readable name of the agent. */
+    name: string;
+  };
   /** Details about authentication signals obtained during the login flow. */
   authentication?: {
     /** Contains the authentication methods a user has completed during their session. */
@@ -787,11 +813,94 @@ type PromptOptions = {
     [patternProperties: string]: any;
   };
 };
-type SAMLAttributeValue = string | number | boolean | null | (string | number | boolean)[];
-type SetSAMLAttributeValue = SAMLAttributeValue;
 type RenderPromptId = PromptId;
 type RenderPromptOptions = PromptOptions;
 type TxMetadataValue = string | boolean | number;
+/**
+ * Describes the type of authentication factor (and its options) that can be used to
+ * challenge a user.
+ */
+type FactorSelector =
+  | {
+      /** A type of authentication factor such as `push-notification`, `phone`, `email`, `otp`, `webauthn-roaming`, `webauthn-platform`, and `recovery-code`. */
+      type: 'otp' | 'email' | 'webauthn-platform' | 'webauthn-roaming' | 'recovery-code';
+      /** Additional options for configuring a factor of a given type. */
+      options?: {
+        [key: string]: unknown;
+      };
+    }
+  | {
+      /** A type of authentication factor such as `phone`. */
+      type: 'phone';
+      /** Additional options for configuring the phone factor. */
+      options?: {
+        /** The method passed in this field will be preferred over the others if available. */
+        preferredMethod?: 'sms' | 'voice' | 'both';
+      };
+    }
+  | {
+      /** A type of authentication factor such as `push-notification`. */
+      type: 'push' | 'push-notification';
+      /** Additional options for configuring the push factor. */
+      options?: {
+        /** If this is set to false, the OTP fallback method for the push factor will not be available for the user. */
+        otpFallback?: boolean;
+      };
+    };
+/**
+ * Describes the type of authentication factor (and its options) that can be used to
+ * enroll a user.
+ */
+type EnrollmentFactorSelector =
+  | {
+      /** A type of authentication factor such as `push-notification`, `phone`, `otp`, `webauthn-roaming`, `webauthn-platform`, and `recovery-code`. */
+      type:
+        | 'otp'
+        | 'webauthn-platform'
+        | 'webauthn-roaming'
+        | 'push'
+        | 'push-notification'
+        | 'recovery-code';
+      /** Additional options for configuring a factor of a given type. */
+      options?: {
+        [key: string]: unknown;
+      };
+    }
+  | {
+      /** A type of authentication factor such as `phone`. */
+      type: 'phone';
+      /** Additional options for configuring the phone factor. */
+      options?: {
+        /** The method passed in this field will be preferred over the others if available. */
+        preferredMethod?: 'sms' | 'voice' | 'both';
+      };
+    };
+type MultifactorProvider = 'none' | 'guardian' | 'google-authenticator' | 'duo' | 'any';
+interface DuoMultifactorProviderOptions {
+  /** This is the API hostname value from your Duo account. */
+  host: string;
+  /** This is the Client ID (previously Integration key) value from your Duo account. */
+  ikey: string;
+  /** This is the Client secret (previously Secret key) value from your Duo account. */
+  skey: string;
+  /** Use some attribute of the profile as the username in DuoSecurity. This is also useful if you already have your users enrolled in Duo. */
+  username?: string;
+}
+interface RequireMultifactorAuthOptions {
+  allowRememberBrowser?: boolean;
+  providerOptions?: DuoMultifactorProviderOptions;
+}
+interface ChallengeWithOptions {
+  additionalFactors?: FactorSelector[];
+}
+interface EnrollWithOptions {
+  additionalFactors?: EnrollmentFactorSelector[];
+}
+interface SessionRevocationOptions {
+  /** Default to false. If true, the system ends the session and keeps the refresh tokens. The application may continue to get access tokens for the duration of the refresh token lifetime. */
+  preserveRefreshTokens?: boolean;
+}
+type SAMLAttributeValue = string | number | boolean | Array<string | number | boolean> | null;
 interface ValidationAPI {
   /**
    * Throw an error when there is a validation error.
@@ -801,14 +910,6 @@ interface ValidationAPI {
    * @param errorMessage A customer defined message for the validation error.
    */
   error(errorCode: string, errorMessage: string): PostLoginAPI;
-}
-interface RulesAPI {
-  /**
-   * Check whether a Rule with a specific ID has been executed in the current transaction.
-   *
-   * @param ruleId The Rule ID.
-   */
-  wasExecuted(ruleId: string): boolean;
 }
 interface Secrets {
   [secretName: string]: string;
@@ -858,12 +959,6 @@ interface AccessTokenAPI {
    * @throws will throw an error if scope is invalid
    */
   removeScope(scope: string): void;
-}
-interface ChallengeWithOptions {
-  additionalFactors?: FactorSelector[];
-}
-interface EnrollWithOptions {
-  additionalFactors?: EnrollmentFactorSelector[];
 }
 interface AuthenticationAPI {
   /**
@@ -1048,58 +1143,6 @@ interface GroupsAPI {
    */
   hasGroupMembership(groups: string[]): Promise<CheckGroupMembershipResponse>;
 }
-type GetUserGroupsParams = {
-  take?: number;
-  from?: string;
-};
-type ListUserGroupsResponse = {
-  /** The list of user groups. */
-  groups: UserGroupMembership[];
-  /** A cursor for pagination. */
-  next?: string;
-};
-type UserGroupMembership = {
-  /** Unique identifier of the group. */
-  id: string;
-  /** Name of the Group */
-  name: string;
-  /** External identifier of the group, often used for SCIM synchronization. */
-  external_id?: string;
-  /** Identifier of the connection this group belongs to (if a connection group). */
-  connection_id?: string;
-  /** Identifier of the tenant this group belongs to. */
-  tenant_name: string;
-  /** Timestamp of when the group was created. */
-  created_at: string;
-  /** Timestamp of when the group was updated. */
-  updated_at: string;
-  /** Timestamp of when the group membership was added. */
-  membership_created_at: string;
-  /** The method with which the group was assigned to the user. */
-  assignment: string;
-};
-type CheckGroupMembershipResponse = {
-  /** Map of group identifiers (ID or name) to membership details including status and matching groups */
-  memberships: {
-    [key: string]: {
-      /** Whether the user is a member of this group */
-      is_member: boolean;
-      /** Array of matching groups when is_member is true */
-      matches?: {
-        /** Unique identifier of the group. */
-        id: string;
-        /** Name of the Group */
-        name: string;
-        /** Can be `connection`, `organization` or `tenant` */
-        group_type: string;
-      }[];
-    };
-  };
-  /** Map of group identifiers to error codes for groups that couldn't be checked */
-  errors?: {
-    [key: string]: string;
-  };
-};
 interface IdTokenAPI {
   /**
    * Set a custom claim on the ID Token that will be issued upon completion of the login flow.
@@ -1109,9 +1152,6 @@ interface IdTokenAPI {
    */
   setCustomClaim(key: string, value: unknown): PostLoginAPI;
 }
-type DuoMultifactor = {
-  provider: 'duo';
-} & RequireMultifactorAuth;
 interface EnableMultifactorOptions<T> {
   /**
    * When provider is set to `google-authenticator` or `duo`, the user is prompted for MFA once
@@ -1123,7 +1163,7 @@ interface EnableMultifactorOptions<T> {
   /**
    * Additional options to configure the challenge, only available for the `duo` provider.
    */
-  providerOptions?: T extends 'duo' ? DuoMultifactor['providerOptions'] : never;
+  providerOptions?: T extends 'duo' ? RequireMultifactorAuthOptions['providerOptions'] : never;
 }
 interface MultifactorAPI {
   /**
@@ -1135,7 +1175,7 @@ interface MultifactorAPI {
    * of the configured providers.
    * @param options Additional options for enabling multifactor challenges.
    */
-  enable<T extends RequireMultifactorAuth['provider']>(
+  enable<T extends MultifactorProvider>(
     provider: T,
     options?: EnableMultifactorOptions<T>
   ): PostLoginAPI;
@@ -1353,39 +1393,14 @@ interface RolesAPI {
    */
   getUserEffectiveRolesByNames(names: string[]): Promise<FilteredUserEffectiveRolesResponse>;
 }
-/**
- * Parameters for fetching user effective roles with checkpoint pagination.
- */
-type GetUserEffectiveRolesParams = {
-  /** The maximum number of roles to return (up to 100). */
-  take?: number;
-  /** Pagination token from the previous response's `next` field. Use this to retrieve the next page of results. */
-  from?: string;
-};
-/**
- * Response type for fetching user effective roles with checkpoint pagination.
- */
-type GetUserEffectiveRolesResponse = {
-  /** The list of user roles. */
-  roles: Role[];
-  /** A cursor for pagination. */
-  next?: string;
-};
-/**
- * Response type for fetching user effective roles filtered by IDs or names.
- */
-type FilteredUserEffectiveRolesResponse = {
-  /** The list of user roles. */
-  roles: Role[];
-};
-type Role = {
-  /** Unique identifier of the role. */
-  id: string;
-  /** Name of the Role. */
-  name: string;
-  /** Type of the Role. */
-  type: string;
-};
+interface RulesAPI {
+  /**
+   * Check whether a Rule with a specific ID has been executed in the current transaction.
+   *
+   * @param ruleId The Rule ID.
+   */
+  wasExecuted(ruleId: string): boolean;
+}
 interface SAMLResponseAPI {
   /**
    * Set attributes on the SAML assertion being issued to the authenticated user.
@@ -1394,7 +1409,7 @@ interface SAMLResponseAPI {
    * @param value The value of the SAML claim. Setting this value to `null` or
    * `undefined` will remove the claim from the assertion.
    */
-  setAttribute(attribute: string, value: SetSAMLAttributeValue): void;
+  setAttribute(attribute: string, value: SAMLAttributeValue): void;
   /**
    * Audience of the SAML assertion.
    * Default is issuer on SAMLRequest.
@@ -1559,10 +1574,6 @@ interface SAMLResponseAPI {
    * ```
    */
   setEncryptionAlgorithm(encryptionAlgorithm: 'aes256-cbc'): void;
-}
-interface SessionRevocationOptions {
-  /** Default to false. If true, the system ends the session and keeps the refresh tokens. The application may continue to get access tokens for the duration of the refresh token lifetime. */
-  preserveRefreshTokens?: boolean;
 }
 interface SessionAPI {
   /**

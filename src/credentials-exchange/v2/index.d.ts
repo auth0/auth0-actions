@@ -104,6 +104,17 @@ type CredentialsExchangeV2Event = {
     };
     scope: string[];
   };
+  /** [Early Access] Information about the agent acting in this flow. Set when the client requesting the token is linked to an agent and the tenant has agents as principals enabled; `undefined` otherwise. */
+  agent?: {
+    /** [Early Access] The stable identifier for the agent, prefixed with `agt_` (for example, `agt_2hVk6JxPxbRgNZDKfJQqmn`). */
+    agent_id: string;
+    /** [Early Access] Free-form key-value metadata associated with the agent. Always defined when `agent` is present; an empty object when the agent has no metadata. */
+    agent_metadata: {
+      [additionalProperties: string]: any;
+    };
+    /** [Early Access] The human-readable name of the agent. */
+    name: string;
+  };
   /** Information about the Client used during this token exchange. */
   client: {
     /** The client id of the application the user is logging in to. */
