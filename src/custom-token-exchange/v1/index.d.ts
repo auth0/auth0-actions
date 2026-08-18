@@ -541,7 +541,7 @@ interface AuthenticationAPI {
   setOrganization(organization_id_or_name: string): void;
   /**
    * Set the actor for the token exchange to represent the entity acting on behalf of the subject.
-   * Must be used alongside the setUserById or SetUserByConnection commands. Calling setActor is optional.
+   * Must be used alongside the setUserById or setUserByConnection commands. Calling setActor is optional.
    * Receiving an actor_token in the request does not automatically produce an act claim; the Action must explicitly call this method.
    * Refresh tokens are not issued when an actor is set for the transaction.
    *
