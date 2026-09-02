@@ -122,6 +122,16 @@ type EventStreamV1Event = {
     specversion: string;
     /** Timestamp of when the occurrence happened. Must adhere to RFC 3339. */
     time?: string | null;
+    /** The Auth0 tenant identifier to which the event is associated. */
+    a0tenant: string;
+    /**
+     * The Auth0 event stream ID of the stream the event was delivered on.
+     * Present when the event is delivered via an event stream; omitted when
+     * events are retrieved via the Events API (GET /api/v2/events).
+     */
+    a0stream?: string;
+    /** The purpose of this event. Set only in special cases such as a test event; omitted for normal events. */
+    a0purpose?: 'test' & string;
   };
 };
 interface Configuration {}
