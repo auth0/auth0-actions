@@ -1,100 +1,8 @@
-type CacheWriteErrorCode =
-  | 'MaxSideEffectsExceeded'
-  | 'CacheKeySizeExceeded'
-  | 'CacheValueSizeExceeded'
-  | 'CacheSizeExceeded'
-  | 'ItemAlreadyExpired'
-  | 'InvalidExpiry'
-  | 'FailedToSetCacheRecord'
-  | 'FailedToDeleteCacheRecord'
-  | 'CacheKeyDoesNotExist';
-/**
- * Details about a cached value.
- */
-interface CacheRecord {
-  /**
-   * The cached value itself.
-   */
-  value: string;
-  /**
-   * Expiry time in milliseconds since the unix epoch.
-   */
-  expires_at: number;
-}
-interface CacheWriteSuccess {
-  type: 'success';
-  record: CacheRecord;
-}
-interface CacheWriteError {
-  type: 'error';
-  code: CacheWriteErrorCode;
-}
-type CacheWriteResult = CacheWriteSuccess | CacheWriteError;
-interface CacheDeleteSuccess {
-  type: 'success';
-}
-type CacheDeleteResult = CacheDeleteSuccess | CacheWriteError;
-interface CacheSetOptions {
-  /**
-   * The absolute expiry time in milliseconds since the unix epoch.
-   * While cached records may be evicted earlier, they will
-   * never remain beyond the supplied `expires_at`.
-   *
-   * *Note*: This value should not be supplied if a value was also
-   * provided for `ttl`. If both options are supplied, the
-   * earlier expiry of the two will be used.
-   */
-  expires_at?: number;
-  /**
-   * The time-to-live value of this cache entry in milliseconds.
-   * While cached values may be evicted earlier, they will
-   * never remain beyond the supplied `ttl`.
-   *
-   * *Note*: This value should not be supplied if a value was also
-   * provided for `expires_at`. If both options are supplied, the
-   * earlier expiry of the two will be used.
-   */
-  ttl?: number;
-}
-/**
- * Methods and utilities to manage the Actions cache.
- */
-interface CacheAPI {
-  /**
-   * Delete a record describing a cached value at the supplied
-   * key if it exists.
-   *
-   * @param key The key of the cache record to delete.
-   */
-  delete(key: string): CacheDeleteResult;
-  /**
-   * Retrieve a record describing a cached value at the supplied key,
-   * if it exists. If a record is found, the cached value can be found
-   * at the `value` property of the returned object.
-   *
-   * @param key The key of the record stored in the cache.
-   */
-  get(key: string): CacheRecord | undefined;
-  /**
-   * Store or update a string value in the cache at the specified key.
-   *
-   * Values stored in this cache are scoped to the Trigger in which they
-   * are set. They are subject to the {@link https://auth0.com/docs/customize/actions/limitations Actions Cache Limits}.
-   *
-   * Values stored in this way will have lifetimes of _up to_ the specified
-   * `ttl` or `expires_at` values. If no lifetime is specified, a default of
-   * lifetime of 15 minutes will be used. Lifetimes may not exceed the maximum
-   * duration listed at {@link https://auth0.com/docs/customize/actions/limitations Actions Cache Limits}.
-   *
-   * **Important**: This cache is designed for short-lived, ephemeral data. Items may not be
-   * available in later transactions even if they are within their supplied their lifetime.
-   *
-   * @param key The key of the record to be stored.
-   * @param value The value of the record to be stored.
-   * @param options Options for adjusting cache behavior.
-   */
-  set(key: string, value: string, options?: CacheSetOptions): CacheWriteResult;
-}
+import {
+  C as CacheAPI,
+  M as ModuleRegistration,
+  L as LoadedAction,
+} from '../../../_shared/BquXyhu2.js';
 interface NotificationsAPI {
   /**
    * When called, the notification event is considered failed without recovery:
@@ -114,7 +22,7 @@ interface NotificationsAPI {
 /**
  * Methods and utilities to inform whether or not the event message should be treated as an error or not.
  */
-interface CustomEmailProviderAPI {
+interface CustomPhoneProviderAPI {
   /**
    * Make changes to the cache.
    */
@@ -165,32 +73,27 @@ interface Event {
     };
   };
   notification: {
-    /** Email address of the sender for the email. */
-    from: string;
-    /** Rendered HTML template. */
-    html: string;
+    /** The text, as we rendered it, ready to be delivered as a text message. */
+    as_text: string;
+    /** The text, as we rendered it, ready to be delivered as a voicetext message. */
+    as_voice: string;
+    /** The One Time Password that we drawn for this message for some types (e.g. `otp_verify`, `otp_enroll`). If provided, it is important to have it conveyed to the end-user. */
+    code?: string;
+    /** The way the message should be delivered. Could be `text` or `voice`. */
+    delivery_method: 'text' | 'voice';
+    /** The E.164 compliant phone number for the sender. */
+    from?: string;
     /** The locale we rendered the message in, example `en_US`, as defined in the BCP-47 specification. */
-    locale: string;
-    /** The type of message that is being send, like `verify_email` or `welcome_email`. */
+    locale?: string;
+    /** The type of message that is being send, like `otp_verify` or `blocked_account`. */
     message_type:
-      | 'verify_email'
-      | 'verify_email_by_code'
-      | 'reset_email'
-      | 'reset_email_by_code'
-      | 'welcome_email'
-      | 'verification_code'
-      | 'mfa_oob_code'
-      | 'enrollment_email'
+      | 'otp_verify'
+      | 'otp_enroll'
       | 'blocked_account'
-      | 'stolen_credentials'
-      | 'try_provider_configuration_email'
-      | 'organization_invitation';
-    /** Subject to be attached to the email. */
-    subject: string;
-    /** Rendered text template. */
-    text: string;
-    /** Email address of the recipient. */
-    to: string;
+      | 'change_password'
+      | 'password_breach';
+    /** The E.164 compliant phone number for the recipient. */
+    recipient: string;
   };
   /** Details about the Organization associated with the current transaction. */
   organization?: {
@@ -207,8 +110,9 @@ interface Event {
   } & {
     [key: string]: any;
   };
+  /** Details about the request that initiated the transaction. */
   request: {
-    geoip?: {
+    geoip: {
       cityName?: string;
       continentCode?: string;
       countryCode?: string;
@@ -225,11 +129,11 @@ interface Event {
     /** The hostname that is being used for the authentication flow. */
     hostname?: string;
     /** The originating IP address of the request. */
-    ip?: string;
-    /** The query string parameters sent to the authorization request. */
-    query?: {
-      [key: string]: string;
-    };
+    ip: string;
+    /** The language requested by the browser. */
+    language?: string;
+    /** The HTTP method used for the request */
+    method: string;
     /** The value of the `User-Agent` header received when initiating the transaction. */
     user_agent?: string;
   };
@@ -258,6 +162,8 @@ interface Event {
     app_metadata: {
       [key: string]: any;
     };
+    /** Timestamp indicating when the user profile was first created. */
+    created_at: string;
     /** (unique) User's email address. */
     email?: string;
     /** Indicates whether the user has verified their email address. */
@@ -266,12 +172,37 @@ interface Event {
     family_name?: string;
     /** User's given name. */
     given_name?: string;
+    /** Contains info retrieved from the identity provider with which the user originally authenticates. Users may also link their profile to multiple identity providers; those identities will then also appear in this array. The contents of an individual identity provider object varies by provider. */
+    identities?: ({
+      /** Name of the Auth0 connection used to authenticate the user. */
+      connection?: string;
+      /** Indicates whether the connection is a social one. */
+      isSocial?: boolean;
+      /** User information associated with the connection. When profiles are linked, it is populated with the associated user info for secondary accounts. */
+      profileData?: {
+        [key: string]: string;
+      };
+      /** Name of the entity that is authenticating the user, such as Facebook, Google, SAML, or your own provider. */
+      provider?: string;
+      /** User's unique identifier for this connection/provider. */
+      user_id?: string;
+    } & {
+      [key: string]: any;
+    })[];
+    /** Timestamp indicating the last time the user's password was reset/changed. At user creation, this field does not exist. This property is only available for Database connections. */
+    last_password_reset?: string;
     /** User's full name. */
     name?: string;
     /** User's nickname. */
     nickname?: string;
+    /** User's phone number. */
+    phone_number?: string;
+    /** Indicates whether the user has verified their phone number. */
+    phone_verified?: boolean;
     /** URL pointing to the [user's profile picture](https://auth0.com/docs/users/change-user-picture). */
     picture?: string;
+    /** Timestamp indicating when the user's profile was last updated/modified. */
+    updated_at: string;
     /** (unique) User's unique identifier. */
     user_id: string;
     /** Custom fields that store info about a user that does not impact what they can or cannot access, such as work address, home address, or user preferences. */
@@ -292,7 +223,22 @@ interface Event {
    */
   secrets: Secrets;
 }
-interface CustomEmailProviderAction {
-  (event: Event, api: CustomEmailProviderAPI): Promise<void>;
+interface CustomPhoneProviderAction {
+  (event: Event, api: CustomPhoneProviderAPI): Promise<void>;
 }
-export type { Configuration, CustomEmailProviderAPI, CustomEmailProviderAction, Event, Secrets };
+type CustomPhoneProviderModule = {
+  onExecuteCustomPhoneProvider: CustomPhoneProviderAction;
+};
+/**
+ * Builds `contextToArguments` input for tests: a fresh clone of the example event paired with a stubbed
+ * {@link CustomPhoneProviderTriggerAPI}. The event is cloned per call so mutations in one execution don't leak into the next.
+ */
+declare function getDefaultArguments(): Parameters<
+  CustomPhoneProviderModule[keyof CustomPhoneProviderModule]
+>;
+/** Loads a CustomPhoneProvider v1 action file for use in tests, e.g. `action.execute('onExecuteCustomPhoneProvider', event, api)`. */
+declare const loadAction: (
+  filename: string,
+  modules?: readonly ModuleRegistration[]
+) => Promise<LoadedAction<CustomPhoneProviderModule>>;
+export { getDefaultArguments, loadAction };
