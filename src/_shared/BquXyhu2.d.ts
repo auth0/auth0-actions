@@ -1,3 +1,23 @@
+interface Handler {
+  (...args: any[]): Promise<void>;
+}
+interface Execution {
+  /** Returns all stdout/stderr output written by the action via console. */
+  getLogs(): string;
+}
+/** An actions: module to register up front, so the action can require('actions:<name>'). */
+interface ModuleRegistration {
+  name: string;
+  filename: string;
+  secrets?: Record<string, string>;
+}
+interface LoadedAction<TModule extends Record<string, Handler>> {
+  /** Invokes the loaded action's export named `entrypoint`, e.g. `action.execute('onExecutePostLogin', event, api)`. */
+  execute<K extends keyof TModule & string>(
+    entrypoint: K,
+    ...args: Parameters<TModule[K]>
+  ): Promise<Execution>;
+}
 type CacheWriteErrorCode =
   | 'MaxSideEffectsExceeded'
   | 'CacheKeySizeExceeded'
@@ -95,60 +115,4 @@ interface CacheAPI {
    */
   set(key: string, value: string, options?: CacheSetOptions): CacheWriteResult;
 }
-/**
- * Methods and utilities to help change the behaviour of the event stream flow.
- */
-interface EventStreamAPI {
-  /**
-   * Store and retrieve data that persists across executions.
-   */
-  readonly cache: CacheAPI;
-}
-/** EventStreamV1Event */
-type EventStreamV1Event = {
-  /** The CloudEvent message containing all event properties. */
-  message: {
-    /** Identifies the event. */
-    id: string;
-    /** Describes the type of event related to the originating occurrence. */
-    type: string;
-    /** The event payload. */
-    data?: {
-      [additionalProperties: string]: any;
-    } | null;
-    /** Identifies the context in which an event happened. */
-    source: string;
-    /** The version of the CloudEvents specification which the event uses. */
-    specversion: string;
-    /** Timestamp of when the occurrence happened. Must adhere to RFC 3339. */
-    time?: string | null;
-    /** The Auth0 tenant identifier to which the event is associated. */
-    a0tenant: string;
-    /**
-     * The Auth0 event stream ID of the stream the event was delivered on.
-     * Present when the event is delivered via an event stream; omitted when
-     * events are retrieved via the Events API (GET /api/v2/events).
-     */
-    a0stream?: string;
-    /** The purpose of this event. Set only in special cases such as a test event; omitted for normal events. */
-    a0purpose?: 'test' & string;
-  };
-};
-interface Configuration {}
-interface Secrets {
-  [secretName: string]: string;
-}
-interface Event extends EventStreamV1Event {
-  /**
-   * @private Configuration values associated with this Action.
-   */
-  configuration: Configuration;
-  /**
-   * Secret values securely associated with this Action.
-   */
-  secrets: Secrets;
-}
-interface EventStreamAction {
-  (event: Event, api: EventStreamAPI): Promise<void>;
-}
-export type { Configuration, Event, EventStreamAPI, EventStreamAction, Secrets };
+export type { CacheAPI as C, LoadedAction as L, ModuleRegistration as M };

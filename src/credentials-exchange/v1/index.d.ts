@@ -1,9 +1,8 @@
-/** CredentialsExchangeV1Event */
-type CredentialsExchangeV1Event = {
+interface Event {
   actor: {
     /** The body of the POST request. */
     body?: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     geoIp?: {
       city_name?: string;
@@ -16,8 +15,7 @@ type CredentialsExchangeV1Event = {
       subdivision_code?: string;
       subdivision_name?: string;
       time_zone?: string;
-    } & {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** The hostname that is being used for the authentication flow. */
     hostname?: string;
@@ -35,7 +33,7 @@ type CredentialsExchangeV1Event = {
     id: string;
     /** An object for holding other application properties. */
     metadata: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
     /** The name of the application (as defined in the Dashboard). */
     name: string;
@@ -46,30 +44,26 @@ type CredentialsExchangeV1Event = {
     reason: 'invalid_scope' | 'invalid_request' | 'server_error';
   };
   customClaims: {
-    [additionalProperties: string]: any;
+    [key: string]: any;
   };
   scope: string[];
   tenant: {
     /** The name of the tenant. */
     id: string;
   };
-} & {
-  [additionalProperties: string]: any;
-};
-/** CredentialsExchangeV1Result */
-type CredentialsExchangeV1Result = {
+  [key: string]: any;
+}
+interface Result {
   command?: {
     type: 'deny';
     message: string;
     reason: 'invalid_scope' | 'invalid_request' | 'server_error';
   };
   customClaims?: {
-    [additionalProperties: string]: any;
+    [key: string]: any;
   };
   scope?: string[];
-};
-interface Event extends CredentialsExchangeV1Event {}
-interface Result extends CredentialsExchangeV1Result {}
+}
 interface Secrets {
   [secretName: string]: string;
 }
