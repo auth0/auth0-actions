@@ -312,4 +312,14 @@ interface CredentialsExchangeAPI {
 interface CredentialsExchangeAction {
   (event: Event, api: CredentialsExchangeAPI): Promise<void>;
 }
-export type { Configuration, CredentialsExchangeAPI, CredentialsExchangeAction, Event, Secrets };
+type CredentialsExchangeModule = {
+  onExecuteCredentialsExchange: CredentialsExchangeAction;
+};
+export type {
+  Configuration,
+  CredentialsExchangeAPI,
+  CredentialsExchangeAction,
+  CredentialsExchangeModule,
+  Event,
+  Secrets,
+};

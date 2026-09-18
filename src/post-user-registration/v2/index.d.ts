@@ -332,4 +332,14 @@ interface Event extends PostUserRegistrationV2Event {
 interface PostUserRegistrationAction {
   (event: Event, api: PostUserRegistrationAPI): Promise<void>;
 }
-export type { Configuration, Event, PostUserRegistrationAPI, PostUserRegistrationAction, Secrets };
+type PostUserRegistrationModule = {
+  onExecutePostUserRegistration: PostUserRegistrationAction;
+};
+export type {
+  Configuration,
+  Event,
+  PostUserRegistrationAPI,
+  PostUserRegistrationAction,
+  PostUserRegistrationModule,
+  Secrets,
+};

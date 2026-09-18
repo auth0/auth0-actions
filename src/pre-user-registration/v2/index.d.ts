@@ -399,4 +399,15 @@ interface Event extends PreUserRegistrationV2Event {
 interface PreUserRegistrationAction {
   (event: Event, api: PreUserRegistrationAPI): Promise<void>;
 }
-export type { Configuration, Event, PreUserRegistrationAPI, PreUserRegistrationAction, Secrets };
+type PreUserRegistrationModule = {
+  onExecutePreUserRegistration: PreUserRegistrationAction;
+  onContinuePreUserRegistration: PreUserRegistrationAction;
+};
+export type {
+  Configuration,
+  Event,
+  PreUserRegistrationAPI,
+  PreUserRegistrationAction,
+  PreUserRegistrationModule,
+  Secrets,
+};

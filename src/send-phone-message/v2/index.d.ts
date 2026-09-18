@@ -259,4 +259,14 @@ interface Event extends SendPhoneMessageV2Event {
 interface SendPhoneMessageAction {
   (event: Event, api: SendPhoneMessageAPI): Promise<void>;
 }
-export type { Configuration, Event, Secrets, SendPhoneMessageAPI, SendPhoneMessageAction };
+type SendPhoneMessageModule = {
+  onExecuteSendPhoneMessage: SendPhoneMessageAction;
+};
+export type {
+  Configuration,
+  Event,
+  Secrets,
+  SendPhoneMessageAPI,
+  SendPhoneMessageAction,
+  SendPhoneMessageModule,
+};

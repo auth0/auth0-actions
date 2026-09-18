@@ -295,4 +295,14 @@ interface Event {
 interface CustomEmailProviderAction {
   (event: Event, api: CustomEmailProviderAPI): Promise<void>;
 }
-export type { Configuration, CustomEmailProviderAPI, CustomEmailProviderAction, Event, Secrets };
+type CustomEmailProviderModule = {
+  onExecuteCustomEmailProvider: CustomEmailProviderAction;
+};
+export type {
+  Configuration,
+  CustomEmailProviderAPI,
+  CustomEmailProviderAction,
+  CustomEmailProviderModule,
+  Event,
+  Secrets,
+};

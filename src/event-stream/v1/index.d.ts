@@ -151,4 +151,7 @@ interface Event extends EventStreamV1Event {
 interface EventStreamAction {
   (event: Event, api: EventStreamAPI): Promise<void>;
 }
-export type { Configuration, Event, EventStreamAPI, EventStreamAction, Secrets };
+type EventStreamModule = {
+  onExecuteEventStream: EventStreamAction;
+};
+export type { Configuration, Event, EventStreamAPI, EventStreamAction, EventStreamModule, Secrets };
