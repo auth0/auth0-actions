@@ -680,4 +680,14 @@ interface CustomTokenExchangeAPI {
 interface CustomTokenExchangeAction {
   (event: Event, api: CustomTokenExchangeAPI): Promise<void>;
 }
-export type { Configuration, CustomTokenExchangeAPI, CustomTokenExchangeAction, Event, Secrets };
+type CustomTokenExchangeModule = {
+  onExecuteCustomTokenExchange: CustomTokenExchangeAction;
+};
+export type {
+  Configuration,
+  CustomTokenExchangeAPI,
+  CustomTokenExchangeAction,
+  CustomTokenExchangeModule,
+  Event,
+  Secrets,
+};

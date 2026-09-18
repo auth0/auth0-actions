@@ -627,10 +627,15 @@ interface Event extends PasswordResetPostChallengeV1Event {
 interface PasswordResetPostChallengeAction {
   (event: Event, api: PasswordResetPostChallengeAPI): Promise<void>;
 }
+type PasswordResetPostChallengeModule = {
+  onExecutePostChallenge: PasswordResetPostChallengeAction;
+  onContinuePostChallenge: PasswordResetPostChallengeAction;
+};
 export type {
   Configuration,
   Event,
   PasswordResetPostChallengeAPI,
   PasswordResetPostChallengeAction,
+  PasswordResetPostChallengeModule,
   Secrets,
 };

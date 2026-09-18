@@ -1760,11 +1760,16 @@ interface PostLoginAPI {
 interface PostLoginAction {
   (event: Event, api: PostLoginAPI): Promise<void>;
 }
+type PostLoginModule = {
+  onExecutePostLogin: PostLoginAction;
+  onContinuePostLogin: PostLoginAction;
+};
 export type {
   Configuration,
   Event,
   PostLoginAPI,
   PostLoginAction,
+  PostLoginModule,
   PromptAPI,
   RefreshTokenAPI,
   Secrets,

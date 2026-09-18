@@ -318,4 +318,14 @@ interface Event {
 interface CustomPhoneProviderAction {
   (event: Event, api: CustomPhoneProviderAPI): Promise<void>;
 }
-export type { Configuration, CustomPhoneProviderAPI, CustomPhoneProviderAction, Event, Secrets };
+type CustomPhoneProviderModule = {
+  onExecuteCustomPhoneProvider: CustomPhoneProviderAction;
+};
+export type {
+  Configuration,
+  CustomPhoneProviderAPI,
+  CustomPhoneProviderAction,
+  CustomPhoneProviderModule,
+  Event,
+  Secrets,
+};

@@ -262,4 +262,14 @@ interface Event extends PostChangePasswordV2Event {
 interface PostChangePasswordAction {
   (event: Event, api: PostChangePasswordAPI): Promise<void>;
 }
-export type { Configuration, Event, PostChangePasswordAPI, PostChangePasswordAction, Secrets };
+type PostChangePasswordModule = {
+  onExecutePostChangePassword: PostChangePasswordAction;
+};
+export type {
+  Configuration,
+  Event,
+  PostChangePasswordAPI,
+  PostChangePasswordAction,
+  PostChangePasswordModule,
+  Secrets,
+};
