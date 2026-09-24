@@ -1,6 +1,6 @@
 'use strict';
 
-var index = require('./Db5gBOLD.js');
+var index = require('./BBcRtdsL.js');
 
 const { assertValidScope, MAX_SCOPE_COUNT_LIMIT } = index.helpers.accessToken;
 /**

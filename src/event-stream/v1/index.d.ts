@@ -104,8 +104,11 @@ interface EventStreamAPI {
    */
   readonly cache: CacheAPI;
 }
-/** EventStreamV1Event */
-type EventStreamV1Event = {
+interface Configuration {}
+interface Secrets {
+  [secretName: string]: string;
+}
+interface Event {
   /** The CloudEvent message containing all event properties. */
   message: {
     /** Identifies the event. */
@@ -133,12 +136,6 @@ type EventStreamV1Event = {
     /** Timestamp of when the occurrence happened. Must adhere to RFC 3339. */
     time: string;
   };
-};
-interface Configuration {}
-interface Secrets {
-  [secretName: string]: string;
-}
-interface Event extends EventStreamV1Event {
   /**
    * @private Configuration values associated with this Action.
    */
