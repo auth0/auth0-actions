@@ -2,7 +2,7 @@
 
 var handler = require('../../../_shared/_XK5Fidc.js');
 var metadata = require('../../../_shared/Dygdkb3A.js');
-var index = require('../../../_shared/DvTaCl9e.js');
+var index = require('../../../_shared/Db5gBOLD.js');
 require('node:vm');
 require('async_hooks');
 require('console');

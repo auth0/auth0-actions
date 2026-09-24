@@ -112,6 +112,16 @@ type EventStreamV1Event = {
     id: string;
     /** Describes the type of event related to the originating occurrence. */
     type: string;
+    /** The purpose of this event. Set only in special cases such as a test event; omitted for normal events. */
+    a0purpose?: 'test';
+    /**
+     * The Auth0 event stream ID of the stream the event was delivered on.
+     * Present when the event is delivered via an event stream; omitted when
+     * events are retrieved via the Events API (GET /api/v2/events).
+     */
+    a0stream?: string;
+    /** The Auth0 tenant identifier to which the event is associated. */
+    a0tenant: string;
     /** The event payload. */
     data?: {
       [additionalProperties: string]: any;
@@ -121,17 +131,7 @@ type EventStreamV1Event = {
     /** The version of the CloudEvents specification which the event uses. */
     specversion: string;
     /** Timestamp of when the occurrence happened. Must adhere to RFC 3339. */
-    time?: string | null;
-    /** The Auth0 tenant identifier to which the event is associated. */
-    a0tenant: string;
-    /**
-     * The Auth0 event stream ID of the stream the event was delivered on.
-     * Present when the event is delivered via an event stream; omitted when
-     * events are retrieved via the Events API (GET /api/v2/events).
-     */
-    a0stream?: string;
-    /** The purpose of this event. Set only in special cases such as a test event; omitted for normal events. */
-    a0purpose?: 'test' & string;
+    time: string;
   };
 };
 interface Configuration {}
