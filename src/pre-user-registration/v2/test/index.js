@@ -1,7 +1,7 @@
 'use strict';
 
 var handler = require('../../../_shared/_XK5Fidc.js');
-var index = require('../../../_shared/Db5gBOLD.js');
+var index = require('../../../_shared/BBcRtdsL.js');
 require('node:vm');
 require('async_hooks');
 require('console');

@@ -2,8 +2,8 @@
 
 var handler = require('../../../_shared/_XK5Fidc.js');
 var metadata = require('../../../_shared/Dygdkb3A.js');
-var targetScopes = require('../../../_shared/CG3qLr9m.js');
-var index = require('../../../_shared/Db5gBOLD.js');
+var targetScopes = require('../../../_shared/BmQoefei.js');
+var index = require('../../../_shared/BBcRtdsL.js');
 var url = require('url');
 require('node:vm');
 require('async_hooks');
