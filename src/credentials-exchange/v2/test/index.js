@@ -1,14 +1,14 @@
 'use strict';
 
 var handler = require('../../../_shared/_XK5Fidc.js');
-var targetScopes = require('../../../_shared/Bi7NRjgy.js');
+var targetScopes = require('../../../_shared/CG3qLr9m.js');
 require('node:vm');
 require('async_hooks');
 require('console');
 require('stream');
 require('node:fs/promises');
 require('node:module');
-require('../../../_shared/DvTaCl9e.js');
+require('../../../_shared/Db5gBOLD.js');
 
 /**
  * No-op {@link CredentialsExchangeTriggerAPI} for use in mock API implementations.

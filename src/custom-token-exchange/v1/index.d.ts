@@ -95,166 +95,6 @@ interface CacheAPI {
    */
   set(key: string, value: string, options?: CacheSetOptions): CacheWriteResult;
 }
-/** CustomTokenExchangeV1Event */
-type CustomTokenExchangeV1Event = {
-  /** Information about the Client with which this transaction was initiated. */
-  client: {
-    /** The client id of the application the user is logging in to. */
-    client_id: string;
-    /** An object for holding other application properties. */
-    metadata: {
-      [additionalProperties: string]: string;
-    };
-    /** The name of the application (as defined in the Dashboard). */
-    name: string;
-  };
-  /** Details about the Organization associated with the current transaction. */
-  organization?: {
-    /** The Organization identifier. */
-    id: string;
-    /** The friendly name of the Organization. */
-    display_name: string;
-    /** Metadata associated with the Organization. */
-    metadata: {
-      [additionalProperties: string]: string;
-    };
-    /** The name of the Organization. */
-    name: string;
-  } & {
-    [additionalProperties: string]: any;
-  };
-  /** Details about the request that initiated the transaction. */
-  request: {
-    /** The body of the POST request. This data will only be available during refresh token, Client Credential Exchange flows and PreUserRegistration Action. */
-    body: {
-      [additionalProperties: string]: any;
-    };
-    geoip: {
-      cityName?: string;
-      continentCode?: string;
-      countryCode?: string;
-      countryCode3?: string;
-      countryName?: string;
-      latitude?: number;
-      longitude?: number;
-      subdivisionCode?: string;
-      subdivisionName?: string;
-      timeZone?: string;
-    } & {
-      [additionalProperties: string]: any;
-    };
-    /** The hostname that is being used for the authentication flow. */
-    hostname?: string;
-    /** The originating IP address of the request. */
-    ip: string;
-    /** The language requested by the browser. */
-    language?: string;
-    /** The HTTP method used for the request */
-    method: string;
-    /** The value of the `User-Agent` header received when initiating the transaction. */
-    user_agent?: string;
-  };
-  /** Details about the resource server to which the access is being requested. */
-  resource_server: {
-    /** The identifier of the resource server. For example: `https://your-api.example.com`. */
-    identifier: string;
-  };
-  /** Details about the Tenant associated with the current transaction. */
-  tenant: {
-    /** The name of the tenant. */
-    id: string;
-  };
-  /** Details about the current custom token exchange transaction. */
-  transaction: {
-    /** The actor token provided in the token exchange request. */
-    actor_token?: string;
-    /** The type of the actor token provided in the token exchange request. */
-    actor_token_type?: string;
-    /** The user represented by the actor token. This will only be present if the actor_token_type is urn:ietf:params:oauth:token-type:id_token and the actor token provided in the token exchange request is a valid Auth0 generated ID token. */
-    actor_token_user?: {
-      /** Custom fields that store info about a user that influences the user's access, such as support plan, security roles, or access control groups. */
-      app_metadata: {
-        [additionalProperties: string]: any;
-      };
-      /** Timestamp indicating when the user profile was first created. */
-      created_at: string;
-      /** (unique) User's email address. */
-      email?: string;
-      /** Indicates whether the user has verified their email address. */
-      email_verified: boolean;
-      /** User's family name. */
-      family_name?: string;
-      /** User's given name. */
-      given_name?: string;
-      /** Timestamp indicating the last time the user's password was reset/changed. At user creation, this field does not exist. This property is only available for Database connections. */
-      last_password_reset?: string;
-      /** User's full name. */
-      name?: string;
-      /** User's nickname. */
-      nickname?: string;
-      /** User's phone number. */
-      phone_number?: string;
-      /** Indicates whether the user has verified their phone number. */
-      phone_verified?: boolean;
-      /** URL pointing to the [user's profile picture](https://auth0.com/docs/users/change-user-picture). */
-      picture?: string;
-      /** Timestamp indicating when the user's profile was last updated/modified. */
-      updated_at: string;
-      /** (unique) User's unique identifier. */
-      user_id: string;
-      /** Custom fields that store info about a user that does not impact what they can or cannot access, such as work address, home address, or user preferences. */
-      user_metadata: {
-        [additionalProperties: string]: any;
-      };
-      /** (unique) User's username. */
-      username?: string;
-      /** An array of authentication factors that the user has enrolled. */
-      enrolledFactors?: ({
-        /** The type of authentication factor such as `push-notification`, `phone`, `email`, `otp`, `webauthn-roaming` and `webauthn-platform`. */
-        type: string;
-        /** Additional options describing this instance of the enrolled factor. */
-        options?: {
-          [additionalProperties: string]: any;
-        };
-      } & {
-        [additionalProperties: string]: any;
-      })[];
-      /** List of multi-factor authentication (MFA) providers with which the user is enrolled. This array is updated when the user enrolls in MFA and when an administrator resets a user's MFA enrollments. */
-      multifactor?: string[];
-      /** Contains info retrieved from the identity provider with which the user originally authenticates. Users may also link their profile to multiple identity providers; those identities will then also appear in this array. The contents of an individual identity provider object varies by provider. */
-      identities: ({
-        /** Name of the Auth0 connection used to authenticate the user. */
-        connection?: string;
-        /** Indicates whether the connection is a social one. */
-        isSocial?: boolean;
-        /** User information associated with the connection. When profiles are linked, it is populated with the associated user info for secondary accounts. */
-        profileData?: {
-          [additionalProperties: string]: string;
-        };
-        /** Name of the entity that is authenticating the user, such as Facebook, Google, SAML, or your own provider. */
-        provider?: string;
-        /** User's unique identifier for this connection/provider. */
-        user_id?: string;
-      } & {
-        [additionalProperties: string]: any;
-      })[];
-    } & {
-      [additionalProperties: string]: any;
-    };
-    /** [Early Access] An object containing shared data across custom Actions for the duration of a transaction. */
-    metadata?: {
-      [additionalProperties: string]: string | number | boolean;
-    };
-    /** The scopes requested (if any) provided in the token exchange request. */
-    requested_scopes: string[];
-    /** The type of token to be generated by Auth0. For example: urn:ietf:params:oauth:token-type:access_token. */
-    requested_token_type: string | null;
-    /** The subject token provided in the token exchange request. */
-    subject_token: string;
-    /** The subject_token_type provided in the token exchange request. */
-    subject_token_type: string;
-  };
-};
 /** Options to control the behavior of the setUserByConnection command. */
 type CustomTokenExchangeSetUserByConnectionOptions = {
   /** Behavior to apply if no user with the specified user_id exists in the connection. */
@@ -308,7 +148,164 @@ interface Configuration {}
 interface Secrets {
   [secretName: string]: string;
 }
-interface Event extends CustomTokenExchangeV1Event {
+interface Event {
+  /** Information about the Client with which this transaction was initiated. */
+  client: {
+    /** The client id of the application the user is logging in to. */
+    client_id: string;
+    /** An object for holding other application properties. */
+    metadata: {
+      [key: string]: string;
+    };
+    /** The name of the application (as defined in the Dashboard). */
+    name: string;
+  };
+  /** Details about the Organization associated with the current transaction. */
+  organization?: {
+    /** The Organization identifier. */
+    id: string;
+    /** The friendly name of the Organization. */
+    display_name: string;
+    /** Metadata associated with the Organization. */
+    metadata: {
+      [key: string]: string;
+    };
+    /** The name of the Organization. */
+    name: string;
+  } & {
+    [key: string]: any;
+  };
+  /** Details about the request that initiated the transaction. */
+  request: {
+    /** The body of the POST request. This data will only be available during refresh token, Client Credential Exchange flows and PreUserRegistration Action. */
+    body: {
+      [key: string]: any;
+    };
+    geoip: {
+      cityName?: string;
+      continentCode?: string;
+      countryCode?: string;
+      countryCode3?: string;
+      countryName?: string;
+      latitude?: number;
+      longitude?: number;
+      subdivisionCode?: string;
+      subdivisionName?: string;
+      timeZone?: string;
+    } & {
+      [key: string]: any;
+    };
+    /** The hostname that is being used for the authentication flow. */
+    hostname?: string;
+    /** The originating IP address of the request. */
+    ip: string;
+    /** The language requested by the browser. */
+    language?: string;
+    /** The HTTP method used for the request */
+    method: string;
+    /** The value of the `User-Agent` header received when initiating the transaction. */
+    user_agent?: string;
+  };
+  /** Details about the resource server to which the access is being requested. */
+  resource_server: {
+    /** The identifier of the resource server. For example: `https://your-api.example.com`. */
+    identifier: string;
+  };
+  /** Details about the Tenant associated with the current transaction. */
+  tenant: {
+    /** The name of the tenant. */
+    id: string;
+  };
+  /** Details about the current custom token exchange transaction. */
+  transaction: {
+    /** The actor token provided in the token exchange request. */
+    actor_token?: string;
+    /** The type of the actor token provided in the token exchange request. */
+    actor_token_type?: string;
+    /** The user represented by the actor token. This will only be present if the actor_token_type is urn:ietf:params:oauth:token-type:id_token and the actor token provided in the token exchange request is a valid Auth0 generated ID token. */
+    actor_token_user?: {
+      /** Custom fields that store info about a user that influences the user's access, such as support plan, security roles, or access control groups. */
+      app_metadata: {
+        [key: string]: any;
+      };
+      /** Timestamp indicating when the user profile was first created. */
+      created_at: string;
+      /** (unique) User's email address. */
+      email?: string;
+      /** Indicates whether the user has verified their email address. */
+      email_verified: boolean;
+      /** User's family name. */
+      family_name?: string;
+      /** User's given name. */
+      given_name?: string;
+      /** Timestamp indicating the last time the user's password was reset/changed. At user creation, this field does not exist. This property is only available for Database connections. */
+      last_password_reset?: string;
+      /** User's full name. */
+      name?: string;
+      /** User's nickname. */
+      nickname?: string;
+      /** User's phone number. */
+      phone_number?: string;
+      /** Indicates whether the user has verified their phone number. */
+      phone_verified?: boolean;
+      /** URL pointing to the [user's profile picture](https://auth0.com/docs/users/change-user-picture). */
+      picture?: string;
+      /** Timestamp indicating when the user's profile was last updated/modified. */
+      updated_at: string;
+      /** (unique) User's unique identifier. */
+      user_id: string;
+      /** Custom fields that store info about a user that does not impact what they can or cannot access, such as work address, home address, or user preferences. */
+      user_metadata: {
+        [key: string]: any;
+      };
+      /** (unique) User's username. */
+      username?: string;
+      /** An array of authentication factors that the user has enrolled. */
+      enrolledFactors?: ({
+        /** The type of authentication factor such as `push-notification`, `phone`, `email`, `otp`, `webauthn-roaming` and `webauthn-platform`. */
+        type: string;
+        /** Additional options describing this instance of the enrolled factor. */
+        options?: {
+          [key: string]: any;
+        };
+      } & {
+        [key: string]: any;
+      })[];
+      /** List of multi-factor authentication (MFA) providers with which the user is enrolled. This array is updated when the user enrolls in MFA and when an administrator resets a user's MFA enrollments. */
+      multifactor?: string[];
+      /** Contains info retrieved from the identity provider with which the user originally authenticates. Users may also link their profile to multiple identity providers; those identities will then also appear in this array. The contents of an individual identity provider object varies by provider. */
+      identities: ({
+        /** Name of the Auth0 connection used to authenticate the user. */
+        connection?: string;
+        /** Indicates whether the connection is a social one. */
+        isSocial?: boolean;
+        /** User information associated with the connection. When profiles are linked, it is populated with the associated user info for secondary accounts. */
+        profileData?: {
+          [key: string]: string;
+        };
+        /** Name of the entity that is authenticating the user, such as Facebook, Google, SAML, or your own provider. */
+        provider?: string;
+        /** User's unique identifier for this connection/provider. */
+        user_id?: string;
+      } & {
+        [key: string]: any;
+      })[];
+    } & {
+      [key: string]: any;
+    };
+    /** [Early Access] An object containing shared data across custom Actions for the duration of a transaction. */
+    metadata?: {
+      [key: string]: string | number | boolean;
+    };
+    /** The scopes requested (if any) provided in the token exchange request. */
+    requested_scopes: string[];
+    /** The type of token to be generated by Auth0. For example: urn:ietf:params:oauth:token-type:access_token. */
+    requested_token_type: string | null;
+    /** The subject token provided in the token exchange request. */
+    subject_token: string;
+    /** The subject_token_type provided in the token exchange request. */
+    subject_token_type: string;
+  };
   /**
    * @private Configuration values associated with this Action.
    */
