@@ -1,10 +1,11 @@
 'use strict';
 
 var handler = require('../../../_shared/_XK5Fidc.js');
-var metadata = require('../../../_shared/Dygdkb3A.js');
-var targetScopes = require('../../../_shared/CG3qLr9m.js');
-var index = require('../../../_shared/Db5gBOLD.js');
+var metadata = require('../../../_shared/CCSSAUl4.js');
+var targetScopes = require('../../../_shared/CrJbY0EA.js');
+var index = require('../../../_shared/nn856JWA.js');
 var url = require('url');
+var isObject = require('../../../_shared/DdL05O3i.js');
 require('node:vm');
 require('async_hooks');
 require('console');
@@ -1355,7 +1356,7 @@ class UserAPIImpl {
         // Guard against situations where the persisted user's metadata is NOT already
         // an object. This type is not enforced in some scenarios like CustomDB where a developer
         // can return anything in the app_metadata field.
-        if (!metadata.isObject(this.#event.user.app_metadata)) {
+        if (!isObject.isObject(this.#event.user.app_metadata)) {
             throw new Error('Unexpected app_metadata format. Must be a valid JSON object');
         }
         this.#triggerAPI.setMetadata('application', key, value);
@@ -1365,7 +1366,7 @@ class UserAPIImpl {
         // Guard against situations where the persisted user's metadata is NOT already
         // an object. This type is not enforced in some scenarios like CustomDB where a developer
         // can return anything in the user_metadata field.
-        if (!metadata.isObject(this.#event.user.user_metadata)) {
+        if (!isObject.isObject(this.#event.user.user_metadata)) {
             throw new Error('Unexpected user_metadata format. Must be a valid JSON object.');
         }
         this.#triggerAPI.setMetadata('user', key, value);

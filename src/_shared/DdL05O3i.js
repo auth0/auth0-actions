@@ -13,17 +13,4 @@ function isObject(value) {
     return value != null && typeof value === "object" && Array.isArray(value) === false;
 }
 
-/**
- * Creates a no-op {@link TransactionMetadataAPI} for use in mock API implementations.
- */
-function createNoopTransactionMetadataAPI() {
-    return {
-        setMetadata() { },
-        getMetadata() {
-            return {};
-        },
-    };
-}
-
-exports.createNoopTransactionMetadataAPI = createNoopTransactionMetadataAPI;
 exports.isObject = isObject;

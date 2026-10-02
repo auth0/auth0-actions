@@ -1,8 +1,9 @@
 'use strict';
 
 var handler = require('../../../_shared/_XK5Fidc.js');
-var metadata = require('../../../_shared/Dygdkb3A.js');
-var index = require('../../../_shared/Db5gBOLD.js');
+var metadata = require('../../../_shared/CCSSAUl4.js');
+var index = require('../../../_shared/nn856JWA.js');
+var isObject = require('../../../_shared/DdL05O3i.js');
 require('node:vm');
 require('async_hooks');
 require('console');
@@ -184,7 +185,7 @@ function validateActorLevel(source) {
     }
 }
 function validateActor(actor) {
-    if (!metadata.isObject(actor)) {
+    if (!isObject.isObject(actor)) {
         throw new Error('The actor must be a plain object.');
     }
     validateActorLevel(actor);
@@ -192,7 +193,7 @@ function validateActor(actor) {
     for (let depth = 2; depth <= ACTOR_MAX_NESTING_DEPTH; depth++) {
         if (source.act === undefined)
             return;
-        if (!metadata.isObject(source.act)) {
+        if (!isObject.isObject(source.act)) {
             throw new Error('The act claim must be a plain object.');
         }
         validateActorLevel(source.act);
