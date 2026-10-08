@@ -4,8 +4,13 @@ var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __esm = (fn, res) => function __init() {
-  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+var __esm = (fn, res, err) => function __init() {
+  if (err) throw err[0];
+  try {
+    return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+  } catch (e) {
+    throw err = [e], e;
+  }
 };
 var __export = (target, all) => {
   for (var name in all)
@@ -109,8 +114,7 @@ var require_ucs2length = __commonJS({
         value = str.charCodeAt(pos++);
         if (value >= 55296 && value <= 56319 && pos < len) {
           value = str.charCodeAt(pos);
-          if ((value & 64512) === 56320)
-            pos++;
+          if ((value & 64512) === 56320) pos++;
         }
       }
       return length;
@@ -404,16 +408,9 @@ var pattern5 = new RegExp("^[a-zA-Z_][a-zA-Z0-9_]{0,49}$", "u");
 var pattern6 = new RegExp(".*", "u");
 var schema53 = {
   type: ["string", "number", "boolean", "null", "array"],
-  maxLength: 2048,
-  items: { type: ["string", "number", "boolean"], maxLength: 2048 }
+  items: { type: ["string", "number", "boolean"]}
 };
 var schema57 = {
-  $id: "https://auth0.com/triggers/PostLogin/generic/commands/PostLoginSetSAMLConfigurationInput.json",
-  $schema: "http://json-schema.org/draft-07/schema",
-  title: "PostLoginSetSAMLConfigurationInput",
-  description: "Input validation for the SetSAMLConfiguration command.",
-  type: "object",
-  additionalProperties: false,
   properties: {
     RelayState: { type: "string", maxLength: 512 },
     audience: { type: "string", maxLength: 2048 },
@@ -1159,8 +1156,8 @@ function validate117(data, { instancePath = "", parentData, parentDataProperty, 
 var schema66 = { enum: ["persistent", "non-persistent"] };
 var ModifyScope = validate60;
 var pattern7 = new RegExp("^[a-zA-Z0-9@._+-]{1,255}$", "u");
-var CustomTokenExchangeDenyInput = validate319;
-function validate320(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+var CustomTokenExchangeDenyInput = validate317;
+function validate318(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (typeof data === "string") {
@@ -1209,10 +1206,10 @@ function validate320(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate320.errors = vErrors;
+  validate318.errors = vErrors;
   return errors === 0;
 }
-function validate322(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate320(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (typeof data === "string") {
@@ -1261,10 +1258,10 @@ function validate322(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate322.errors = vErrors;
+  validate320.errors = vErrors;
   return errors === 0;
 }
-function validate319(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate317(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -1316,24 +1313,24 @@ function validate319(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
     if (data.code !== void 0) {
-      if (!validate320(data.code, {
+      if (!validate318(data.code, {
         instancePath: instancePath + "/code",
         parentData: data,
         parentDataProperty: "code",
         rootData
       })) {
-        vErrors = vErrors === null ? validate320.errors : vErrors.concat(validate320.errors);
+        vErrors = vErrors === null ? validate318.errors : vErrors.concat(validate318.errors);
         errors = vErrors.length;
       }
     }
     if (data.reason !== void 0) {
-      if (!validate322(data.reason, {
+      if (!validate320(data.reason, {
         instancePath: instancePath + "/reason",
         parentData: data,
         parentDataProperty: "reason",
         rootData
       })) {
-        vErrors = vErrors === null ? validate322.errors : vErrors.concat(validate322.errors);
+        vErrors = vErrors === null ? validate320.errors : vErrors.concat(validate320.errors);
         errors = vErrors.length;
       }
     }
@@ -1352,11 +1349,11 @@ function validate319(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate319.errors = vErrors;
+  validate317.errors = vErrors;
   return errors === 0;
 }
-var CustomTokenExchangeRejectInvalidSubjectTokenInput = validate352;
-function validate353(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+var CustomTokenExchangeRejectInvalidSubjectTokenInput = validate350;
+function validate351(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (typeof data === "string") {
@@ -1405,10 +1402,10 @@ function validate353(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate353.errors = vErrors;
+  validate351.errors = vErrors;
   return errors === 0;
 }
-function validate352(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate350(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -1445,13 +1442,13 @@ function validate352(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
     if (data.reason !== void 0) {
-      if (!validate353(data.reason, {
+      if (!validate351(data.reason, {
         instancePath: instancePath + "/reason",
         parentData: data,
         parentDataProperty: "reason",
         rootData
       })) {
-        vErrors = vErrors === null ? validate353.errors : vErrors.concat(validate353.errors);
+        vErrors = vErrors === null ? validate351.errors : vErrors.concat(validate351.errors);
         errors = vErrors.length;
       }
     }
@@ -1470,11 +1467,11 @@ function validate352(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate352.errors = vErrors;
+  validate350.errors = vErrors;
   return errors === 0;
 }
-var CustomTokenExchangeSetMetadataInput = validate355;
-function validate356(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+var CustomTokenExchangeSetMetadataInput = validate353;
+function validate354(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (typeof data !== "string") {
@@ -1492,10 +1489,10 @@ function validate356(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate356.errors = vErrors;
+  validate354.errors = vErrors;
   return errors === 0;
 }
-function validate355(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate353(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -1532,13 +1529,13 @@ function validate355(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
     if (data.key !== void 0) {
-      if (!validate356(data.key, {
+      if (!validate354(data.key, {
         instancePath: instancePath + "/key",
         parentData: data,
         parentDataProperty: "key",
         rootData
       })) {
-        vErrors = vErrors === null ? validate356.errors : vErrors.concat(validate356.errors);
+        vErrors = vErrors === null ? validate354.errors : vErrors.concat(validate354.errors);
         errors = vErrors.length;
       }
     }
@@ -1557,11 +1554,11 @@ function validate355(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate355.errors = vErrors;
+  validate353.errors = vErrors;
   return errors === 0;
 }
-var CustomTokenExchangeSetOrganizationInput = validate358;
-function validate359(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+var CustomTokenExchangeSetOrganizationInput = validate356;
+function validate357(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (typeof data === "string") {
@@ -1610,10 +1607,10 @@ function validate359(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate359.errors = vErrors;
+  validate357.errors = vErrors;
   return errors === 0;
 }
-function validate358(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate356(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -1650,13 +1647,13 @@ function validate358(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
     if (data.organization_id_or_name !== void 0) {
-      if (!validate359(data.organization_id_or_name, {
+      if (!validate357(data.organization_id_or_name, {
         instancePath: instancePath + "/organization_id_or_name",
         parentData: data,
         parentDataProperty: "organization_id_or_name",
         rootData
       })) {
-        vErrors = vErrors === null ? validate359.errors : vErrors.concat(validate359.errors);
+        vErrors = vErrors === null ? validate357.errors : vErrors.concat(validate357.errors);
         errors = vErrors.length;
       }
     }
@@ -1675,11 +1672,11 @@ function validate358(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate358.errors = vErrors;
+  validate356.errors = vErrors;
   return errors === 0;
 }
-var CustomTokenExchangeSetUserByConnectionInput = validate361;
-function validate362(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+var CustomTokenExchangeSetUserByConnectionInput = validate359;
+function validate360(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (typeof data === "string") {
@@ -1728,26 +1725,20 @@ function validate362(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate362.errors = vErrors;
+  validate360.errors = vErrors;
   return errors === 0;
 }
-var schema180 = {
-  description: "Options to control the behavior of the setUserByConnection command.",
-  type: "object",
-  required: ["creationBehavior", "updateBehavior"],
-  additionalProperties: false,
+var schema179 = {
   properties: {
     creationBehavior: {
-      description: "Behavior to apply if no user with the specified user_id exists in the connection.",
       enum: ["create_if_not_exists", "none"]
     },
     updateBehavior: {
-      description: "Behavior to apply if a user with specified user_id already exists in the connection.",
       enum: ["replace", "none"]
     }
   }
 };
-function validate364(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate362(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -1805,7 +1796,7 @@ function validate364(data, { instancePath = "", parentData, parentDataProperty, 
           instancePath: instancePath + "/creationBehavior",
           schemaPath: "#/properties/creationBehavior/enum",
           keyword: "enum",
-          params: { allowedValues: schema180.properties.creationBehavior.enum },
+          params: { allowedValues: schema179.properties.creationBehavior.enum },
           message: "must be equal to one of the allowed values"
         };
         if (vErrors === null) {
@@ -1823,7 +1814,7 @@ function validate364(data, { instancePath = "", parentData, parentDataProperty, 
           instancePath: instancePath + "/updateBehavior",
           schemaPath: "#/properties/updateBehavior/enum",
           keyword: "enum",
-          params: { allowedValues: schema180.properties.updateBehavior.enum },
+          params: { allowedValues: schema179.properties.updateBehavior.enum },
           message: "must be equal to one of the allowed values"
         };
         if (vErrors === null) {
@@ -1849,10 +1840,10 @@ function validate364(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate364.errors = vErrors;
+  validate362.errors = vErrors;
   return errors === 0;
 }
-function validate366(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate364(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -2297,10 +2288,10 @@ function validate366(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate366.errors = vErrors;
+  validate364.errors = vErrors;
   return errors === 0;
 }
-function validate361(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate359(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -2367,35 +2358,35 @@ function validate361(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
     if (data.connection_name !== void 0) {
-      if (!validate362(data.connection_name, {
+      if (!validate360(data.connection_name, {
         instancePath: instancePath + "/connection_name",
         parentData: data,
         parentDataProperty: "connection_name",
+        rootData
+      })) {
+        vErrors = vErrors === null ? validate360.errors : vErrors.concat(validate360.errors);
+        errors = vErrors.length;
+      }
+    }
+    if (data.options !== void 0) {
+      if (!validate362(data.options, {
+        instancePath: instancePath + "/options",
+        parentData: data,
+        parentDataProperty: "options",
         rootData
       })) {
         vErrors = vErrors === null ? validate362.errors : vErrors.concat(validate362.errors);
         errors = vErrors.length;
       }
     }
-    if (data.options !== void 0) {
-      if (!validate364(data.options, {
-        instancePath: instancePath + "/options",
-        parentData: data,
-        parentDataProperty: "options",
-        rootData
-      })) {
-        vErrors = vErrors === null ? validate364.errors : vErrors.concat(validate364.errors);
-        errors = vErrors.length;
-      }
-    }
     if (data.user_attributes !== void 0) {
-      if (!validate366(data.user_attributes, {
+      if (!validate364(data.user_attributes, {
         instancePath: instancePath + "/user_attributes",
         parentData: data,
         parentDataProperty: "user_attributes",
         rootData
       })) {
-        vErrors = vErrors === null ? validate366.errors : vErrors.concat(validate366.errors);
+        vErrors = vErrors === null ? validate364.errors : vErrors.concat(validate364.errors);
         errors = vErrors.length;
       }
     }
@@ -2414,11 +2405,11 @@ function validate361(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate361.errors = vErrors;
+  validate359.errors = vErrors;
   return errors === 0;
 }
-var CustomTokenExchangeSetUserByIdInput = validate368;
-function validate369(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+var CustomTokenExchangeSetUserByIdInput = validate366;
+function validate367(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (typeof data === "string") {
@@ -2467,10 +2458,10 @@ function validate369(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate369.errors = vErrors;
+  validate367.errors = vErrors;
   return errors === 0;
 }
-function validate368(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate366(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -2507,13 +2498,13 @@ function validate368(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
     if (data.user_id !== void 0) {
-      if (!validate369(data.user_id, {
+      if (!validate367(data.user_id, {
         instancePath: instancePath + "/user_id",
         parentData: data,
         parentDataProperty: "user_id",
         rootData
       })) {
-        vErrors = vErrors === null ? validate369.errors : vErrors.concat(validate369.errors);
+        vErrors = vErrors === null ? validate367.errors : vErrors.concat(validate367.errors);
         errors = vErrors.length;
       }
     }
@@ -2532,11 +2523,11 @@ function validate368(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate368.errors = vErrors;
+  validate366.errors = vErrors;
   return errors === 0;
 }
-var PasswordResetPostChallengeRenderPromptInput = validate560;
-function validate561(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+var PasswordResetPostChallengeRenderPromptInput = validate527;
+function validate528(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (typeof data === "string") {
@@ -2570,10 +2561,10 @@ function validate561(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate561.errors = vErrors;
+  validate528.errors = vErrors;
   return errors === 0;
 }
-function validate563(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate530(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -2711,10 +2702,10 @@ function validate563(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate563.errors = vErrors;
+  validate530.errors = vErrors;
   return errors === 0;
 }
-function validate560(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate527(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -2751,24 +2742,24 @@ function validate560(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
     if (data.promptId !== void 0) {
-      if (!validate561(data.promptId, {
+      if (!validate528(data.promptId, {
         instancePath: instancePath + "/promptId",
         parentData: data,
         parentDataProperty: "promptId",
         rootData
       })) {
-        vErrors = vErrors === null ? validate561.errors : vErrors.concat(validate561.errors);
+        vErrors = vErrors === null ? validate528.errors : vErrors.concat(validate528.errors);
         errors = vErrors.length;
       }
     }
     if (data.promptOptions !== void 0) {
-      if (!validate563(data.promptOptions, {
+      if (!validate530(data.promptOptions, {
         instancePath: instancePath + "/promptOptions",
         parentData: data,
         parentDataProperty: "promptOptions",
         rootData
       })) {
-        vErrors = vErrors === null ? validate563.errors : vErrors.concat(validate563.errors);
+        vErrors = vErrors === null ? validate530.errors : vErrors.concat(validate530.errors);
         errors = vErrors.length;
       }
     }
@@ -2787,11 +2778,11 @@ function validate560(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate560.errors = vErrors;
+  validate527.errors = vErrors;
   return errors === 0;
 }
-var PostLoginRenderPromptInput = validate738;
-function validate739(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+var PostLoginRenderPromptInput = validate705;
+function validate706(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (typeof data === "string") {
@@ -2825,10 +2816,10 @@ function validate739(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate739.errors = vErrors;
+  validate706.errors = vErrors;
   return errors === 0;
 }
-function validate741(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate708(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -2966,10 +2957,10 @@ function validate741(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate741.errors = vErrors;
+  validate708.errors = vErrors;
   return errors === 0;
 }
-function validate738(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate705(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -3006,24 +2997,24 @@ function validate738(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
     if (data.promptId !== void 0) {
-      if (!validate739(data.promptId, {
+      if (!validate706(data.promptId, {
         instancePath: instancePath + "/promptId",
         parentData: data,
         parentDataProperty: "promptId",
         rootData
       })) {
-        vErrors = vErrors === null ? validate739.errors : vErrors.concat(validate739.errors);
+        vErrors = vErrors === null ? validate706.errors : vErrors.concat(validate706.errors);
         errors = vErrors.length;
       }
     }
     if (data.promptOptions !== void 0) {
-      if (!validate741(data.promptOptions, {
+      if (!validate708(data.promptOptions, {
         instancePath: instancePath + "/promptOptions",
         parentData: data,
         parentDataProperty: "promptOptions",
         rootData
       })) {
-        vErrors = vErrors === null ? validate741.errors : vErrors.concat(validate741.errors);
+        vErrors = vErrors === null ? validate708.errors : vErrors.concat(validate708.errors);
         errors = vErrors.length;
       }
     }
@@ -3042,7 +3033,7 @@ function validate738(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate738.errors = vErrors;
+  validate705.errors = vErrors;
   return errors === 0;
 }
 var PostLoginRevokeRefreshTokenInput = validate139;
@@ -3773,8 +3764,8 @@ function validate121(data, { instancePath = "", parentData, parentDataProperty, 
   validate121.errors = vErrors;
   return errors === 0;
 }
-var PostLoginValidationErrorInput = validate743;
-function validate744(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+var PostLoginValidationErrorInput = validate710;
+function validate711(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (typeof data === "string") {
@@ -3808,10 +3799,10 @@ function validate744(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate744.errors = vErrors;
+  validate711.errors = vErrors;
   return errors === 0;
 }
-function validate746(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate713(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (typeof data === "string") {
@@ -3845,10 +3836,10 @@ function validate746(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate746.errors = vErrors;
+  validate713.errors = vErrors;
   return errors === 0;
 }
-function validate743(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate710(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -3900,24 +3891,24 @@ function validate743(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
     if (data.errorCode !== void 0) {
-      if (!validate744(data.errorCode, {
+      if (!validate711(data.errorCode, {
         instancePath: instancePath + "/errorCode",
         parentData: data,
         parentDataProperty: "errorCode",
         rootData
       })) {
-        vErrors = vErrors === null ? validate744.errors : vErrors.concat(validate744.errors);
+        vErrors = vErrors === null ? validate711.errors : vErrors.concat(validate711.errors);
         errors = vErrors.length;
       }
     }
     if (data.errorMessage !== void 0) {
-      if (!validate746(data.errorMessage, {
+      if (!validate713(data.errorMessage, {
         instancePath: instancePath + "/errorMessage",
         parentData: data,
         parentDataProperty: "errorMessage",
         rootData
       })) {
-        vErrors = vErrors === null ? validate746.errors : vErrors.concat(validate746.errors);
+        vErrors = vErrors === null ? validate713.errors : vErrors.concat(validate713.errors);
         errors = vErrors.length;
       }
     }
@@ -3936,11 +3927,11 @@ function validate743(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate743.errors = vErrors;
+  validate710.errors = vErrors;
   return errors === 0;
 }
-var PreUserRegistrationSetUserIdInput = validate912;
-function validate913(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+var PreUserRegistrationSetUserIdInput = validate879;
+function validate880(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (typeof data === "string") {
@@ -4004,10 +3995,10 @@ function validate913(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate913.errors = vErrors;
+  validate880.errors = vErrors;
   return errors === 0;
 }
-function validate912(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate879(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -4044,13 +4035,13 @@ function validate912(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
     if (data.user_id !== void 0) {
-      if (!validate913(data.user_id, {
+      if (!validate880(data.user_id, {
         instancePath: instancePath + "/user_id",
         parentData: data,
         parentDataProperty: "user_id",
         rootData
       })) {
-        vErrors = vErrors === null ? validate913.errors : vErrors.concat(validate913.errors);
+        vErrors = vErrors === null ? validate880.errors : vErrors.concat(validate880.errors);
         errors = vErrors.length;
       }
     }
@@ -4069,11 +4060,11 @@ function validate912(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate912.errors = vErrors;
+  validate879.errors = vErrors;
   return errors === 0;
 }
-var PreUserRegistrationValidationErrorInput = validate915;
-function validate916(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+var PreUserRegistrationValidationErrorInput = validate882;
+function validate883(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (typeof data === "string") {
@@ -4107,10 +4098,10 @@ function validate916(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate916.errors = vErrors;
+  validate883.errors = vErrors;
   return errors === 0;
 }
-function validate918(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate885(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (typeof data === "string") {
@@ -4144,10 +4135,10 @@ function validate918(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate918.errors = vErrors;
+  validate885.errors = vErrors;
   return errors === 0;
 }
-function validate915(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate882(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -4199,24 +4190,24 @@ function validate915(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
     if (data.errorCode !== void 0) {
-      if (!validate916(data.errorCode, {
+      if (!validate883(data.errorCode, {
         instancePath: instancePath + "/errorCode",
         parentData: data,
         parentDataProperty: "errorCode",
         rootData
       })) {
-        vErrors = vErrors === null ? validate916.errors : vErrors.concat(validate916.errors);
+        vErrors = vErrors === null ? validate883.errors : vErrors.concat(validate883.errors);
         errors = vErrors.length;
       }
     }
     if (data.errorMessage !== void 0) {
-      if (!validate918(data.errorMessage, {
+      if (!validate885(data.errorMessage, {
         instancePath: instancePath + "/errorMessage",
         parentData: data,
         parentDataProperty: "errorMessage",
         rootData
       })) {
-        vErrors = vErrors === null ? validate918.errors : vErrors.concat(validate918.errors);
+        vErrors = vErrors === null ? validate885.errors : vErrors.concat(validate885.errors);
         errors = vErrors.length;
       }
     }
@@ -4235,7 +4226,7 @@ function validate915(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate915.errors = vErrors;
+  validate882.errors = vErrors;
   return errors === 0;
 }
 var CustomTokenExchangeDenyInputCodec = /* @__PURE__ */ createCodec2(
@@ -4497,13 +4488,7 @@ var helpers = {
   accessToken: accessToken_exports,
   customClaim: customClaim_exports,
   samlResponse: {
-    ...constants_exports2,
-    /** @deprecated use `validate` at the top level to handle Codecs error formatting */
-    formatValidationError
-  },
-  setPrimaryUser: constants_exports3,
-  renderPrompt: constants_exports
-};
+    ...constants_exports2}};
 
 exports.CustomTokenExchangeDenyInputCodec = CustomTokenExchangeDenyInputCodec;
 exports.CustomTokenExchangeRejectInvalidSubjectTokenInputCodec = CustomTokenExchangeRejectInvalidSubjectTokenInputCodec;
