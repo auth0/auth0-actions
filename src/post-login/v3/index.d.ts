@@ -726,6 +726,8 @@ type PostLoginV3Event = {
     };
     /** The type of the subject token in a token exchange request. */
     subject_token_type?: string;
+    /** The live target scope set for the transaction. Initialized from the requested scopes and immediately updated by api.transaction target scope methods across current and subsequent Actions. After all Actions complete, these scopes are filtered by the transaction's applicable authorization policies, including App Access Permissions and RBAC. Unauthorized scopes are silently dropped. When explicit user consent is required, all scopes remaining after filtering are included in the consent prompt. */
+    target_scopes?: string[];
   } & {
     [additionalProperties: string]: any;
   };
@@ -947,6 +949,8 @@ interface AccessTokenAPI {
   setCustomClaim(key: string, value: unknown): PostLoginAPI;
   /**
    * Add a scope on the Access Token that will be issued upon completion of the login flow.
+   *
+   * Restrictions: [Handling Scopes in Actions](https://auth0.com/docs/customize/actions/handling-scopes-in-actions).
    *
    * @param scope The scope to be added.
    * @throws will throw an error if scope is invalid
@@ -1655,6 +1659,78 @@ interface TransactionAPI {
    * metadata property.
    */
   setMetadata(key: string, value: TxMetadataValue | null): void;
+  /**
+   * Add a scope to the target scope set. After all Actions complete, added scopes are
+   * evaluated against the transaction's applicable authorization policies, including App
+   * Access Permissions and RBAC. Unauthorized scopes are silently dropped. Authorized
+   * additions are included in the consent prompt when explicit user consent is required.
+   *
+   * Scopes modified using this method are updated in real-time in the
+   * `event.transaction.target_scopes` array.
+   *
+   * @param scope The scope to add.
+   * @throws Will throw an error if the scope is invalid.
+   *
+   * @example
+   * ```js
+   * exports.onExecutePostLogin = async (event, api) => {
+   *   api.transaction.addTargetScope('read:reports');
+   * };
+   * ```
+   */
+  addTargetScope(scope: string): void;
+  /**
+   * Remove a scope from the target scope set.
+   *
+   * Scopes modified using this method are updated in real-time in the
+   * `event.transaction.target_scopes` array.
+   *
+   * @param scope The scope to remove.
+   * @throws Will throw an error if the scope is invalid.
+   *
+   * @example
+   * ```js
+   * exports.onExecutePostLogin = async (event, api) => {
+   *   api.transaction.removeTargetScope('admin:full');
+   * };
+   * ```
+   */
+  removeTargetScope(scope: string): void;
+  /**
+   * Replace the entire target scope set. After all Actions complete, the new scopes are
+   * evaluated against the transaction's applicable authorization policies, including App
+   * Access Permissions and RBAC. Unauthorized scopes are silently dropped. All scopes
+   * remaining after filtering are included in the consent prompt when explicit user
+   * consent is required.
+   *
+   * Scopes modified using this method are updated in real-time in the
+   * `event.transaction.target_scopes` array.
+   *
+   * @param scopes The new target scope set.
+   * @throws Will throw an error if any scope is invalid.
+   *
+   * @example
+   * ```js
+   * exports.onExecutePostLogin = async (event, api) => {
+   *   api.transaction.setTargetScopes(['read:users', 'write:users']);
+   * };
+   * ```
+   */
+  setTargetScopes(scopes: string[]): void;
+  /**
+   * Remove all scopes from the target scope set.
+   *
+   * Scopes modified using this method are updated in real-time in the
+   * `event.transaction.target_scopes` array.
+   *
+   * @example
+   * ```js
+   * exports.onExecutePostLogin = async (event, api) => {
+   *   api.transaction.clearTargetScopes();
+   * };
+   * ```
+   */
+  clearTargetScopes(): void;
 }
 interface UserAPI {
   /**

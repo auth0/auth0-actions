@@ -1,7 +1,8 @@
 'use strict';
 
 var handler = require('../../../_shared/_XK5Fidc.js');
-var index = require('../../../_shared/Db5gBOLD.js');
+var metadata = require('../../../_shared/CCSSAUl4.js');
+var index = require('../../../_shared/nn856JWA.js');
 require('node:vm');
 require('async_hooks');
 require('console');
@@ -14,8 +15,12 @@ require('node:module');
  */
 class PreUserRegistrationTriggerAPIStubImpl {
     #cacheAPI = handler.createNoopCacheAPI();
+    #transactionMetadataAPI = metadata.createNoopTransactionMetadataAPI();
     getCacheAPI() {
         return this.#cacheAPI;
+    }
+    getTransactionMetadataAPI() {
+        return this.#transactionMetadataAPI;
     }
     denyAccess(_reason, _userMessage) { }
     setAppMetadata(_key, _value) { }
@@ -170,6 +175,34 @@ const event = {
     },
 };
 
+/** Feature flag gating access to the transaction metadata API. */
+const TRANSACTION_METADATA_FLAG = 'actions_pre_user_registration_transaction_metadata';
+class TransactionAPIImpl {
+    #metadataAPI;
+    #event;
+    #featureFlags;
+    constructor(metadataAPI, event, featureFlags) {
+        this.#metadataAPI = metadataAPI;
+        this.#event = event;
+        this.#featureFlags = featureFlags;
+    }
+    setMetadata(key, value) {
+        this.#assertFeatureEnabled();
+        this.#metadataAPI.setMetadata(key, value);
+        if (!this.#event.transaction) {
+            this.#event.transaction = {};
+        }
+        this.#event.transaction.metadata = this.#metadataAPI.getMetadata();
+    }
+    // Prevent the internal transaction metadata API from being executed when the
+    // gating feature flag is disabled. Remove this guard at GA.
+    #assertFeatureEnabled() {
+        if (this.#featureFlags[TRANSACTION_METADATA_FLAG] !== true) {
+            throw new Error('Method not implemented.');
+        }
+    }
+}
+
 class AccessAPIImpl {
     #api;
     #triggerAPI;
@@ -221,16 +254,18 @@ class PreUserRegistrationAPIImpl {
     user;
     cache;
     validation;
-    constructor(triggerAPI) {
+    transaction;
+    constructor(triggerAPI, event, featureFlags) {
         this.cache = triggerAPI.getCacheAPI();
         this.access = new AccessAPIImpl(triggerAPI, this);
         this.user = new UserAPIImpl(triggerAPI, this);
         this.validation = new ValidationAPIImpl(triggerAPI, this);
+        this.transaction = new TransactionAPIImpl(triggerAPI.getTransactionMetadataAPI(), event, featureFlags);
     }
 }
 
 function contextToArguments(ctx) {
-    return [ctx.event, new PreUserRegistrationAPIImpl(ctx.triggerAPI)];
+    return [ctx.event, new PreUserRegistrationAPIImpl(ctx.triggerAPI, ctx.event, ctx.featureFlags)];
 }
 const getHandler = handler.getHandlerFactory([
     'onExecutePreUserRegistration',
@@ -245,6 +280,7 @@ function getDefaultArguments() {
     return contextToArguments({
         event: handler.deepClone(event),
         triggerAPI: new PreUserRegistrationTriggerAPIStubImpl(),
+        featureFlags: {},
     });
 }
 /** Loads a PreUserRegistration v2 action file for use in tests, e.g. `action.execute('onExecutePreUserRegistration', event, api)`. */
