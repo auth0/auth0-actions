@@ -2,8 +2,8 @@
 
 var handler = require('../../../_shared/_XK5Fidc.js');
 var metadata = require('../../../_shared/CCSSAUl4.js');
-var targetScopes = require('../../../_shared/CrJbY0EA.js');
-var index = require('../../../_shared/nn856JWA.js');
+var targetScopes = require('../../../_shared/Cvjbd0zv.js');
+var index = require('../../../_shared/CqcjwCkp.js');
 var url = require('url');
 var isObject = require('../../../_shared/DdL05O3i.js');
 require('node:vm');
