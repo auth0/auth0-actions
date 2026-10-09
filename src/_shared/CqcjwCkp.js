@@ -2526,8 +2526,8 @@ function validate366(data, { instancePath = "", parentData, parentDataProperty, 
   validate366.errors = vErrors;
   return errors === 0;
 }
-var PasswordResetPostChallengeRenderPromptInput = validate527;
-function validate528(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+var PasswordResetPostChallengeRenderPromptInput = validate526;
+function validate527(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (typeof data === "string") {
@@ -2558,268 +2558,13 @@ function validate528(data, { instancePath = "", parentData, parentDataProperty, 
       vErrors = [err1];
     } else {
       vErrors.push(err1);
-    }
-    errors++;
-  }
-  validate528.errors = vErrors;
-  return errors === 0;
-}
-function validate530(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
-  let vErrors = null;
-  let errors = 0;
-  if (data && typeof data == "object" && !Array.isArray(data)) {
-    for (const key0 in data) {
-      if (!(key0 === "fields" || key0 === "vars")) {
-        const err0 = {
-          instancePath,
-          schemaPath: "#/additionalProperties",
-          keyword: "additionalProperties",
-          params: { additionalProperty: key0 },
-          message: "must NOT have additional properties"
-        };
-        if (vErrors === null) {
-          vErrors = [err0];
-        } else {
-          vErrors.push(err0);
-        }
-        errors++;
-      }
-    }
-    if (data.fields !== void 0) {
-      let data0 = data.fields;
-      if (data0 && typeof data0 == "object" && !Array.isArray(data0)) {
-        if (Object.keys(data0).length > 24) {
-          const err1 = {
-            instancePath: instancePath + "/fields",
-            schemaPath: "#/properties/fields/maxProperties",
-            keyword: "maxProperties",
-            params: { limit: 24 },
-            message: "must NOT have more than 24 properties"
-          };
-          if (vErrors === null) {
-            vErrors = [err1];
-          } else {
-            vErrors.push(err1);
-          }
-          errors++;
-        }
-        for (const key1 in data0) {
-          if (!pattern5.test(key1)) {
-            const err2 = {
-              instancePath: instancePath + "/fields",
-              schemaPath: "#/properties/fields/additionalProperties",
-              keyword: "additionalProperties",
-              params: { additionalProperty: key1 },
-              message: "must NOT have additional properties"
-            };
-            if (vErrors === null) {
-              vErrors = [err2];
-            } else {
-              vErrors.push(err2);
-            }
-            errors++;
-          }
-        }
-      } else {
-        const err3 = {
-          instancePath: instancePath + "/fields",
-          schemaPath: "#/properties/fields/type",
-          keyword: "type",
-          params: { type: "object" },
-          message: "must be object"
-        };
-        if (vErrors === null) {
-          vErrors = [err3];
-        } else {
-          vErrors.push(err3);
-        }
-        errors++;
-      }
-    }
-    if (data.vars !== void 0) {
-      let data1 = data.vars;
-      if (data1 && typeof data1 == "object" && !Array.isArray(data1)) {
-        if (Object.keys(data1).length > 24) {
-          const err4 = {
-            instancePath: instancePath + "/vars",
-            schemaPath: "#/properties/vars/maxProperties",
-            keyword: "maxProperties",
-            params: { limit: 24 },
-            message: "must NOT have more than 24 properties"
-          };
-          if (vErrors === null) {
-            vErrors = [err4];
-          } else {
-            vErrors.push(err4);
-          }
-          errors++;
-        }
-        for (const key2 in data1) {
-          if (!pattern6.test(key2)) {
-            const err5 = {
-              instancePath: instancePath + "/vars",
-              schemaPath: "#/properties/vars/additionalProperties",
-              keyword: "additionalProperties",
-              params: { additionalProperty: key2 },
-              message: "must NOT have additional properties"
-            };
-            if (vErrors === null) {
-              vErrors = [err5];
-            } else {
-              vErrors.push(err5);
-            }
-            errors++;
-          }
-        }
-      } else {
-        const err6 = {
-          instancePath: instancePath + "/vars",
-          schemaPath: "#/properties/vars/type",
-          keyword: "type",
-          params: { type: "object" },
-          message: "must be object"
-        };
-        if (vErrors === null) {
-          vErrors = [err6];
-        } else {
-          vErrors.push(err6);
-        }
-        errors++;
-      }
-    }
-  } else {
-    const err7 = {
-      instancePath,
-      schemaPath: "#/type",
-      keyword: "type",
-      params: { type: "object" },
-      message: "must be object"
-    };
-    if (vErrors === null) {
-      vErrors = [err7];
-    } else {
-      vErrors.push(err7);
-    }
-    errors++;
-  }
-  validate530.errors = vErrors;
-  return errors === 0;
-}
-function validate527(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
-  let vErrors = null;
-  let errors = 0;
-  if (data && typeof data == "object" && !Array.isArray(data)) {
-    if (data.promptId === void 0) {
-      const err0 = {
-        instancePath,
-        schemaPath: "#/required",
-        keyword: "required",
-        params: { missingProperty: "promptId" },
-        message: "must have required property 'promptId'"
-      };
-      if (vErrors === null) {
-        vErrors = [err0];
-      } else {
-        vErrors.push(err0);
-      }
-      errors++;
-    }
-    for (const key0 in data) {
-      if (!(key0 === "promptId" || key0 === "promptOptions")) {
-        const err1 = {
-          instancePath,
-          schemaPath: "#/additionalProperties",
-          keyword: "additionalProperties",
-          params: { additionalProperty: key0 },
-          message: "must NOT have additional properties"
-        };
-        if (vErrors === null) {
-          vErrors = [err1];
-        } else {
-          vErrors.push(err1);
-        }
-        errors++;
-      }
-    }
-    if (data.promptId !== void 0) {
-      if (!validate528(data.promptId, {
-        instancePath: instancePath + "/promptId",
-        parentData: data,
-        parentDataProperty: "promptId",
-        rootData
-      })) {
-        vErrors = vErrors === null ? validate528.errors : vErrors.concat(validate528.errors);
-        errors = vErrors.length;
-      }
-    }
-    if (data.promptOptions !== void 0) {
-      if (!validate530(data.promptOptions, {
-        instancePath: instancePath + "/promptOptions",
-        parentData: data,
-        parentDataProperty: "promptOptions",
-        rootData
-      })) {
-        vErrors = vErrors === null ? validate530.errors : vErrors.concat(validate530.errors);
-        errors = vErrors.length;
-      }
-    }
-  } else {
-    const err2 = {
-      instancePath,
-      schemaPath: "#/type",
-      keyword: "type",
-      params: { type: "object" },
-      message: "must be object"
-    };
-    if (vErrors === null) {
-      vErrors = [err2];
-    } else {
-      vErrors.push(err2);
     }
     errors++;
   }
   validate527.errors = vErrors;
   return errors === 0;
 }
-var PostLoginRenderPromptInput = validate705;
-function validate706(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
-  let vErrors = null;
-  let errors = 0;
-  if (typeof data === "string") {
-    if (func4(data) > 48) {
-      const err0 = {
-        instancePath,
-        schemaPath: "#/maxLength",
-        keyword: "maxLength",
-        params: { limit: 48 },
-        message: "must NOT have more than 48 characters"
-      };
-      if (vErrors === null) {
-        vErrors = [err0];
-      } else {
-        vErrors.push(err0);
-      }
-      errors++;
-    }
-  } else {
-    const err1 = {
-      instancePath,
-      schemaPath: "#/type",
-      keyword: "type",
-      params: { type: "string" },
-      message: "must be string"
-    };
-    if (vErrors === null) {
-      vErrors = [err1];
-    } else {
-      vErrors.push(err1);
-    }
-    errors++;
-  }
-  validate706.errors = vErrors;
-  return errors === 0;
-}
-function validate708(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate529(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -2957,10 +2702,10 @@ function validate708(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate708.errors = vErrors;
+  validate529.errors = vErrors;
   return errors === 0;
 }
-function validate705(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate526(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -2997,24 +2742,24 @@ function validate705(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
     if (data.promptId !== void 0) {
-      if (!validate706(data.promptId, {
+      if (!validate527(data.promptId, {
         instancePath: instancePath + "/promptId",
         parentData: data,
         parentDataProperty: "promptId",
         rootData
       })) {
-        vErrors = vErrors === null ? validate706.errors : vErrors.concat(validate706.errors);
+        vErrors = vErrors === null ? validate527.errors : vErrors.concat(validate527.errors);
         errors = vErrors.length;
       }
     }
     if (data.promptOptions !== void 0) {
-      if (!validate708(data.promptOptions, {
+      if (!validate529(data.promptOptions, {
         instancePath: instancePath + "/promptOptions",
         parentData: data,
         parentDataProperty: "promptOptions",
         rootData
       })) {
-        vErrors = vErrors === null ? validate708.errors : vErrors.concat(validate708.errors);
+        vErrors = vErrors === null ? validate529.errors : vErrors.concat(validate529.errors);
         errors = vErrors.length;
       }
     }
@@ -3033,7 +2778,262 @@ function validate705(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate705.errors = vErrors;
+  validate526.errors = vErrors;
+  return errors === 0;
+}
+var PostLoginRenderPromptInput = validate703;
+function validate704(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+  let vErrors = null;
+  let errors = 0;
+  if (typeof data === "string") {
+    if (func4(data) > 48) {
+      const err0 = {
+        instancePath,
+        schemaPath: "#/maxLength",
+        keyword: "maxLength",
+        params: { limit: 48 },
+        message: "must NOT have more than 48 characters"
+      };
+      if (vErrors === null) {
+        vErrors = [err0];
+      } else {
+        vErrors.push(err0);
+      }
+      errors++;
+    }
+  } else {
+    const err1 = {
+      instancePath,
+      schemaPath: "#/type",
+      keyword: "type",
+      params: { type: "string" },
+      message: "must be string"
+    };
+    if (vErrors === null) {
+      vErrors = [err1];
+    } else {
+      vErrors.push(err1);
+    }
+    errors++;
+  }
+  validate704.errors = vErrors;
+  return errors === 0;
+}
+function validate706(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+  let vErrors = null;
+  let errors = 0;
+  if (data && typeof data == "object" && !Array.isArray(data)) {
+    for (const key0 in data) {
+      if (!(key0 === "fields" || key0 === "vars")) {
+        const err0 = {
+          instancePath,
+          schemaPath: "#/additionalProperties",
+          keyword: "additionalProperties",
+          params: { additionalProperty: key0 },
+          message: "must NOT have additional properties"
+        };
+        if (vErrors === null) {
+          vErrors = [err0];
+        } else {
+          vErrors.push(err0);
+        }
+        errors++;
+      }
+    }
+    if (data.fields !== void 0) {
+      let data0 = data.fields;
+      if (data0 && typeof data0 == "object" && !Array.isArray(data0)) {
+        if (Object.keys(data0).length > 24) {
+          const err1 = {
+            instancePath: instancePath + "/fields",
+            schemaPath: "#/properties/fields/maxProperties",
+            keyword: "maxProperties",
+            params: { limit: 24 },
+            message: "must NOT have more than 24 properties"
+          };
+          if (vErrors === null) {
+            vErrors = [err1];
+          } else {
+            vErrors.push(err1);
+          }
+          errors++;
+        }
+        for (const key1 in data0) {
+          if (!pattern5.test(key1)) {
+            const err2 = {
+              instancePath: instancePath + "/fields",
+              schemaPath: "#/properties/fields/additionalProperties",
+              keyword: "additionalProperties",
+              params: { additionalProperty: key1 },
+              message: "must NOT have additional properties"
+            };
+            if (vErrors === null) {
+              vErrors = [err2];
+            } else {
+              vErrors.push(err2);
+            }
+            errors++;
+          }
+        }
+      } else {
+        const err3 = {
+          instancePath: instancePath + "/fields",
+          schemaPath: "#/properties/fields/type",
+          keyword: "type",
+          params: { type: "object" },
+          message: "must be object"
+        };
+        if (vErrors === null) {
+          vErrors = [err3];
+        } else {
+          vErrors.push(err3);
+        }
+        errors++;
+      }
+    }
+    if (data.vars !== void 0) {
+      let data1 = data.vars;
+      if (data1 && typeof data1 == "object" && !Array.isArray(data1)) {
+        if (Object.keys(data1).length > 24) {
+          const err4 = {
+            instancePath: instancePath + "/vars",
+            schemaPath: "#/properties/vars/maxProperties",
+            keyword: "maxProperties",
+            params: { limit: 24 },
+            message: "must NOT have more than 24 properties"
+          };
+          if (vErrors === null) {
+            vErrors = [err4];
+          } else {
+            vErrors.push(err4);
+          }
+          errors++;
+        }
+        for (const key2 in data1) {
+          if (!pattern6.test(key2)) {
+            const err5 = {
+              instancePath: instancePath + "/vars",
+              schemaPath: "#/properties/vars/additionalProperties",
+              keyword: "additionalProperties",
+              params: { additionalProperty: key2 },
+              message: "must NOT have additional properties"
+            };
+            if (vErrors === null) {
+              vErrors = [err5];
+            } else {
+              vErrors.push(err5);
+            }
+            errors++;
+          }
+        }
+      } else {
+        const err6 = {
+          instancePath: instancePath + "/vars",
+          schemaPath: "#/properties/vars/type",
+          keyword: "type",
+          params: { type: "object" },
+          message: "must be object"
+        };
+        if (vErrors === null) {
+          vErrors = [err6];
+        } else {
+          vErrors.push(err6);
+        }
+        errors++;
+      }
+    }
+  } else {
+    const err7 = {
+      instancePath,
+      schemaPath: "#/type",
+      keyword: "type",
+      params: { type: "object" },
+      message: "must be object"
+    };
+    if (vErrors === null) {
+      vErrors = [err7];
+    } else {
+      vErrors.push(err7);
+    }
+    errors++;
+  }
+  validate706.errors = vErrors;
+  return errors === 0;
+}
+function validate703(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+  let vErrors = null;
+  let errors = 0;
+  if (data && typeof data == "object" && !Array.isArray(data)) {
+    if (data.promptId === void 0) {
+      const err0 = {
+        instancePath,
+        schemaPath: "#/required",
+        keyword: "required",
+        params: { missingProperty: "promptId" },
+        message: "must have required property 'promptId'"
+      };
+      if (vErrors === null) {
+        vErrors = [err0];
+      } else {
+        vErrors.push(err0);
+      }
+      errors++;
+    }
+    for (const key0 in data) {
+      if (!(key0 === "promptId" || key0 === "promptOptions")) {
+        const err1 = {
+          instancePath,
+          schemaPath: "#/additionalProperties",
+          keyword: "additionalProperties",
+          params: { additionalProperty: key0 },
+          message: "must NOT have additional properties"
+        };
+        if (vErrors === null) {
+          vErrors = [err1];
+        } else {
+          vErrors.push(err1);
+        }
+        errors++;
+      }
+    }
+    if (data.promptId !== void 0) {
+      if (!validate704(data.promptId, {
+        instancePath: instancePath + "/promptId",
+        parentData: data,
+        parentDataProperty: "promptId",
+        rootData
+      })) {
+        vErrors = vErrors === null ? validate704.errors : vErrors.concat(validate704.errors);
+        errors = vErrors.length;
+      }
+    }
+    if (data.promptOptions !== void 0) {
+      if (!validate706(data.promptOptions, {
+        instancePath: instancePath + "/promptOptions",
+        parentData: data,
+        parentDataProperty: "promptOptions",
+        rootData
+      })) {
+        vErrors = vErrors === null ? validate706.errors : vErrors.concat(validate706.errors);
+        errors = vErrors.length;
+      }
+    }
+  } else {
+    const err2 = {
+      instancePath,
+      schemaPath: "#/type",
+      keyword: "type",
+      params: { type: "object" },
+      message: "must be object"
+    };
+    if (vErrors === null) {
+      vErrors = [err2];
+    } else {
+      vErrors.push(err2);
+    }
+    errors++;
+  }
+  validate703.errors = vErrors;
   return errors === 0;
 }
 var PostLoginRevokeRefreshTokenInput = validate139;
@@ -3764,7 +3764,44 @@ function validate121(data, { instancePath = "", parentData, parentDataProperty, 
   validate121.errors = vErrors;
   return errors === 0;
 }
-var PostLoginValidationErrorInput = validate710;
+var PostLoginValidationErrorInput = validate708;
+function validate709(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+  let vErrors = null;
+  let errors = 0;
+  if (typeof data === "string") {
+    if (func4(data) > 100) {
+      const err0 = {
+        instancePath,
+        schemaPath: "#/maxLength",
+        keyword: "maxLength",
+        params: { limit: 100 },
+        message: "must NOT have more than 100 characters"
+      };
+      if (vErrors === null) {
+        vErrors = [err0];
+      } else {
+        vErrors.push(err0);
+      }
+      errors++;
+    }
+  } else {
+    const err1 = {
+      instancePath,
+      schemaPath: "#/type",
+      keyword: "type",
+      params: { type: "string" },
+      message: "must be string"
+    };
+    if (vErrors === null) {
+      vErrors = [err1];
+    } else {
+      vErrors.push(err1);
+    }
+    errors++;
+  }
+  validate709.errors = vErrors;
+  return errors === 0;
+}
 function validate711(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
@@ -3802,44 +3839,7 @@ function validate711(data, { instancePath = "", parentData, parentDataProperty, 
   validate711.errors = vErrors;
   return errors === 0;
 }
-function validate713(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
-  let vErrors = null;
-  let errors = 0;
-  if (typeof data === "string") {
-    if (func4(data) > 100) {
-      const err0 = {
-        instancePath,
-        schemaPath: "#/maxLength",
-        keyword: "maxLength",
-        params: { limit: 100 },
-        message: "must NOT have more than 100 characters"
-      };
-      if (vErrors === null) {
-        vErrors = [err0];
-      } else {
-        vErrors.push(err0);
-      }
-      errors++;
-    }
-  } else {
-    const err1 = {
-      instancePath,
-      schemaPath: "#/type",
-      keyword: "type",
-      params: { type: "string" },
-      message: "must be string"
-    };
-    if (vErrors === null) {
-      vErrors = [err1];
-    } else {
-      vErrors.push(err1);
-    }
-    errors++;
-  }
-  validate713.errors = vErrors;
-  return errors === 0;
-}
-function validate710(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate708(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -3891,24 +3891,24 @@ function validate710(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
     if (data.errorCode !== void 0) {
-      if (!validate711(data.errorCode, {
+      if (!validate709(data.errorCode, {
         instancePath: instancePath + "/errorCode",
         parentData: data,
         parentDataProperty: "errorCode",
         rootData
       })) {
-        vErrors = vErrors === null ? validate711.errors : vErrors.concat(validate711.errors);
+        vErrors = vErrors === null ? validate709.errors : vErrors.concat(validate709.errors);
         errors = vErrors.length;
       }
     }
     if (data.errorMessage !== void 0) {
-      if (!validate713(data.errorMessage, {
+      if (!validate711(data.errorMessage, {
         instancePath: instancePath + "/errorMessage",
         parentData: data,
         parentDataProperty: "errorMessage",
         rootData
       })) {
-        vErrors = vErrors === null ? validate713.errors : vErrors.concat(validate713.errors);
+        vErrors = vErrors === null ? validate711.errors : vErrors.concat(validate711.errors);
         errors = vErrors.length;
       }
     }
@@ -3927,11 +3927,11 @@ function validate710(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate710.errors = vErrors;
+  validate708.errors = vErrors;
   return errors === 0;
 }
-var PreUserRegistrationSetUserIdInput = validate879;
-function validate880(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+var PreUserRegistrationSetUserIdInput = validate877;
+function validate878(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (typeof data === "string") {
@@ -3995,10 +3995,10 @@ function validate880(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate880.errors = vErrors;
+  validate878.errors = vErrors;
   return errors === 0;
 }
-function validate879(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate877(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -4035,13 +4035,13 @@ function validate879(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
     if (data.user_id !== void 0) {
-      if (!validate880(data.user_id, {
+      if (!validate878(data.user_id, {
         instancePath: instancePath + "/user_id",
         parentData: data,
         parentDataProperty: "user_id",
         rootData
       })) {
-        vErrors = vErrors === null ? validate880.errors : vErrors.concat(validate880.errors);
+        vErrors = vErrors === null ? validate878.errors : vErrors.concat(validate878.errors);
         errors = vErrors.length;
       }
     }
@@ -4060,10 +4060,47 @@ function validate879(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate879.errors = vErrors;
+  validate877.errors = vErrors;
   return errors === 0;
 }
-var PreUserRegistrationValidationErrorInput = validate882;
+var PreUserRegistrationValidationErrorInput = validate880;
+function validate881(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+  let vErrors = null;
+  let errors = 0;
+  if (typeof data === "string") {
+    if (func4(data) > 100) {
+      const err0 = {
+        instancePath,
+        schemaPath: "#/maxLength",
+        keyword: "maxLength",
+        params: { limit: 100 },
+        message: "must NOT have more than 100 characters"
+      };
+      if (vErrors === null) {
+        vErrors = [err0];
+      } else {
+        vErrors.push(err0);
+      }
+      errors++;
+    }
+  } else {
+    const err1 = {
+      instancePath,
+      schemaPath: "#/type",
+      keyword: "type",
+      params: { type: "string" },
+      message: "must be string"
+    };
+    if (vErrors === null) {
+      vErrors = [err1];
+    } else {
+      vErrors.push(err1);
+    }
+    errors++;
+  }
+  validate881.errors = vErrors;
+  return errors === 0;
+}
 function validate883(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
@@ -4101,44 +4138,7 @@ function validate883(data, { instancePath = "", parentData, parentDataProperty, 
   validate883.errors = vErrors;
   return errors === 0;
 }
-function validate885(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
-  let vErrors = null;
-  let errors = 0;
-  if (typeof data === "string") {
-    if (func4(data) > 100) {
-      const err0 = {
-        instancePath,
-        schemaPath: "#/maxLength",
-        keyword: "maxLength",
-        params: { limit: 100 },
-        message: "must NOT have more than 100 characters"
-      };
-      if (vErrors === null) {
-        vErrors = [err0];
-      } else {
-        vErrors.push(err0);
-      }
-      errors++;
-    }
-  } else {
-    const err1 = {
-      instancePath,
-      schemaPath: "#/type",
-      keyword: "type",
-      params: { type: "string" },
-      message: "must be string"
-    };
-    if (vErrors === null) {
-      vErrors = [err1];
-    } else {
-      vErrors.push(err1);
-    }
-    errors++;
-  }
-  validate885.errors = vErrors;
-  return errors === 0;
-}
-function validate882(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate880(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -4190,24 +4190,24 @@ function validate882(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
     if (data.errorCode !== void 0) {
-      if (!validate883(data.errorCode, {
+      if (!validate881(data.errorCode, {
         instancePath: instancePath + "/errorCode",
         parentData: data,
         parentDataProperty: "errorCode",
         rootData
       })) {
-        vErrors = vErrors === null ? validate883.errors : vErrors.concat(validate883.errors);
+        vErrors = vErrors === null ? validate881.errors : vErrors.concat(validate881.errors);
         errors = vErrors.length;
       }
     }
     if (data.errorMessage !== void 0) {
-      if (!validate885(data.errorMessage, {
+      if (!validate883(data.errorMessage, {
         instancePath: instancePath + "/errorMessage",
         parentData: data,
         parentDataProperty: "errorMessage",
         rootData
       })) {
-        vErrors = vErrors === null ? validate885.errors : vErrors.concat(validate885.errors);
+        vErrors = vErrors === null ? validate883.errors : vErrors.concat(validate883.errors);
         errors = vErrors.length;
       }
     }
@@ -4226,7 +4226,7 @@ function validate882(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate882.errors = vErrors;
+  validate880.errors = vErrors;
   return errors === 0;
 }
 var CustomTokenExchangeDenyInputCodec = /* @__PURE__ */ createCodec2(
