@@ -2788,8 +2788,8 @@ function validate525(data, { instancePath = "", parentData, parentDataProperty, 
   validate525.errors = vErrors;
   return errors === 0;
 }
-var PostLoginRenderPromptInput = validate701;
-function validate702(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+var PostLoginRenderPromptInput = validate699;
+function validate700(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (typeof data === "string") {
@@ -2823,10 +2823,10 @@ function validate702(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate702.errors = vErrors;
+  validate700.errors = vErrors;
   return errors === 0;
 }
-function validate704(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate702(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -2964,10 +2964,10 @@ function validate704(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate704.errors = vErrors;
+  validate702.errors = vErrors;
   return errors === 0;
 }
-function validate701(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate699(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -3004,24 +3004,24 @@ function validate701(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
     if (data.promptId !== void 0) {
-      if (!validate702(data.promptId, {
+      if (!validate700(data.promptId, {
         instancePath: instancePath + "/promptId",
         parentData: data,
         parentDataProperty: "promptId",
         rootData
       })) {
-        vErrors = vErrors === null ? validate702.errors : vErrors.concat(validate702.errors);
+        vErrors = vErrors === null ? validate700.errors : vErrors.concat(validate700.errors);
         errors = vErrors.length;
       }
     }
     if (data.promptOptions !== void 0) {
-      if (!validate704(data.promptOptions, {
+      if (!validate702(data.promptOptions, {
         instancePath: instancePath + "/promptOptions",
         parentData: data,
         parentDataProperty: "promptOptions",
         rootData
       })) {
-        vErrors = vErrors === null ? validate704.errors : vErrors.concat(validate704.errors);
+        vErrors = vErrors === null ? validate702.errors : vErrors.concat(validate702.errors);
         errors = vErrors.length;
       }
     }
@@ -3040,7 +3040,7 @@ function validate701(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate701.errors = vErrors;
+  validate699.errors = vErrors;
   return errors === 0;
 }
 var PostLoginRevokeRefreshTokenInput = validate139;
@@ -3771,7 +3771,44 @@ function validate121(data, { instancePath = "", parentData, parentDataProperty, 
   validate121.errors = vErrors;
   return errors === 0;
 }
-var PostLoginValidationErrorInput = validate706;
+var PostLoginValidationErrorInput = validate704;
+function validate705(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+  let vErrors = null;
+  let errors = 0;
+  if (typeof data === "string") {
+    if (func4(data) > 100) {
+      const err0 = {
+        instancePath,
+        schemaPath: "#/maxLength",
+        keyword: "maxLength",
+        params: { limit: 100 },
+        message: "must NOT have more than 100 characters"
+      };
+      if (vErrors === null) {
+        vErrors = [err0];
+      } else {
+        vErrors.push(err0);
+      }
+      errors++;
+    }
+  } else {
+    const err1 = {
+      instancePath,
+      schemaPath: "#/type",
+      keyword: "type",
+      params: { type: "string" },
+      message: "must be string"
+    };
+    if (vErrors === null) {
+      vErrors = [err1];
+    } else {
+      vErrors.push(err1);
+    }
+    errors++;
+  }
+  validate705.errors = vErrors;
+  return errors === 0;
+}
 function validate707(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
@@ -3809,44 +3846,7 @@ function validate707(data, { instancePath = "", parentData, parentDataProperty, 
   validate707.errors = vErrors;
   return errors === 0;
 }
-function validate709(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
-  let vErrors = null;
-  let errors = 0;
-  if (typeof data === "string") {
-    if (func4(data) > 100) {
-      const err0 = {
-        instancePath,
-        schemaPath: "#/maxLength",
-        keyword: "maxLength",
-        params: { limit: 100 },
-        message: "must NOT have more than 100 characters"
-      };
-      if (vErrors === null) {
-        vErrors = [err0];
-      } else {
-        vErrors.push(err0);
-      }
-      errors++;
-    }
-  } else {
-    const err1 = {
-      instancePath,
-      schemaPath: "#/type",
-      keyword: "type",
-      params: { type: "string" },
-      message: "must be string"
-    };
-    if (vErrors === null) {
-      vErrors = [err1];
-    } else {
-      vErrors.push(err1);
-    }
-    errors++;
-  }
-  validate709.errors = vErrors;
-  return errors === 0;
-}
-function validate706(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate704(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -3898,24 +3898,24 @@ function validate706(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
     if (data.errorCode !== void 0) {
-      if (!validate707(data.errorCode, {
+      if (!validate705(data.errorCode, {
         instancePath: instancePath + "/errorCode",
         parentData: data,
         parentDataProperty: "errorCode",
         rootData
       })) {
-        vErrors = vErrors === null ? validate707.errors : vErrors.concat(validate707.errors);
+        vErrors = vErrors === null ? validate705.errors : vErrors.concat(validate705.errors);
         errors = vErrors.length;
       }
     }
     if (data.errorMessage !== void 0) {
-      if (!validate709(data.errorMessage, {
+      if (!validate707(data.errorMessage, {
         instancePath: instancePath + "/errorMessage",
         parentData: data,
         parentDataProperty: "errorMessage",
         rootData
       })) {
-        vErrors = vErrors === null ? validate709.errors : vErrors.concat(validate709.errors);
+        vErrors = vErrors === null ? validate707.errors : vErrors.concat(validate707.errors);
         errors = vErrors.length;
       }
     }
@@ -3934,11 +3934,11 @@ function validate706(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate706.errors = vErrors;
+  validate704.errors = vErrors;
   return errors === 0;
 }
-var PreUserRegistrationSetUserIdInput = validate875;
-function validate876(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+var PreUserRegistrationSetUserIdInput = validate873;
+function validate874(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (typeof data === "string") {
@@ -4002,10 +4002,10 @@ function validate876(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate876.errors = vErrors;
+  validate874.errors = vErrors;
   return errors === 0;
 }
-function validate875(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate873(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -4042,13 +4042,13 @@ function validate875(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
     if (data.user_id !== void 0) {
-      if (!validate876(data.user_id, {
+      if (!validate874(data.user_id, {
         instancePath: instancePath + "/user_id",
         parentData: data,
         parentDataProperty: "user_id",
         rootData
       })) {
-        vErrors = vErrors === null ? validate876.errors : vErrors.concat(validate876.errors);
+        vErrors = vErrors === null ? validate874.errors : vErrors.concat(validate874.errors);
         errors = vErrors.length;
       }
     }
@@ -4067,10 +4067,47 @@ function validate875(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate875.errors = vErrors;
+  validate873.errors = vErrors;
   return errors === 0;
 }
-var PreUserRegistrationValidationErrorInput = validate878;
+var PreUserRegistrationValidationErrorInput = validate876;
+function validate877(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+  let vErrors = null;
+  let errors = 0;
+  if (typeof data === "string") {
+    if (func4(data) > 100) {
+      const err0 = {
+        instancePath,
+        schemaPath: "#/maxLength",
+        keyword: "maxLength",
+        params: { limit: 100 },
+        message: "must NOT have more than 100 characters"
+      };
+      if (vErrors === null) {
+        vErrors = [err0];
+      } else {
+        vErrors.push(err0);
+      }
+      errors++;
+    }
+  } else {
+    const err1 = {
+      instancePath,
+      schemaPath: "#/type",
+      keyword: "type",
+      params: { type: "string" },
+      message: "must be string"
+    };
+    if (vErrors === null) {
+      vErrors = [err1];
+    } else {
+      vErrors.push(err1);
+    }
+    errors++;
+  }
+  validate877.errors = vErrors;
+  return errors === 0;
+}
 function validate879(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
@@ -4108,44 +4145,7 @@ function validate879(data, { instancePath = "", parentData, parentDataProperty, 
   validate879.errors = vErrors;
   return errors === 0;
 }
-function validate881(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
-  let vErrors = null;
-  let errors = 0;
-  if (typeof data === "string") {
-    if (func4(data) > 100) {
-      const err0 = {
-        instancePath,
-        schemaPath: "#/maxLength",
-        keyword: "maxLength",
-        params: { limit: 100 },
-        message: "must NOT have more than 100 characters"
-      };
-      if (vErrors === null) {
-        vErrors = [err0];
-      } else {
-        vErrors.push(err0);
-      }
-      errors++;
-    }
-  } else {
-    const err1 = {
-      instancePath,
-      schemaPath: "#/type",
-      keyword: "type",
-      params: { type: "string" },
-      message: "must be string"
-    };
-    if (vErrors === null) {
-      vErrors = [err1];
-    } else {
-      vErrors.push(err1);
-    }
-    errors++;
-  }
-  validate881.errors = vErrors;
-  return errors === 0;
-}
-function validate878(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
+function validate876(data, { instancePath = "", parentData, parentDataProperty, rootData = data } = {}) {
   let vErrors = null;
   let errors = 0;
   if (data && typeof data == "object" && !Array.isArray(data)) {
@@ -4197,24 +4197,24 @@ function validate878(data, { instancePath = "", parentData, parentDataProperty, 
       }
     }
     if (data.errorCode !== void 0) {
-      if (!validate879(data.errorCode, {
+      if (!validate877(data.errorCode, {
         instancePath: instancePath + "/errorCode",
         parentData: data,
         parentDataProperty: "errorCode",
         rootData
       })) {
-        vErrors = vErrors === null ? validate879.errors : vErrors.concat(validate879.errors);
+        vErrors = vErrors === null ? validate877.errors : vErrors.concat(validate877.errors);
         errors = vErrors.length;
       }
     }
     if (data.errorMessage !== void 0) {
-      if (!validate881(data.errorMessage, {
+      if (!validate879(data.errorMessage, {
         instancePath: instancePath + "/errorMessage",
         parentData: data,
         parentDataProperty: "errorMessage",
         rootData
       })) {
-        vErrors = vErrors === null ? validate881.errors : vErrors.concat(validate881.errors);
+        vErrors = vErrors === null ? validate879.errors : vErrors.concat(validate879.errors);
         errors = vErrors.length;
       }
     }
@@ -4233,7 +4233,7 @@ function validate878(data, { instancePath = "", parentData, parentDataProperty, 
     }
     errors++;
   }
-  validate878.errors = vErrors;
+  validate876.errors = vErrors;
   return errors === 0;
 }
 var CustomTokenExchangeDenyInputCodec = /* @__PURE__ */ createCodec2(
