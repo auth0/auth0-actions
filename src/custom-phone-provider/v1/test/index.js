@@ -1,6 +1,6 @@
 'use strict';
 
-var handler = require('../../../_shared/_XK5Fidc.js');
+var handler = require('../../../_shared/handler.js');
 require('node:vm');
 require('async_hooks');
 require('console');
@@ -109,6 +109,10 @@ const event = {
         id: 'my-org',
         metadata: {},
         name: 'MyOrg',
+    },
+    authentication: {
+        initial_flow: 'login',
+        user_exists: true,
     },
     connection: {
         id: 'con_example',

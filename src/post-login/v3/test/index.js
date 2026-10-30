@@ -1,11 +1,11 @@
 'use strict';
 
-var handler = require('../../../_shared/_XK5Fidc.js');
-var metadata = require('../../../_shared/CCSSAUl4.js');
-var targetScopes = require('../../../_shared/CrJbY0EA.js');
-var index = require('../../../_shared/nn856JWA.js');
+var handler = require('../../../_shared/handler.js');
+var metadata = require('../../../_shared/metadata.js');
+var targetScopes = require('../../../_shared/targetScopes.js');
+var index = require('../../../_shared/index.js');
 var url = require('url');
-var isObject = require('../../../_shared/DdL05O3i.js');
+var isObject = require('../../../_shared/isObject.js');
 require('node:vm');
 require('async_hooks');
 require('console');
@@ -401,6 +401,7 @@ const event = {
         external_client_id: 'https://example.com/oauth-client.json',
         name: 'All Applications',
         external_metadata_type: 'cimd',
+        is_first_party: true,
         metadata: {},
         refresh_token: {
             policies: [

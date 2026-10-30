@@ -1,14 +1,14 @@
 'use strict';
 
-var handler = require('../../../_shared/_XK5Fidc.js');
-var targetScopes = require('../../../_shared/CrJbY0EA.js');
+var handler = require('../../../_shared/handler.js');
+var targetScopes = require('../../../_shared/targetScopes.js');
 require('node:vm');
 require('async_hooks');
 require('console');
 require('stream');
 require('node:fs/promises');
 require('node:module');
-require('../../../_shared/nn856JWA.js');
+require('../../../_shared/index.js');
 
 /**
  * No-op {@link CredentialsExchangeTriggerAPI} for use in mock API implementations.
@@ -63,6 +63,7 @@ const event = {
             },
         },
         client_id: 'client-id',
+        is_first_party: true,
         name: 'A Client Application',
         metadata: {},
     },

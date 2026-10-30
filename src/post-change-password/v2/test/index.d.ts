@@ -1,4 +1,4 @@
-import { M as ModuleRegistration, L as LoadedAction } from '../../../_shared/DMXD7FWp.js';
+import { M as ModuleRegistration, L as LoadedAction } from '../../../_shared/loader.js';
 import { PostChangePasswordModule } from '../index';
 /**
  * Builds `contextToArguments` input for tests: a fresh clone of the example event paired with a stubbed

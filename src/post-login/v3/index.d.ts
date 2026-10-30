@@ -352,6 +352,8 @@ type PostLoginV3Event = {
   client: {
     /** The client id of the application to which the user is logging in. */
     client_id: string;
+    /** Indicates whether the client application is first-party (true) or third-party (false). First-party applications are owned and operated by your organization, while third-party applications are owned by an external party. To learn more, read [First-Party and Third-Party Applications](https://auth0.com/docs/get-started/applications/first-party-and-third-party-applications). */
+    is_first_party: boolean;
     /** An object for holding other application properties. */
     metadata: {
       [additionalProperties: string]: string;
