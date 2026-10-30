@@ -95,297 +95,6 @@ interface CacheAPI {
    */
   set(key: string, value: string, options?: CacheSetOptions): CacheWriteResult;
 }
-/**
- * PasswordResetPostChallengeV1Event
- *
- * Event Object for the Password Reset Post Challenge
- */
-type PasswordResetPostChallengeV1Event = {
-  /** Details about authentication obtained during the password reset flow. */
-  authentication: {
-    /** Contains the authentication methods a user has completed during their session. */
-    methods: (
-      | {
-          /**
-           * The name of the first factor that was completed. Values include the following:
-           * - `federated` A social or enterprise connection was used to authenticate the user as the first factor.
-           * - `pwd` A password was used to authenticate a database connection user as the first factor.
-           * - `passkey` A passkey was used to authenticate a database connection user as the first factor.
-           * - `sms` A Passwordless SMS connection was used to authenticate the user as the first factor.
-           * - `email` A Passwordless Email connection was used to authenticate the user as the first factor or verify email for password reset.
-           * - `phone_number` A phone number was used for password reset.
-           * - `mock` Used for internal testing.
-           * - May also be a URL denoting a custom authentication method (as second or later factor).
-           * @summary First Factor
-           */
-          name: string;
-          timestamp: string;
-        }
-      | {
-          /**
-           * The user completed multi-factor authentication (second or later factors).
-           * @summary Multi-factor Authentication
-           */
-          name: 'mfa';
-          timestamp: string;
-        }
-    )[];
-    /** Supplemental risk assessment. This is available only if the Akamai Integration is enabled and Akamai forwards the headers for the transaction. */
-    riskAssessment?: {
-      /** Supplemental signals sent from third party providers to assist in risk assessments. */
-      supplemental?: {
-        /** [Early Access] Supplemental risk assessment. This is available only if Akamai Account Protector is enabled and Akamai forwards the headers for the transaction. */
-        akamai?: {
-          /** The bot detection results as forwarded by Akamai Bot Manager. */
-          akamaiBot?: {
-            /** The type of the Akamai bot manager results. */
-            type?: string;
-            /** The action of the Akamai bot manager results. */
-            action?: string;
-            /** The bot category of the Akamai bot manager results. */
-            botCategory?: string[];
-            /** The bot score of the Akamai bot manager results. */
-            botScore?: number;
-            /** The bot score response segment of the Akamai bot manager results. */
-            botScoreResponseSegment?: string;
-            /** The botnet ID of the Akamai bot manager results. */
-            botnetId?: string;
-          };
-          /** The user risk detection results as forwarded by Akamai Account Protector. */
-          akamaiUserRisk?: {
-            /** The action of the Akamai user risk assessment. */
-            action?: string;
-            /** The allowed status of the Akamai user risk assessment. */
-            allow?: number;
-            /** The email domain of the user. */
-            emailDomain?: string;
-            /** The general risk of the Akamai user risk assessment. */
-            general?: {
-              [additionalProperties: string]: any;
-            };
-            /** The OUID of the user. */
-            ouid?: string;
-            /** The request ID of the user. */
-            requestid?: string;
-            /** The risk of the Akamai user risk assessment. */
-            risk?: {
-              [additionalProperties: string]: any;
-            };
-            /** The score of the Akamai user risk assessment. */
-            score?: number;
-            /** The status of the Akamai user risk assessment. */
-            status?: number;
-            /** The trust of the Akamai user risk assessment. */
-            trust?: {
-              [additionalProperties: string]: any;
-            };
-            /** The username of the user. */
-            username?: string;
-            /** The UUID of the Akamai user risk assessment. */
-            uuid?: string;
-          };
-        };
-      };
-    };
-  } & {
-    [additionalProperties: string]: any;
-  };
-  /** An object containing information describing the authorization granted to the user who is logging in. */
-  authorization: {
-    /** An array containing the names of a user's assigned roles. */
-    roles: string[];
-  };
-  /** Information about the Client with which this password reset transaction was initiated. */
-  client: {
-    /** The client id of the application the user is logging in to. */
-    client_id: string;
-    /** An object for holding other application properties. */
-    metadata: {
-      [additionalProperties: string]: string;
-    };
-    /** The name of the application (as defined in the Dashboard). */
-    name: string;
-  };
-  /** Details about the Connection that was used to authenticate the user. */
-  connection: {
-    /** The connection's unique identifier. */
-    id: string;
-    /** Metadata associated with the connection. */
-    metadata?: {
-      [additionalProperties: string]: string;
-    };
-    /** The name of the connection used to authenticate the user (such as `twitter` or `some-g-suite-domain`). */
-    name: string;
-    /** The type of connection. For social connections, `event.connection.strategy === event.connection.name`. For enterprise connections, the strategy is `waad` (Windows Azure AD), `ad` (Active Directory/LDAP), `auth0` (database connections), and so on. */
-    strategy: string;
-  };
-  /** Details about the custom domain associated with the current transaction. */
-  custom_domain?: {
-    /** The custom domain name. */
-    domain: string;
-    /** Custom domain metadata as key-value pairs. */
-    domain_metadata: {
-      [additionalProperties: string]: string;
-    };
-  };
-  /** Details about the Organization associated with the current transaction. */
-  organization?: {
-    /** The Organization identifier. */
-    id: string;
-    /** The friendly name of the Organization. */
-    display_name: string;
-    /** Metadata associated with the Organization. */
-    metadata: {
-      [additionalProperties: string]: string;
-    };
-    /** The name of the Organization. */
-    name: string;
-  } & {
-    [additionalProperties: string]: any;
-  };
-  /** Collected data from rendered custom prompts. */
-  prompt?: {
-    /** The prompt ID. */
-    id: string;
-    /** Fields and hidden fields data. */
-    fields?: {
-      [additionalProperties: string]: any;
-    };
-    /** Shared variables data. */
-    vars?: {
-      [additionalProperties: string]: any;
-    };
-  };
-  /** Details about the request that initiated the transaction. */
-  request: {
-    /** The body of the POST request. This data will only be available during refresh token and Client Credential Exchange flows and Post Login Action. */
-    body: {
-      [additionalProperties: string]: any;
-    };
-    geoip: {
-      cityName?: string;
-      continentCode?: string;
-      countryCode?: string;
-      countryCode3?: string;
-      countryName?: string;
-      latitude?: number;
-      longitude?: number;
-      subdivisionCode?: string;
-      subdivisionName?: string;
-      timeZone?: string;
-    } & {
-      [additionalProperties: string]: any;
-    };
-    /** The hostname that is being used for the authentication flow. */
-    hostname?: string;
-    /** The originating IP address of the request. */
-    ip: string;
-    /** The language requested by the browser. */
-    language?: string;
-    /** The HTTP method used for the request */
-    method: string;
-    /** The query string parameters sent to the authorization request. */
-    query: {
-      [additionalProperties: string]: any;
-    };
-    /** The value of the `User-Agent` header received when initiating the transaction. */
-    user_agent?: string;
-  };
-  /** Login statistics for the current user. */
-  stats: {
-    /** The number of times this user has logged in. */
-    logins_count: number;
-  };
-  /** Details about the Tenant associated with the current transaction. */
-  tenant: {
-    /** The name of the tenant. */
-    id: string;
-  };
-  /** Details about the current transaction. */
-  transaction: {
-    /** Correlation ID can be provided in the initial authentication request when the application redirects to Universal Login. You can use value to correlate logs and requests from your Action code with the user flow. */
-    correlation_id?: string;
-    /** The locale to be used for this transaction as determined by comparing the browser's requested languages to the tenant's language settings. */
-    locale: string;
-    /** Hint to the Authorization Server about the login identifier the End-User might use to log in (if necessary). */
-    login_hint?: string;
-    /** An opaque arbitrary alphanumeric string your app adds to the initial request that Auth0 includes when redirecting back to your application. */
-    state?: string;
-    /** The ui_locales provided in the original authentication request. */
-    ui_locales: string[];
-  } & {
-    [additionalProperties: string]: any;
-  };
-  /** An object describing the user on whose behalf the current transaction was initiated. */
-  user: {
-    /** Custom fields that store info about a user that influences the user's access, such as support plan, security roles, or access control groups. */
-    app_metadata: {
-      [additionalProperties: string]: any;
-    };
-    /** Timestamp indicating when the user profile was first created. */
-    created_at: string;
-    /** (unique) User's email address. */
-    email?: string;
-    /** Indicates whether the user has verified their email address. */
-    email_verified: boolean;
-    /** User's family name. */
-    family_name?: string;
-    /** User's given name. */
-    given_name?: string;
-    /** Timestamp indicating the last time the user's password was reset/changed. At user creation, this field does not exist. This property is only available for Database connections. */
-    last_password_reset?: string;
-    /** User's full name. */
-    name?: string;
-    /** User's nickname. */
-    nickname?: string;
-    /** User's phone number. */
-    phone_number?: string;
-    /** Indicates whether the user has verified their phone number. */
-    phone_verified?: boolean;
-    /** URL pointing to the [user's profile picture](https://auth0.com/docs/users/change-user-picture). */
-    picture?: string;
-    /** Timestamp indicating when the user's profile was last updated/modified. */
-    updated_at: string;
-    /** (unique) User's unique identifier. */
-    user_id: string;
-    /** Custom fields that store info about a user that does not impact what they can or cannot access, such as work address, home address, or user preferences. */
-    user_metadata: {
-      [additionalProperties: string]: any;
-    };
-    /** (unique) User's username. */
-    username?: string;
-    /** An array of authentication factors that the user has enrolled. Empty array means the user has no enrolled factors.  If enrolledFactors is undefined, the system was unable fetch the information, the user may or may not have enrolled factors. */
-    enrolledFactors?: ({
-      /** The type of authentication factor such as `push-notification`, `phone`, `email`, `otp`, `webauthn-roaming` and `webauthn-platform`. */
-      type: string;
-      /** Additional options describing this instance of the enrolled factor. */
-      options?: {
-        [additionalProperties: string]: any;
-      };
-    } & {
-      [additionalProperties: string]: any;
-    })[];
-    /** Contains info retrieved from the identity provider with which the user originally authenticated. Users may also link their profile to multiple identity providers; those identities will then also appear in this array. The contents of an individual identity provider object varies by provider. */
-    identities: ({
-      /** Name of the Auth0 connection used to authenticate the user. */
-      connection?: string;
-      /** Indicates whether the connection is a social one. */
-      isSocial?: boolean;
-      /** User information associated with the connection. When profiles are linked, it is populated with the associated user info for secondary accounts. */
-      profileData?: {
-        [additionalProperties: string]: string;
-      };
-      /** Name of the entity that is authenticating the user, such as Facebook, Google, SAML, or your own provider. */
-      provider?: string;
-      /** User's unique identifier for this connection/provider. */
-      user_id?: string;
-    } & {
-      [additionalProperties: string]: any;
-    })[];
-  } & {
-    [additionalProperties: string]: any;
-  };
-};
 /** The custom prompt ID. */
 type PromptId = string;
 type PromptOptions = {
@@ -614,15 +323,299 @@ interface Secrets {
   [secretName: string]: string;
 }
 interface Configuration {}
-interface Event extends PasswordResetPostChallengeV1Event {
+interface Event {
   /**
    * @private Configuration values associated with this Action.
    */
   readonly configuration: Configuration;
+  /** Details about authentication obtained during the password reset flow. */
+  authentication: {
+    /** Contains the authentication methods a user has completed during their session. */
+    methods: (
+      | {
+          /**
+           * The name of the first factor that was completed. Values include the following:
+           * - `federated` A social or enterprise connection was used to authenticate the user as the first factor.
+           * - `pwd` A password was used to authenticate a database connection user as the first factor.
+           * - `passkey` A passkey was used to authenticate a database connection user as the first factor.
+           * - `sms` A Passwordless SMS connection was used to authenticate the user as the first factor.
+           * - `email` A Passwordless Email connection was used to authenticate the user as the first factor or verify email for password reset.
+           * - `phone_number` A phone number was used for password reset.
+           * - `mock` Used for internal testing.
+           * - May also be a URL denoting a custom authentication method (as second or later factor).
+           * @summary First Factor
+           */
+          name: string;
+          timestamp: string;
+        }
+      | {
+          /**
+           * The user completed multi-factor authentication (second or later factors).
+           * @summary Multi-factor Authentication
+           */
+          name: 'mfa';
+          timestamp: string;
+        }
+    )[];
+    /** Supplemental risk assessment. This is available only if the Akamai Integration is enabled and Akamai forwards the headers for the transaction. */
+    riskAssessment?: {
+      /** Supplemental signals sent from third party providers to assist in risk assessments. */
+      supplemental?: {
+        /** [Early Access] Supplemental risk assessment. This is available only if Akamai Account Protector is enabled and Akamai forwards the headers for the transaction. */
+        akamai?: {
+          /** The bot detection results as forwarded by Akamai Bot Manager. */
+          akamaiBot?: {
+            /** The type of the Akamai bot manager results. */
+            type?: string;
+            /** The action of the Akamai bot manager results. */
+            action?: string;
+            /** The bot category of the Akamai bot manager results. */
+            botCategory?: string[];
+            /** The bot score of the Akamai bot manager results. */
+            botScore?: number;
+            /** The bot score response segment of the Akamai bot manager results. */
+            botScoreResponseSegment?: string;
+            /** The botnet ID of the Akamai bot manager results. */
+            botnetId?: string;
+          };
+          /** The user risk detection results as forwarded by Akamai Account Protector. */
+          akamaiUserRisk?: {
+            /** The action of the Akamai user risk assessment. */
+            action?: string;
+            /** The allowed status of the Akamai user risk assessment. */
+            allow?: number;
+            /** The email domain of the user. */
+            emailDomain?: string;
+            /** The general risk of the Akamai user risk assessment. */
+            general?: {
+              [key: string]: any;
+            };
+            /** The OUID of the user. */
+            ouid?: string;
+            /** The request ID of the user. */
+            requestid?: string;
+            /** The risk of the Akamai user risk assessment. */
+            risk?: {
+              [key: string]: any;
+            };
+            /** The score of the Akamai user risk assessment. */
+            score?: number;
+            /** The status of the Akamai user risk assessment. */
+            status?: number;
+            /** The trust of the Akamai user risk assessment. */
+            trust?: {
+              [key: string]: any;
+            };
+            /** The username of the user. */
+            username?: string;
+            /** The UUID of the Akamai user risk assessment. */
+            uuid?: string;
+          };
+        };
+      };
+    };
+  } & {
+    [key: string]: any;
+  };
+  /** An object containing information describing the authorization granted to the user who is logging in. */
+  authorization: {
+    /** An array containing the names of a user's assigned roles. */
+    roles: string[];
+  };
+  /** Information about the Client with which this password reset transaction was initiated. */
+  client: {
+    /** The client id of the application the user is logging in to. */
+    client_id: string;
+    /** An object for holding other application properties. */
+    metadata: {
+      [key: string]: string;
+    };
+    /** The name of the application (as defined in the Dashboard). */
+    name: string;
+  };
+  /** Details about the Connection that was used to authenticate the user. */
+  connection: {
+    /** The connection's unique identifier. */
+    id: string;
+    /** Metadata associated with the connection. */
+    metadata?: {
+      [key: string]: string;
+    };
+    /** The name of the connection used to authenticate the user (such as `twitter` or `some-g-suite-domain`). */
+    name: string;
+    /** The type of connection. For social connections, `event.connection.strategy === event.connection.name`. For enterprise connections, the strategy is `waad` (Windows Azure AD), `ad` (Active Directory/LDAP), `auth0` (database connections), and so on. */
+    strategy: string;
+  };
+  /** Details about the custom domain associated with the current transaction. */
+  custom_domain?: {
+    /** The custom domain name. */
+    domain: string;
+    /** Custom domain metadata as key-value pairs. */
+    domain_metadata: {
+      [key: string]: string;
+    };
+  };
+  /** Details about the Organization associated with the current transaction. */
+  organization?: {
+    /** The Organization identifier. */
+    id: string;
+    /** The friendly name of the Organization. */
+    display_name: string;
+    /** Metadata associated with the Organization. */
+    metadata: {
+      [key: string]: string;
+    };
+    /** The name of the Organization. */
+    name: string;
+  } & {
+    [key: string]: any;
+  };
+  /** Collected data from rendered custom prompts. */
+  prompt?: {
+    /** The prompt ID. */
+    id: string;
+    /** Fields and hidden fields data. */
+    fields?: {
+      [key: string]: any;
+    };
+    /** Shared variables data. */
+    vars?: {
+      [key: string]: any;
+    };
+  };
+  /** Details about the request that initiated the transaction. */
+  request: {
+    /** The body of the POST request. This data will only be available during refresh token and Client Credential Exchange flows and Post Login Action. */
+    body: {
+      [key: string]: any;
+    };
+    geoip: {
+      cityName?: string;
+      continentCode?: string;
+      countryCode?: string;
+      countryCode3?: string;
+      countryName?: string;
+      latitude?: number;
+      longitude?: number;
+      subdivisionCode?: string;
+      subdivisionName?: string;
+      timeZone?: string;
+    } & {
+      [key: string]: any;
+    };
+    /** The hostname that is being used for the authentication flow. */
+    hostname?: string;
+    /** The originating IP address of the request. */
+    ip: string;
+    /** The language requested by the browser. */
+    language?: string;
+    /** The HTTP method used for the request */
+    method: string;
+    /** The query string parameters sent to the authorization request. */
+    query: {
+      [key: string]: any;
+    };
+    /** The value of the `User-Agent` header received when initiating the transaction. */
+    user_agent?: string;
+  };
   /**
    * Secret values securely associated with this Action.
    */
   readonly secrets: Secrets;
+  /** Login statistics for the current user. */
+  stats: {
+    /** The number of times this user has logged in. */
+    logins_count: number;
+  };
+  /** Details about the Tenant associated with the current transaction. */
+  tenant: {
+    /** The name of the tenant. */
+    id: string;
+  };
+  /** Details about the current transaction. */
+  transaction: {
+    /** Correlation ID can be provided in the initial authentication request when the application redirects to Universal Login. You can use value to correlate logs and requests from your Action code with the user flow. */
+    correlation_id?: string;
+    /** The locale to be used for this transaction as determined by comparing the browser's requested languages to the tenant's language settings. */
+    locale: string;
+    /** Hint to the Authorization Server about the login identifier the End-User might use to log in (if necessary). */
+    login_hint?: string;
+    /** An opaque arbitrary alphanumeric string your app adds to the initial request that Auth0 includes when redirecting back to your application. */
+    state?: string;
+    /** The ui_locales provided in the original authentication request. */
+    ui_locales: string[];
+  } & {
+    [key: string]: any;
+  };
+  /** An object describing the user on whose behalf the current transaction was initiated. */
+  user: {
+    /** Custom fields that store info about a user that influences the user's access, such as support plan, security roles, or access control groups. */
+    app_metadata: {
+      [key: string]: any;
+    };
+    /** Timestamp indicating when the user profile was first created. */
+    created_at: string;
+    /** (unique) User's email address. */
+    email?: string;
+    /** Indicates whether the user has verified their email address. */
+    email_verified: boolean;
+    /** User's family name. */
+    family_name?: string;
+    /** User's given name. */
+    given_name?: string;
+    /** Timestamp indicating the last time the user's password was reset/changed. At user creation, this field does not exist. This property is only available for Database connections. */
+    last_password_reset?: string;
+    /** User's full name. */
+    name?: string;
+    /** User's nickname. */
+    nickname?: string;
+    /** User's phone number. */
+    phone_number?: string;
+    /** Indicates whether the user has verified their phone number. */
+    phone_verified?: boolean;
+    /** URL pointing to the [user's profile picture](https://auth0.com/docs/users/change-user-picture). */
+    picture?: string;
+    /** Timestamp indicating when the user's profile was last updated/modified. */
+    updated_at: string;
+    /** (unique) User's unique identifier. */
+    user_id: string;
+    /** Custom fields that store info about a user that does not impact what they can or cannot access, such as work address, home address, or user preferences. */
+    user_metadata: {
+      [key: string]: any;
+    };
+    /** (unique) User's username. */
+    username?: string;
+    /** An array of authentication factors that the user has enrolled. Empty array means the user has no enrolled factors.  If enrolledFactors is undefined, the system was unable fetch the information, the user may or may not have enrolled factors. */
+    enrolledFactors?: ({
+      /** The type of authentication factor such as `push-notification`, `phone`, `email`, `otp`, `webauthn-roaming` and `webauthn-platform`. */
+      type: string;
+      /** Additional options describing this instance of the enrolled factor. */
+      options?: {
+        [key: string]: any;
+      };
+    } & {
+      [key: string]: any;
+    })[];
+    /** Contains info retrieved from the identity provider with which the user originally authenticated. Users may also link their profile to multiple identity providers; those identities will then also appear in this array. The contents of an individual identity provider object varies by provider. */
+    identities: ({
+      /** Name of the Auth0 connection used to authenticate the user. */
+      connection?: string;
+      /** Indicates whether the connection is a social one. */
+      isSocial?: boolean;
+      /** User information associated with the connection. When profiles are linked, it is populated with the associated user info for secondary accounts. */
+      profileData?: {
+        [key: string]: string;
+      };
+      /** Name of the entity that is authenticating the user, such as Facebook, Google, SAML, or your own provider. */
+      provider?: string;
+      /** User's unique identifier for this connection/provider. */
+      user_id?: string;
+    } & {
+      [key: string]: any;
+    })[];
+  } & {
+    [key: string]: any;
+  };
 }
 interface PasswordResetPostChallengeAction {
   (event: Event, api: PasswordResetPostChallengeAPI): Promise<void>;

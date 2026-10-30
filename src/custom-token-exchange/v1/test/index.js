@@ -1,9 +1,9 @@
 'use strict';
 
-var handler = require('../../../_shared/_XK5Fidc.js');
-var metadata = require('../../../_shared/CCSSAUl4.js');
-var index = require('../../../_shared/nn856JWA.js');
-var isObject = require('../../../_shared/DdL05O3i.js');
+var handler = require('../../../_shared/handler.js');
+var metadata = require('../../../_shared/metadata.js');
+var index = require('../../../_shared/index.js');
+var isObject = require('../../../_shared/isObject.js');
 require('node:vm');
 require('async_hooks');
 require('console');

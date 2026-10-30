@@ -1,6 +1,6 @@
 'use strict';
 
-var index = require('./nn856JWA.js');
+var index = require('./index.js');
 
 const { assertValidScope, MAX_SCOPE_COUNT_LIMIT } = index.helpers.accessToken;
 /**
