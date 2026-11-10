@@ -104,8 +104,20 @@ interface PostChangePasswordAPI {
    */
   readonly cache: CacheAPI;
 }
-/** PostChangePasswordV2Event */
-type PostChangePasswordV2Event = {
+interface Configuration {}
+interface Secrets {
+  [secretName: string]: string;
+}
+interface Event {
+  [key: string]: any;
+  /**
+   * @private Configuration values associated with this Action.
+   */
+  configuration: Configuration;
+  /**
+   * Secret values securely associated with this Action.
+   */
+  secrets: Secrets;
   /** Details about supplemental authentication signals obtained during the password change flow. */
   authentication?: {
     /** Details about risk assessments information for different flows. */
@@ -139,7 +151,7 @@ type PostChangePasswordV2Event = {
             emailDomain?: string;
             /** The general risk of the Akamai user risk assessment. */
             general?: {
-              [additionalProperties: string]: any;
+              [key: string]: any;
             };
             /** The OUID of the user. */
             ouid?: string;
@@ -147,7 +159,7 @@ type PostChangePasswordV2Event = {
             requestid?: string;
             /** The risk of the Akamai user risk assessment. */
             risk?: {
-              [additionalProperties: string]: any;
+              [key: string]: any;
             };
             /** The score of the Akamai user risk assessment. */
             score?: number;
@@ -155,7 +167,7 @@ type PostChangePasswordV2Event = {
             status?: number;
             /** The trust of the Akamai user risk assessment. */
             trust?: {
-              [additionalProperties: string]: any;
+              [key: string]: any;
             };
             /** The username of the user. */
             username?: string;
@@ -172,7 +184,7 @@ type PostChangePasswordV2Event = {
     id: string;
     /** Metadata associated with the connection. */
     metadata?: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
     /** The name of the connection used to authenticate the user (such as `twitter` or `some-g-suite-domain`). */
     name: string;
@@ -185,7 +197,7 @@ type PostChangePasswordV2Event = {
     domain: string;
     /** Custom domain metadata as key-value pairs. */
     domain_metadata: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
   };
   /** Details about the request that initiated the transaction. */
@@ -201,8 +213,7 @@ type PostChangePasswordV2Event = {
       subdivisionCode?: string;
       subdivisionName?: string;
       timeZone?: string;
-    } & {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** The hostname that is being used for the authentication flow. */
     hostname?: string;
@@ -242,22 +253,6 @@ type PostChangePasswordV2Event = {
     /** (unique) User's username. */
     username?: string;
   };
-} & {
-  [additionalProperties: string]: any;
-};
-interface Configuration {}
-interface Secrets {
-  [secretName: string]: string;
-}
-interface Event extends PostChangePasswordV2Event {
-  /**
-   * @private Configuration values associated with this Action.
-   */
-  configuration: Configuration;
-  /**
-   * Secret values securely associated with this Action.
-   */
-  secrets: Secrets;
 }
 interface PostChangePasswordAction {
   (event: Event, api: PostChangePasswordAPI): Promise<void>;

@@ -227,31 +227,19 @@ class AuthenticationAPIImpl {
     }
 }
 
-/** Feature flag gating access to the transaction metadata API. */
-const TRANSACTION_METADATA_FLAG = 'actions_cte_transaction_metadata';
 class TransactionAPIImpl {
     #metadataAPI;
     #event;
-    #featureFlags;
-    constructor(metadataAPI, event, featureFlags) {
+    constructor(metadataAPI, event) {
         this.#metadataAPI = metadataAPI;
         this.#event = event;
-        this.#featureFlags = featureFlags;
     }
     setMetadata(key, value) {
-        this.#assertFeatureEnabled();
         this.#metadataAPI.setMetadata(key, value);
         if (!this.#event.transaction) {
             this.#event.transaction = {};
         }
         this.#event.transaction.metadata = this.#metadataAPI.getMetadata();
-    }
-    // Prevent the internal transaction metadata API from being executed when the
-    // gating feature flag is disabled. Remove this guard at GA.
-    #assertFeatureEnabled() {
-        if (this.#featureFlags[TRANSACTION_METADATA_FLAG] !== true) {
-            throw new Error('Method not implemented.');
-        }
     }
 }
 
@@ -276,20 +264,17 @@ class CustomTokenExchangeAPIImpl {
     user;
     cache;
     transaction;
-    constructor(triggerAPI, event, featureFlags) {
+    constructor(triggerAPI, event) {
         this.access = new AccessAPIImpl(triggerAPI);
         this.authentication = new AuthenticationAPIImpl(triggerAPI);
         this.user = new UserAPIImpl(triggerAPI);
         this.cache = triggerAPI.getCacheAPI();
-        this.transaction = new TransactionAPIImpl(triggerAPI.getTransactionMetadataAPI(), event, featureFlags);
+        this.transaction = new TransactionAPIImpl(triggerAPI.getTransactionMetadataAPI(), event);
     }
 }
 
 function contextToArguments(ctx) {
-    return [
-        ctx.event,
-        new CustomTokenExchangeAPIImpl(ctx.triggerAPI, ctx.event, ctx.featureFlags),
-    ];
+    return [ctx.event, new CustomTokenExchangeAPIImpl(ctx.triggerAPI, ctx.event)];
 }
 const getHandler = handler.getHandlerFactory([
     'onExecuteCustomTokenExchange',
@@ -303,7 +288,6 @@ function getDefaultArguments() {
     return contextToArguments({
         event: handler.deepClone(event),
         triggerAPI: new CustomTokenExchangeTriggerAPIStubImpl(),
-        featureFlags: {},
     });
 }
 /** Loads a CustomTokenExchange v1 action file for use in tests, e.g. `action.execute('onExecuteCustomTokenExchange', event, api)`. */
