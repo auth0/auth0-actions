@@ -104,8 +104,12 @@ interface PostUserRegistrationAPI {
    */
   readonly cache: CacheAPI;
 }
-/** PostUserRegistrationV2Event */
-type PostUserRegistrationV2Event = {
+interface Configuration {}
+interface Secrets {
+  [secretName: string]: string;
+}
+interface Event {
+  [key: string]: any;
   /** Details about supplemental authentication signals obtained during the registration flow. */
   authentication?: {
     /** Details about risk assessments information for different flows. */
@@ -139,7 +143,7 @@ type PostUserRegistrationV2Event = {
             emailDomain?: string;
             /** The general risk of the Akamai user risk assessment. */
             general?: {
-              [additionalProperties: string]: any;
+              [key: string]: any;
             };
             /** The OUID of the user. */
             ouid?: string;
@@ -147,7 +151,7 @@ type PostUserRegistrationV2Event = {
             requestid?: string;
             /** The risk of the Akamai user risk assessment. */
             risk?: {
-              [additionalProperties: string]: any;
+              [key: string]: any;
             };
             /** The score of the Akamai user risk assessment. */
             score?: number;
@@ -155,7 +159,7 @@ type PostUserRegistrationV2Event = {
             status?: number;
             /** The trust of the Akamai user risk assessment. */
             trust?: {
-              [additionalProperties: string]: any;
+              [key: string]: any;
             };
             /** The username of the user. */
             username?: string;
@@ -172,7 +176,7 @@ type PostUserRegistrationV2Event = {
     id: string;
     /** Metadata associated with the connection. */
     metadata?: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
     /** The name of the connection used to authenticate the user (such as `twitter` or `some-g-suite-domain`). */
     name: string;
@@ -185,7 +189,7 @@ type PostUserRegistrationV2Event = {
     domain: string;
     /** Custom domain metadata as key-value pairs. */
     domain_metadata: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
   };
   /** Details about the request that initiated the transaction. */
@@ -202,7 +206,7 @@ type PostUserRegistrationV2Event = {
       subdivisionName?: string;
       timeZone?: string;
     } & {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** The hostname that is being used for the authentication flow. */
     hostname?: string;
@@ -269,13 +273,13 @@ type PostUserRegistrationV2Event = {
     /** The ui_locales provided in the original authentication request. */
     ui_locales: string[];
   } & {
-    [additionalProperties: string]: any;
+    [key: string]: any;
   };
   /** An object describing the user on whose behalf the current transaction was initiated. */
   user: {
     /** Custom fields that store info about a user that influences the user's access, such as support plan, security roles, or access control groups. */
     app_metadata: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** Timestamp indicating when the user profile was first created. */
     created_at: string;
@@ -305,21 +309,13 @@ type PostUserRegistrationV2Event = {
     user_id: string;
     /** Custom fields that store info about a user that does not impact what they can or cannot access, such as work address, home address, or user preferences. */
     user_metadata: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** (unique) User's username. */
     username?: string;
   } & {
-    [additionalProperties: string]: any;
+    [key: string]: any;
   };
-} & {
-  [additionalProperties: string]: any;
-};
-interface Configuration {}
-interface Secrets {
-  [secretName: string]: string;
-}
-interface Event extends PostUserRegistrationV2Event {
   /**
    * @private Configuration values associated with this Action.
    */
