@@ -95,8 +95,38 @@ interface CacheAPI {
    */
   set(key: string, value: string, options?: CacheSetOptions): CacheWriteResult;
 }
-/** PreUserRegistrationV2Event */
-type PreUserRegistrationV2Event = {
+interface Configuration {}
+interface Secrets {
+  [secretName: string]: string;
+}
+interface Event {
+  /**
+   * [Private Early Access] Details of the anonymous session that preceded this registration, if any. Present only when the registration was preceded by an anonymous session; undefined otherwise.
+   */
+  anonymous_session?: {
+    /**
+     * [Private Early Access] The date and time when the anonymous session was created, in ISO 8601 format.
+     */
+    created_at: string;
+    /**
+     * [Private Early Access] The date and time when the anonymous session expires, in ISO 8601 format.
+     */
+    expires_at: string;
+    /**
+     * [Private Early Access] Key-value pairs carrying additional information about the anonymous session. Always defined; an empty object when no metadata was provided.
+     */
+    metadata: {
+      [key: string]: string;
+    };
+    /**
+     * [Private Early Access] The identifier of the anonymous session.
+     */
+    session_id: string;
+    /**
+     * [Private Early Access] The identifier of the anonymous user associated with the anonymous session.
+     */
+    user_id: string;
+  };
   /** Details about authentication obtained during the pre user registration flow. */
   authentication?: {
     /** Details about risk assessments information for different flows. */
@@ -130,7 +160,7 @@ type PreUserRegistrationV2Event = {
             emailDomain?: string;
             /** The general risk of the Akamai user risk assessment. */
             general?: {
-              [additionalProperties: string]: any;
+              [key: string]: any;
             };
             /** The OUID of the user. */
             ouid?: string;
@@ -138,7 +168,7 @@ type PreUserRegistrationV2Event = {
             requestid?: string;
             /** The risk of the Akamai user risk assessment. */
             risk?: {
-              [additionalProperties: string]: any;
+              [key: string]: any;
             };
             /** The score of the Akamai user risk assessment. */
             score?: number;
@@ -146,7 +176,7 @@ type PreUserRegistrationV2Event = {
             status?: number;
             /** The trust of the Akamai user risk assessment. */
             trust?: {
-              [additionalProperties: string]: any;
+              [key: string]: any;
             };
             /** The username of the user. */
             username?: string;
@@ -163,7 +193,7 @@ type PreUserRegistrationV2Event = {
     client_id: string;
     /** An object for holding other application properties. */
     metadata: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
     /** The name of the application (as defined in the Dashboard). */
     name: string;
@@ -174,7 +204,7 @@ type PreUserRegistrationV2Event = {
     id: string;
     /** Metadata associated with the connection. */
     metadata?: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
     /** The name of the connection used to authenticate the user (such as `twitter` or `some-g-suite-domain`). */
     name: string;
@@ -187,14 +217,14 @@ type PreUserRegistrationV2Event = {
     domain: string;
     /** Custom domain metadata as key-value pairs. */
     domain_metadata: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
   };
   /** Details about the request that initiated the transaction. */
   request: {
     /** The body of the POST request. This data will only be available during refresh token, Client Credential Exchange flows and PreUserRegistration Action. */
     body: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     geoip: {
       cityName?: string;
@@ -207,8 +237,7 @@ type PreUserRegistrationV2Event = {
       subdivisionCode?: string;
       subdivisionName?: string;
       timeZone?: string;
-    } & {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** The hostname that is being used for the authentication flow. */
     hostname?: string;
@@ -276,14 +305,13 @@ type PreUserRegistrationV2Event = {
     ui_locales: string[];
     /** Correlation ID can be provided in the initial authentication request when the application redirects to Universal Login. You can use value to correlate logs and requests from your Action code with the user flow. */
     correlation_id?: string;
-  } & {
-    [additionalProperties: string]: any;
+    [key: string]: any;
   };
   /** An object describing the user who is attempting to register. */
   user: {
     /** Custom fields that store info about a user that influences the user's access, such as support plan, security roles, or access control groups. */
     app_metadata?: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** (unique) User's email address. */
     email?: string;
@@ -301,19 +329,12 @@ type PreUserRegistrationV2Event = {
     picture?: string;
     /** Custom fields that store info about a user that does not impact what they can or cannot access, such as work address, home address, or user preferences. */
     user_metadata?: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** (unique) User's username. */
     username?: string;
   };
-} & {
-  [additionalProperties: string]: any;
-};
-interface Configuration {}
-interface Secrets {
-  [secretName: string]: string;
-}
-interface Event extends PreUserRegistrationV2Event {
+  [key: string]: any;
   /**
    * @private Configuration values associated with this Action.
    */

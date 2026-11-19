@@ -1,5 +1,4 @@
-/** PostUserRegistrationV1Event */
-type PostUserRegistrationV1Event = {
+interface Event {
   connection: {
     /** The connection's unique identifier. */
     id: string;
@@ -23,7 +22,7 @@ type PostUserRegistrationV1Event = {
     id: string;
     /** Custom fields that store info about a user that influences the user's access, such as support plan, security roles, or access control groups. */
     app_metadata?: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** (unique) User's email address. */
     email?: string;
@@ -37,17 +36,16 @@ type PostUserRegistrationV1Event = {
     tenant?: string;
     /** Custom fields that store info about a user that does not impact what they can or cannot access, such as work address, home address, or user preferences. */
     user_metadata?: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** (unique) User's username. */
     username?: string;
   };
-};
+}
 /** PostUserRegistrationV1Result */
 type PostUserRegistrationV1Result = {
   [property: string]: any;
 };
-interface Event extends PostUserRegistrationV1Event {}
 interface Secrets {
   [secretName: string]: string;
 }

@@ -307,6 +307,7 @@ class RedirectAPIImpl {
         options.tokenParameterName ||= DEFAULT_SESSION_TOKEN_QUERY_PARAM;
         const params = this.#getContinueParams(this.#context.request);
         const token = params[options.tokenParameterName];
+        const expectedState = this.#context.request?.query?.state;
         if (!token) {
             throw new Error(`There is no parameter called '${options.tokenParameterName}' available in either the POST body or query string.`);
         }
@@ -314,7 +315,7 @@ class RedirectAPIImpl {
             token: token,
             secret: options.secret,
             issuer: this.#context.request.hostname,
-            expectedState: params.state,
+            expectedState,
             expectedSub: this.#context.user.user_id,
         });
         if (!response.valid) {

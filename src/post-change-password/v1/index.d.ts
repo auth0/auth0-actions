@@ -1,12 +1,11 @@
-/** PostChangePasswordV1Event */
-type PostChangePasswordV1Event = {
+interface Event {
+  [key: string]: any;
   connection: {
     /** The connection's unique identifier. */
     id: string;
     /** The name of the connection used to authenticate the user (such as `twitter` or `some-g-suite-domain`). */
     name: string;
-  } & {
-    [additionalProperties: string]: any;
+    [key: string]: any;
   };
   /** Details about the Tenant associated with the current transaction. */
   tenant: {
@@ -23,14 +22,11 @@ type PostChangePasswordV1Event = {
     /** (unique) User's username. */
     username?: string;
   };
-} & {
-  [additionalProperties: string]: any;
-};
+}
 /** PostChangePasswordResult */
 type PostChangePasswordV1Result = {
   [property: string]: any;
 };
-interface Event extends PostChangePasswordV1Event {}
 interface Secrets {
   [secretName: string]: string;
 }
