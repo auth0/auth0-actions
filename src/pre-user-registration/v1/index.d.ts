@@ -1,5 +1,4 @@
-/** PreUserRegistrationV1Event */
-type PreUserRegistrationV1Event = {
+interface Event {
   command?: {
     /** Prevent a user from registering */
     type: 'deny';
@@ -19,8 +18,7 @@ type PreUserRegistrationV1Event = {
     /** The originating IP address of the request. */
     ip: string;
     language?: string;
-  } & {
-    [additionalProperties: string]: any;
+    [key: string]: any;
   };
   requestLanguage?: string;
   /** Details about the Tenant associated with the current transaction. */
@@ -31,7 +29,7 @@ type PreUserRegistrationV1Event = {
   user: {
     /** Custom fields that store info about a user that influences the user's access, such as support plan, security roles, or access control groups. */
     app_metadata?: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** (unique) User's email address. */
     email?: string;
@@ -47,14 +45,19 @@ type PreUserRegistrationV1Event = {
     tenant?: string;
     /** Custom fields that store info about a user that does not impact what they can or cannot access, such as work address, home address, or user preferences. */
     user_metadata?: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** (unique) User's username. */
     username?: string;
   };
-};
-/** PreUserRegistrationV1Result */
-type PreUserRegistrationV1Result = {
+}
+interface Secrets {
+  [secretName: string]: string;
+}
+interface Context {
+  secrets: Secrets;
+}
+interface Result {
   command?: {
     /** Prevent a user from registering */
     type: 'deny';
@@ -66,24 +69,15 @@ type PreUserRegistrationV1Result = {
   user?: {
     /** Custom fields that store info about a user that influences the user's access, such as support plan, security roles, or access control groups. */
     app_metadata?: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** Custom fields that store info about a user that does not impact what they can or cannot access, such as work address, home address, or user preferences. */
     user_metadata?: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
-  } & {
-    [additionalProperties: string]: any;
+    [key: string]: any;
   };
-};
-interface Event extends PreUserRegistrationV1Event {}
-interface Secrets {
-  [secretName: string]: string;
 }
-interface Context {
-  secrets: Secrets;
-}
-interface Result extends PreUserRegistrationV1Result {}
 interface PreUserRegistrationAction {
   (event: Event, context: Context): Promise<Result | undefined>;
 }

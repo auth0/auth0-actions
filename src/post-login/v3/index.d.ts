@@ -194,6 +194,21 @@ type PostLoginV3Event = {
     /** [Early Access] The human-readable name of the agent. */
     name: string;
   };
+  /** [Private Early Access] Details of the anonymous session that preceded this login, if any. Present only when the login was preceded by an anonymous session; undefined otherwise. */
+  anonymous_session?: {
+    /** [Private Early Access] The date and time when the anonymous session was created, in ISO 8601 format. */
+    created_at: string;
+    /** [Private Early Access] The date and time when the anonymous session expires, in ISO 8601 format. */
+    expires_at: string;
+    /** [Private Early Access] Key-value pairs carrying additional information about the anonymous session. Always defined; an empty object when no metadata was provided. */
+    metadata: {
+      [additionalProperties: string]: string;
+    };
+    /** [Private Early Access] The identifier of the anonymous session. */
+    session_id: string;
+    /** [Private Early Access] The identifier of the anonymous user associated with the anonymous session. */
+    user_id: string;
+  };
   /** Details about authentication signals obtained during the login flow. */
   authentication?: {
     /** Contains the authentication methods a user has completed during their session. */
