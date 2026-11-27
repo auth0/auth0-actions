@@ -104,15 +104,18 @@ interface SendPhoneMessageAPI {
    */
   readonly cache: CacheAPI;
 }
-/** SendPhoneMessageV2Event */
-type SendPhoneMessageV2Event = {
+interface Configuration {}
+interface Secrets {
+  [secretName: string]: string;
+}
+interface Event {
   /** Information about the Client with which this transaction was initiated. */
   client?: {
     /** The client id of the application the user is logging in to. */
     client_id: string;
     /** An object for holding other application properties. */
     metadata: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
     /** The name of the application (as defined in the Dashboard). */
     name: string;
@@ -123,7 +126,7 @@ type SendPhoneMessageV2Event = {
     domain: string;
     /** Custom domain metadata as key-value pairs. */
     domain_metadata: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
   };
   /** Details about the message that is sent to the user. */
@@ -152,8 +155,7 @@ type SendPhoneMessageV2Event = {
       subdivisionCode?: string;
       subdivisionName?: string;
       timeZone?: string;
-    } & {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** The hostname that is being used for the authentication flow. */
     hostname?: string;
@@ -187,7 +189,7 @@ type SendPhoneMessageV2Event = {
   user: {
     /** Custom fields that store info about a user that influences the user's access, such as support plan, security roles, or access control groups. */
     app_metadata: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** Timestamp indicating when the user profile was first created. */
     created_at: string;
@@ -217,36 +219,28 @@ type SendPhoneMessageV2Event = {
     user_id: string;
     /** Custom fields that store info about a user that does not impact what they can or cannot access, such as work address, home address, or user preferences. */
     user_metadata: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** (unique) User's username. */
     username?: string;
     /** Contains info retrieved from the identity provider with which the user originally authenticates. Users may also link their profile to multiple identity providers; those identities will then also appear in this array. The contents of an individual identity provider object varies by provider. */
-    identities?: ({
+    identities?: {
       /** Name of the Auth0 connection used to authenticate the user. */
       connection?: string;
       /** Indicates whether the connection is a social one. */
       isSocial?: boolean;
       /** User information associated with the connection. When profiles are linked, it is populated with the associated user info for secondary accounts. */
       profileData?: {
-        [additionalProperties: string]: string;
+        [key: string]: string;
       };
       /** Name of the entity that is authenticating the user, such as Facebook, Google, SAML, or your own provider. */
       provider?: string;
       /** User's unique identifier for this connection/provider. */
       user_id?: string;
-    } & {
-      [additionalProperties: string]: any;
-    })[];
-  } & {
-    [additionalProperties: string]: any;
+      [key: string]: any;
+    }[];
+    [key: string]: any;
   };
-};
-interface Configuration {}
-interface Secrets {
-  [secretName: string]: string;
-}
-interface Event extends SendPhoneMessageV2Event {
   /**
    * @private Configuration values associated with this Action.
    */

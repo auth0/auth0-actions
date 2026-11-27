@@ -1,8 +1,7 @@
-/** PostLoginV1Event */
-type PostLoginV1Event = {
+interface Event {
   accessToken: {
     customClaims: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     scope: string[];
   };
@@ -11,7 +10,7 @@ type PostLoginV1Event = {
     asn?: string;
     /** The body of the POST request made to the authorization endpoint. */
     body?: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     geoIp?: {
       city_name?: string;
@@ -24,8 +23,7 @@ type PostLoginV1Event = {
       subdivision_code?: string;
       subdivision_name?: string;
       time_zone?: string;
-    } & {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** The hostname that is being used for the authentication flow. */
     hostname?: string;
@@ -37,7 +35,7 @@ type PostLoginV1Event = {
     method: string;
     /** The query string parameters sent to the authorization request. */
     query: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     userAgent?: string;
   };
@@ -82,7 +80,7 @@ type PostLoginV1Event = {
     id: string;
     /** An object for holding other application properties. */
     metadata: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
     /** The name of the application (as defined in the Dashboard). */
     name: string;
@@ -114,7 +112,7 @@ type PostLoginV1Event = {
     id: string;
     /** Metadata associated with the connection. */
     metadata?: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
     /** The name of the connection used to authenticate the user (such as `twitter` or `some-g-suite-domain`). */
     name: string;
@@ -123,7 +121,7 @@ type PostLoginV1Event = {
   };
   idToken: {
     customClaims: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     scope: string[];
   };
@@ -135,12 +133,11 @@ type PostLoginV1Event = {
     display_name: string;
     /** Metadata associated with the Organization. */
     metadata: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
     /** The name of the Organization. */
     name: string;
-  } & {
-    [additionalProperties: string]: any;
+    [key: string]: any;
   };
   protocol: (
     | 'oidc-basic-profile'
@@ -175,7 +172,7 @@ type PostLoginV1Event = {
     id: string;
     /** Custom fields that store info about a user that influences the user's access, such as support plan, security roles, or access control groups. */
     appMetadata: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** Timestamp indicating when the user profile was first created. */
     createdAt: string;
@@ -184,22 +181,21 @@ type PostLoginV1Event = {
     /** Indicates whether the user has verified their email address. */
     emailVerified: boolean;
     /** An an array of the authentication factors defined by within the current tenant. */
-    enrolledFactors?: ({
+    enrolledFactors?: {
       /** The type of authentication factor such as `push-notification`, `phone`, `email`, `otp`, `webauthn-roaming` and `webauthn-platform`. */
       type: string;
       /** Additional options describing this instance of the enrolled factor. */
       options?: {
-        [additionalProperties: string]: any;
+        [key: string]: any;
       };
-    } & {
-      [additionalProperties: string]: any;
-    })[];
+      [key: string]: any;
+    }[];
     /** User's famiky name. */
     familyName?: string;
     /** User's given name. */
     givenName?: string;
     /** Contains info retrieved from the identity provider with which the user originally authenticates. Users may also link their profile to multiple identity providers; those identities will then also appear in this array. The contents of an individual identity provider object varies by provider. */
-    identities: ({
+    identities: {
       /** The API Access Token to be used with the provider */
       accessToken?: string;
       /** Name of the Auth0 connection used to authenticate the user. */
@@ -208,15 +204,14 @@ type PostLoginV1Event = {
       isSocial?: boolean;
       /** User information associated with the connection. When profiles are linked, it is populated with the associated user info for secondary accounts. */
       profileData?: {
-        [additionalProperties: string]: string;
+        [key: string]: string;
       };
       /** Name of the entity that is authenticating the user, such as Facebook, Google, SAML, or your own provider. */
       provider?: string;
       /** User's unique identifier for this connection/provider. */
       userId?: string;
-    } & {
-      [additionalProperties: string]: any;
-    })[];
+      [key: string]: any;
+    }[];
     /** Timestamp indicating the last time the user's password was reset/changed. At user creation, this field does not exist. This property is only available for Database connections. */
     lastPasswordResetAt?: string;
     /** List of multi-factor authentication (MFA) providers with which the user is enrolled. This array is updated when the user enrolls in MFA and when an administrator resets a user's MFA enrollments. */
@@ -235,22 +230,25 @@ type PostLoginV1Event = {
     updatedAt: string;
     /** Custom fields that store info about a user that does not impact what they can or cannot access, such as work address, home address, or user preferences. */
     userMetadata: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** (unique) User's username. */
     username?: string;
-  } & {
-    [additionalProperties: string]: any;
+    [key: string]: any;
   };
-} & {
-  [additionalProperties: string]: any;
-};
-/** PostLoginV1Result */
-type PostLoginV1Result = {
+  [key: string]: any;
+}
+interface Secrets {
+  [secretName: string]: string;
+}
+interface Context {
+  secrets: Secrets;
+}
+interface Result {
   accessToken?: {
     /** A map of custom claims to be added to the token. The claim keys should take the form of an HTTPS URI. */
     customClaims?: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** A list of scopes to be included in the token. */
     scope?: string[];
@@ -279,7 +277,7 @@ type PostLoginV1Result = {
   idToken?: {
     /** A map of custom claims to be added to the token. The claim keys should take the form of an HTTPS URI. */
     customClaims?: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** A list of scopes to be included in the token. */
     scope?: string[];
@@ -287,22 +285,14 @@ type PostLoginV1Result = {
   user?: {
     /** Custom fields that store info about a user that influences the user's access, such as support plan, security roles, or access control groups. */
     appMetadata?: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** Custom fields that store info about a user that does not impact what they can or cannot access, such as work address, home address, or user preferences. */
     userMetadata?: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
   };
-};
-interface Event extends PostLoginV1Event {}
-interface Secrets {
-  [secretName: string]: string;
 }
-interface Context {
-  secrets: Secrets;
-}
-interface Result extends PostLoginV1Result {}
 interface PostLoginAction {
   (event: Event, context: Context): Promise<Result | undefined>;
 }

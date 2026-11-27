@@ -119,8 +119,11 @@ type Multifactor =
         username?: string;
       };
     };
-/** PostLoginV2Event */
-type PostLoginV2Event = {
+interface Secrets {
+  [secretName: string]: string;
+}
+interface Configuration {}
+interface Event {
   /** Details about authentication signals obtained during the login flow. */
   authentication?: {
     /** Contains the authentication methods a user has completed during their session. */
@@ -162,7 +165,7 @@ type PostLoginV2Event = {
     client_id: string;
     /** An object for holding other application properties. */
     metadata: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
     /** The name of the application (as defined in the Dashboard). */
     name: string;
@@ -173,7 +176,7 @@ type PostLoginV2Event = {
     id: string;
     /** Metadata associated with the connection. */
     metadata?: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
     /** The name of the connection used to authenticate the user (such as `twitter` or `some-g-suite-domain`). */
     name: string;
@@ -188,18 +191,17 @@ type PostLoginV2Event = {
     display_name: string;
     /** Metadata associated with the Organization. */
     metadata: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
     /** The name of the Organization. */
     name: string;
-  } & {
-    [additionalProperties: string]: any;
+    [key: string]: any;
   };
   /** Details about the request that initiated the transaction. */
   request: {
     /** The body of the POST request. This data will only be available during refresh token and Client Credential Exchange flows and Post Login Action. */
     body: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     geoip: {
       cityName?: string;
@@ -212,8 +214,7 @@ type PostLoginV2Event = {
       subdivisionCode?: string;
       subdivisionName?: string;
       timeZone?: string;
-    } & {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** The hostname that is being used for the authentication flow. */
     hostname?: string;
@@ -225,7 +226,7 @@ type PostLoginV2Event = {
     method: string;
     /** The query string parameters sent to the authorization request. */
     query: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** The value of the `User-Agent` header received when initiating the transaction. */
     user_agent?: string;
@@ -281,12 +282,11 @@ type PostLoginV2Event = {
     /** The URL to which Auth0 will redirect the browser after the transaction is completed. */
     redirect_uri?: string;
     /** The details of a rich authorization request per Section 2 of the Rich Authorization Requests spec at https://datatracker.ietf.org/doc/html/draft-ietf-oauth-rar#section-2. */
-    requested_authorization_details?: ({
+    requested_authorization_details?: {
       /** The type of authorization details as a string. The value of the type field determines the allowable contents of the object which contains it. */
       type: string;
-    } & {
-      [additionalProperties: string]: any;
-    })[];
+      [key: string]: any;
+    }[];
     /** The scopes requested (if any) when starting this authentication flow. */
     requested_scopes?: string[];
     /** Informs the Authorization Server of the mechanism to be used for returning parameters from the Authorization Endpoint. */
@@ -297,14 +297,13 @@ type PostLoginV2Event = {
     state?: string;
     /** The ui_locales provided in the original authentication request. */
     ui_locales?: string[];
-  } & {
-    [additionalProperties: string]: any;
+    [key: string]: any;
   };
   /** An object describing the user on whose behalf the current transaction was initiated. */
   user: {
     /** Custom fields that store info about a user that influences the user's access, such as support plan, security roles, or access control groups. */
     app_metadata: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** Timestamp indicating when the user profile was first created. */
     created_at: string;
@@ -334,38 +333,30 @@ type PostLoginV2Event = {
     user_id: string;
     /** Custom fields that store info about a user that does not impact what they can or cannot access, such as work address, home address, or user preferences. */
     user_metadata: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** (unique) User's username. */
     username?: string;
     /** Contains info retrieved from the identity provider with which the user originally authenticates. Users may also link their profile to multiple identity providers; those identities will then also appear in this array. The contents of an individual identity provider object varies by provider. */
-    identities: ({
+    identities: {
       /** Name of the Auth0 connection used to authenticate the user. */
       connection?: string;
       /** Indicates whether the connection is a social one. */
       isSocial?: boolean;
       /** User information associated with the connection. When profiles are linked, it is populated with the associated user info for secondary accounts. */
       profileData?: {
-        [additionalProperties: string]: string;
+        [key: string]: string;
       };
       /** Name of the entity that is authenticating the user, such as Facebook, Google, SAML, or your own provider. */
       provider?: string;
       /** User's unique identifier for this connection/provider. */
       user_id?: string;
-    } & {
-      [additionalProperties: string]: any;
-    })[];
+      [key: string]: any;
+    }[];
     /** List of multi-factor authentication (MFA) providers with which the user is enrolled. This array is updated when the user enrolls in MFA and when an administrator resets a user's MFA enrollments. */
     multifactor?: string[];
-  } & {
-    [additionalProperties: string]: any;
+    [key: string]: any;
   };
-};
-interface Secrets {
-  [secretName: string]: string;
-}
-interface Configuration {}
-interface Event extends PostLoginV2Event {
   /**
    * @private Configuration values associated with this Action.
    */
