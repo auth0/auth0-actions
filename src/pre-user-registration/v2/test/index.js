@@ -22,6 +22,9 @@ class PreUserRegistrationTriggerAPIStubImpl {
     getTransactionMetadataAPI() {
         return this.#transactionMetadataAPI;
     }
+    isTransactionMetadataEnabled() {
+        return false;
+    }
     denyAccess(_reason, _userMessage) { }
     setAppMetadata(_key, _value) { }
     setUserMetadata(_key, _value) { }
@@ -175,31 +178,25 @@ const event = {
     },
 };
 
-/** Feature flag gating access to the transaction metadata API. */
-const TRANSACTION_METADATA_FLAG = 'actions_pre_user_registration_transaction_metadata';
 class TransactionAPIImpl {
-    #metadataAPI;
+    #triggerAPI;
     #event;
-    #featureFlags;
-    constructor(metadataAPI, event, featureFlags) {
-        this.#metadataAPI = metadataAPI;
+    constructor(triggerAPI, event) {
+        this.#triggerAPI = triggerAPI;
         this.#event = event;
-        this.#featureFlags = featureFlags;
     }
     setMetadata(key, value) {
-        this.#assertFeatureEnabled();
-        this.#metadataAPI.setMetadata(key, value);
+        // Prevent the internal transaction metadata API from being executed when the
+        // gating feature flag is disabled. Remove this guard at GA.
+        if (!this.#triggerAPI.isTransactionMetadataEnabled()) {
+            throw new Error('Method not implemented.');
+        }
+        const metadataAPI = this.#triggerAPI.getTransactionMetadataAPI();
+        metadataAPI.setMetadata(key, value);
         if (!this.#event.transaction) {
             this.#event.transaction = {};
         }
-        this.#event.transaction.metadata = this.#metadataAPI.getMetadata();
-    }
-    // Prevent the internal transaction metadata API from being executed when the
-    // gating feature flag is disabled. Remove this guard at GA.
-    #assertFeatureEnabled() {
-        if (this.#featureFlags[TRANSACTION_METADATA_FLAG] !== true) {
-            throw new Error('Method not implemented.');
-        }
+        this.#event.transaction.metadata = metadataAPI.getMetadata();
     }
 }
 
@@ -255,17 +252,17 @@ class PreUserRegistrationAPIImpl {
     cache;
     validation;
     transaction;
-    constructor(triggerAPI, event, featureFlags) {
+    constructor(triggerAPI, event) {
         this.cache = triggerAPI.getCacheAPI();
         this.access = new AccessAPIImpl(triggerAPI, this);
         this.user = new UserAPIImpl(triggerAPI, this);
         this.validation = new ValidationAPIImpl(triggerAPI, this);
-        this.transaction = new TransactionAPIImpl(triggerAPI.getTransactionMetadataAPI(), event, featureFlags);
+        this.transaction = new TransactionAPIImpl(triggerAPI, event);
     }
 }
 
 function contextToArguments(ctx) {
-    return [ctx.event, new PreUserRegistrationAPIImpl(ctx.triggerAPI, ctx.event, ctx.featureFlags)];
+    return [ctx.event, new PreUserRegistrationAPIImpl(ctx.triggerAPI, ctx.event)];
 }
 const getHandler = handler.getHandlerFactory([
     'onExecutePreUserRegistration',
@@ -280,7 +277,6 @@ function getDefaultArguments() {
     return contextToArguments({
         event: handler.deepClone(event),
         triggerAPI: new PreUserRegistrationTriggerAPIStubImpl(),
-        featureFlags: {},
     });
 }
 /** Loads a PreUserRegistration v2 action file for use in tests, e.g. `action.execute('onExecutePreUserRegistration', event, api)`. */

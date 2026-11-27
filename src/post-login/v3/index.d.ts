@@ -181,15 +181,128 @@ type Role = {
   /** Type of the Role. */
   type: string;
 };
-/** PostLoginV3Event */
-type PostLoginV3Event = {
+/** The custom prompt ID. */
+type PromptId = string;
+type PromptOptions = {
+  /** Key-value pairs to populate field values (client-side). */
+  fields?: {
+    [patternProperties: string]: any;
+  };
+  /** Key-value pairs to inject variables (server-side). */
+  vars?: {
+    [patternProperties: string]: any;
+  };
+};
+type RenderPromptId = PromptId;
+type RenderPromptOptions = PromptOptions;
+type TxMetadataValue = string | boolean | number;
+/**
+ * Describes the type of authentication factor (and its options) that can be used to
+ * challenge a user.
+ */
+type FactorSelector =
+  | {
+      /** A type of authentication factor such as `push-notification`, `phone`, `email`, `otp`, `webauthn-roaming`, `webauthn-platform`, and `recovery-code`. */
+      type: 'otp' | 'email' | 'webauthn-platform' | 'webauthn-roaming' | 'recovery-code';
+      /** Additional options for configuring a factor of a given type. */
+      options?: {
+        [key: string]: unknown;
+      };
+    }
+  | {
+      /** A type of authentication factor such as `phone`. */
+      type: 'phone';
+      /** Additional options for configuring the phone factor. */
+      options?: {
+        /** The method passed in this field will be preferred over the others if available. */
+        preferredMethod?: 'sms' | 'voice' | 'both';
+      };
+    }
+  | {
+      /** A type of authentication factor such as `push-notification`. */
+      type: 'push' | 'push-notification';
+      /** Additional options for configuring the push factor. */
+      options?: {
+        /** If this is set to false, the OTP fallback method for the push factor will not be available for the user. */
+        otpFallback?: boolean;
+      };
+    };
+/**
+ * Describes the type of authentication factor (and its options) that can be used to
+ * enroll a user.
+ */
+type EnrollmentFactorSelector =
+  | {
+      /** A type of authentication factor such as `push-notification`, `phone`, `otp`, `webauthn-roaming`, `webauthn-platform`, and `recovery-code`. */
+      type:
+        | 'otp'
+        | 'webauthn-platform'
+        | 'webauthn-roaming'
+        | 'push'
+        | 'push-notification'
+        | 'recovery-code';
+      /** Additional options for configuring a factor of a given type. */
+      options?: {
+        [key: string]: unknown;
+      };
+    }
+  | {
+      /** A type of authentication factor such as `phone`. */
+      type: 'phone';
+      /** Additional options for configuring the phone factor. */
+      options?: {
+        /** The method passed in this field will be preferred over the others if available. */
+        preferredMethod?: 'sms' | 'voice' | 'both';
+      };
+    };
+type MultifactorProvider = 'none' | 'guardian' | 'google-authenticator' | 'duo' | 'any';
+interface DuoMultifactorProviderOptions {
+  /** This is the API hostname value from your Duo account. */
+  host: string;
+  /** This is the Client ID (previously Integration key) value from your Duo account. */
+  ikey: string;
+  /** This is the Client secret (previously Secret key) value from your Duo account. */
+  skey: string;
+  /** Use some attribute of the profile as the username in DuoSecurity. This is also useful if you already have your users enrolled in Duo. */
+  username?: string;
+}
+interface RequireMultifactorAuthOptions {
+  allowRememberBrowser?: boolean;
+  providerOptions?: DuoMultifactorProviderOptions;
+}
+interface ChallengeWithOptions {
+  additionalFactors?: FactorSelector[];
+}
+interface EnrollWithOptions {
+  additionalFactors?: EnrollmentFactorSelector[];
+}
+interface SessionRevocationOptions {
+  /** Default to false. If true, the system ends the session and keeps the refresh tokens. The application may continue to get access tokens for the duration of the refresh token lifetime. */
+  preserveRefreshTokens?: boolean;
+}
+type SAMLAttributeValue = string | number | boolean | Array<string | number | boolean> | null;
+interface ValidationAPI {
+  /**
+   * Throw an error when there is a validation error.
+   *
+   * @param errorCode A customer defined error code for the validation error.
+   *
+   * @param errorMessage A customer defined message for the validation error.
+   */
+  error(errorCode: string, errorMessage: string): PostLoginAPI;
+}
+interface Secrets {
+  [secretName: string]: string;
+}
+interface Configuration {}
+interface Event {
   /** [Early Access] Information about the agent acting in this flow. Set when the authenticating client is linked to an agent and the tenant has agents as principals enabled; `undefined` otherwise. */
   agent?: {
     /** [Early Access] The stable identifier for the agent, prefixed with `agt_` (for example, `agt_2hVk6JxPxbRgNZDKfJQqmn`). */
     agent_id: string;
     /** [Early Access] Free-form key-value metadata associated with the agent. Always defined when `agent` is present; an empty object when the agent has no metadata. */
     agent_metadata: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** [Early Access] The human-readable name of the agent. */
     name: string;
@@ -202,7 +315,7 @@ type PostLoginV3Event = {
     expires_at: string;
     /** [Private Early Access] Key-value pairs carrying additional information about the anonymous session. Always defined; an empty object when no metadata was provided. */
     metadata: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
     /** [Private Early Access] The identifier of the anonymous session. */
     session_id: string;
@@ -328,7 +441,7 @@ type PostLoginV3Event = {
             emailDomain?: string;
             /** The general risk of the Akamai user risk assessment. */
             general?: {
-              [additionalProperties: string]: any;
+              [key: string]: any;
             };
             /** The OUID of the user. */
             ouid?: string;
@@ -336,7 +449,7 @@ type PostLoginV3Event = {
             requestid?: string;
             /** The risk of the Akamai user risk assessment. */
             risk?: {
-              [additionalProperties: string]: any;
+              [key: string]: any;
             };
             /** The score of the Akamai user risk assessment. */
             score?: number;
@@ -344,15 +457,14 @@ type PostLoginV3Event = {
             status?: number;
             /** The trust of the Akamai user risk assessment. */
             trust?: {
-              [additionalProperties: string]: any;
+              [key: string]: any;
             };
             /** The username of the user. */
             username?: string;
             /** The UUID of the Akamai user risk assessment. */
             uuid?: string;
           };
-        } & {
-          [additionalProperties: string]: any;
+          [key: string]: any;
         };
       };
       version: string;
@@ -371,7 +483,7 @@ type PostLoginV3Event = {
     is_first_party: boolean;
     /** An object for holding other application properties. */
     metadata: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
     /** The name of the application (as defined in the Dashboard). */
     name: string;
@@ -392,7 +504,7 @@ type PostLoginV3Event = {
     id: string;
     /** Metadata associated with the connection. */
     metadata?: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
     /** The name of the connection used to authenticate the user (such as `twitter` or `some-g-suite-domain`). */
     name: string;
@@ -405,7 +517,7 @@ type PostLoginV3Event = {
     domain: string;
     /** Custom domain metadata as key-value pairs. */
     domain_metadata: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
   };
   /** Details about the Organization associated with the current transaction. */
@@ -416,12 +528,11 @@ type PostLoginV3Event = {
     display_name: string;
     /** Metadata associated with the Organization. */
     metadata: {
-      [additionalProperties: string]: string;
+      [key: string]: string;
     };
     /** The name of the Organization. */
     name: string;
-  } & {
-    [additionalProperties: string]: any;
+    [key: string]: any;
   };
   /** Collected data from rendered custom prompts. */
   prompt?: {
@@ -429,11 +540,11 @@ type PostLoginV3Event = {
     id: string;
     /** Fields and hidden fields data. */
     fields?: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** Shared variables data. */
     vars?: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
   };
   /** [Enterprise Customers] The current refresh token. */
@@ -466,7 +577,7 @@ type PostLoginV3Event = {
     last_exchanged_at?: string;
     /** Refresh Token Metadata */
     metadata?: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     resource_servers?: {
       /** [Enterprise Customers] The audience of the refresh token. */
@@ -495,7 +606,7 @@ type PostLoginV3Event = {
     asn?: string;
     /** The body of the POST request. This data will only be available during refresh token and Client Credential Exchange flows and Post Login Action. */
     body: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     geoip: {
       cityName?: string;
@@ -508,8 +619,7 @@ type PostLoginV3Event = {
       subdivisionCode?: string;
       subdivisionName?: string;
       timeZone?: string;
-    } & {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** The hostname that is being used for the authentication flow. */
     hostname?: string;
@@ -521,7 +631,7 @@ type PostLoginV3Event = {
     method: string;
     /** The query string parameters sent to the authorization request. */
     query: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** The value of the `User-Agent` header received when initiating the transaction. */
     user_agent?: string;
@@ -546,8 +656,7 @@ type PostLoginV3Event = {
     actor?: {
       /** The subject identifier of the actor. A unique identifier for the entity acting in this role. */
       sub: string;
-    } & {
-      [additionalProperties: string]: string | number | boolean | null;
+      [key: string]: string | number | boolean | null;
     };
     /** [Enterprise Customers] The date and time when the session was last authenticated. */
     authenticated_at?: string;
@@ -586,7 +695,7 @@ type PostLoginV3Event = {
     last_interacted_at?: string;
     /** [Enterprise Customers] [Early Access] Session Metadata */
     metadata?: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** [Enterprise Customers] [Early Access] This object is defined when the session is created from a session transfer token (Native to Web SSO), undefined otherwise. */
     session_transfer?: {
@@ -596,7 +705,7 @@ type PostLoginV3Event = {
         id?: string;
         /** [Enterprise Customers] The metadata of the parent refresh token from which this session/refresh token was created as a result of a session transfer (Native to Web SSO). */
         metadata?: {
-          [additionalProperties: string]: any;
+          [key: string]: any;
         };
       };
     };
@@ -624,8 +733,7 @@ type PostLoginV3Event = {
         subdivisionCode?: string;
         subdivisionName?: string;
         timeZone?: string;
-      } & {
-        [additionalProperties: string]: any;
+        [key: string]: any;
       };
       /** [Early Access] The IP address associated with the request that issued the token. */
       ip: string;
@@ -681,12 +789,11 @@ type PostLoginV3Event = {
     /** The URL to which Auth0 will redirect the browser after the transaction is completed. */
     redirect_uri?: string;
     /** The details of a rich authorization request per Section 2 of the Rich Authorization Requests spec at https://datatracker.ietf.org/doc/html/draft-ietf-oauth-rar#section-2. */
-    requested_authorization_details?: ({
+    requested_authorization_details?: {
       /** The type of authorization details as a string. The value of the type field determines the allowable contents of the object which contains it. */
       type: string;
-    } & {
-      [additionalProperties: string]: any;
-    })[];
+      [key: string]: any;
+    }[];
     /** The scopes requested (if any) when starting this authentication flow. */
     requested_scopes?: string[];
     /** Informs the Authorization Server of the mechanism to be used for returning parameters from the Authorization Endpoint. */
@@ -710,28 +817,23 @@ type PostLoginV3Event = {
               act?: never;
               /** The subject identifier of the actor. A unique identifier for the entity acting in this role. */
               sub: string;
-            } & {
-              [additionalProperties: string]: any;
+              [key: string]: any;
             };
             /** The subject identifier of the actor. A unique identifier for the entity acting in this role. */
             sub: string;
-          } & {
-            [additionalProperties: string]: any;
+            [key: string]: any;
           };
           /** The subject identifier of the actor. A unique identifier for the entity acting in this role. */
           sub: string;
-        } & {
-          [additionalProperties: string]: any;
+          [key: string]: any;
         };
         /** The subject identifier of the actor. A unique identifier for the entity acting in this role. */
         sub: string;
-      } & {
-        [additionalProperties: string]: any;
+        [key: string]: any;
       };
       /** The subject identifier of the actor. A unique identifier for the entity acting in this role. */
       sub: string;
-    } & {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** The type of the actor token in a token exchange request. */
     actor_token_type?: string;
@@ -739,20 +841,19 @@ type PostLoginV3Event = {
     correlation_id?: string;
     /** An object containing shared data across custom Actions for the duration of a transaction. */
     metadata: {
-      [additionalProperties: string]: string | number | boolean;
+      [key: string]: string | number | boolean;
     };
     /** The type of the subject token in a token exchange request. */
     subject_token_type?: string;
     /** The live target scope set for the transaction. Initialized from the requested scopes and immediately updated by api.transaction target scope methods across current and subsequent Actions. After all Actions complete, these scopes are filtered by the transaction's applicable authorization policies, including App Access Permissions and RBAC. Unauthorized scopes are silently dropped. When explicit user consent is required, all scopes remaining after filtering are included in the consent prompt. */
     target_scopes?: string[];
-  } & {
-    [additionalProperties: string]: any;
+    [key: string]: any;
   };
   /** An object describing the user on whose behalf the current transaction was initiated. */
   user: {
     /** Custom fields that store info about a user that influences the user's access, such as support plan, security roles, or access control groups. */
     app_metadata: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** Timestamp indicating when the user profile was first created. */
     created_at: string;
@@ -782,159 +883,40 @@ type PostLoginV3Event = {
     user_id: string;
     /** Custom fields that store info about a user that does not impact what they can or cannot access, such as work address, home address, or user preferences. */
     user_metadata: {
-      [additionalProperties: string]: any;
+      [key: string]: any;
     };
     /** (unique) User's username. */
     username?: string;
     /** An an array of authentication factors that the user has enrolled. */
-    enrolledFactors?: ({
+    enrolledFactors?: {
       /** The type of authentication factor such as `push-notification`, `phone`, `email`, `otp`, `webauthn-roaming` and `webauthn-platform`. */
       type: string;
       /** Additional options describing this instance of the enrolled factor. */
       options?: {
-        [additionalProperties: string]: any;
+        [key: string]: any;
       };
-    } & {
-      [additionalProperties: string]: any;
-    })[];
+      [key: string]: any;
+    }[];
     /** List of multi-factor authentication (MFA) providers with which the user is enrolled. This array is updated when the user enrolls in MFA and when an administrator resets a user's MFA enrollments. */
     multifactor?: string[];
     /** Contains info retrieved from the identity provider with which the user originally authenticates. Users may also link their profile to multiple identity providers; those identities will then also appear in this array. The contents of an individual identity provider object varies by provider. */
-    identities: ({
+    identities: {
       /** Name of the Auth0 connection used to authenticate the user. */
       connection?: string;
       /** Indicates whether the connection is a social one. */
       isSocial?: boolean;
       /** User information associated with the connection. When profiles are linked, it is populated with the associated user info for secondary accounts. */
       profileData?: {
-        [additionalProperties: string]: string;
+        [key: string]: string;
       };
       /** Name of the entity that is authenticating the user, such as Facebook, Google, SAML, or your own provider. */
       provider?: string;
       /** User's unique identifier for this connection/provider. */
       user_id?: string;
-    } & {
-      [additionalProperties: string]: any;
-    })[];
-  } & {
-    [additionalProperties: string]: any;
+      [key: string]: any;
+    }[];
+    [key: string]: any;
   };
-};
-/** The custom prompt ID. */
-type PromptId = string;
-type PromptOptions = {
-  /** Key-value pairs to populate field values (client-side). */
-  fields?: {
-    [patternProperties: string]: any;
-  };
-  /** Key-value pairs to inject variables (server-side). */
-  vars?: {
-    [patternProperties: string]: any;
-  };
-};
-type RenderPromptId = PromptId;
-type RenderPromptOptions = PromptOptions;
-type TxMetadataValue = string | boolean | number;
-/**
- * Describes the type of authentication factor (and its options) that can be used to
- * challenge a user.
- */
-type FactorSelector =
-  | {
-      /** A type of authentication factor such as `push-notification`, `phone`, `email`, `otp`, `webauthn-roaming`, `webauthn-platform`, and `recovery-code`. */
-      type: 'otp' | 'email' | 'webauthn-platform' | 'webauthn-roaming' | 'recovery-code';
-      /** Additional options for configuring a factor of a given type. */
-      options?: {
-        [key: string]: unknown;
-      };
-    }
-  | {
-      /** A type of authentication factor such as `phone`. */
-      type: 'phone';
-      /** Additional options for configuring the phone factor. */
-      options?: {
-        /** The method passed in this field will be preferred over the others if available. */
-        preferredMethod?: 'sms' | 'voice' | 'both';
-      };
-    }
-  | {
-      /** A type of authentication factor such as `push-notification`. */
-      type: 'push' | 'push-notification';
-      /** Additional options for configuring the push factor. */
-      options?: {
-        /** If this is set to false, the OTP fallback method for the push factor will not be available for the user. */
-        otpFallback?: boolean;
-      };
-    };
-/**
- * Describes the type of authentication factor (and its options) that can be used to
- * enroll a user.
- */
-type EnrollmentFactorSelector =
-  | {
-      /** A type of authentication factor such as `push-notification`, `phone`, `otp`, `webauthn-roaming`, `webauthn-platform`, and `recovery-code`. */
-      type:
-        | 'otp'
-        | 'webauthn-platform'
-        | 'webauthn-roaming'
-        | 'push'
-        | 'push-notification'
-        | 'recovery-code';
-      /** Additional options for configuring a factor of a given type. */
-      options?: {
-        [key: string]: unknown;
-      };
-    }
-  | {
-      /** A type of authentication factor such as `phone`. */
-      type: 'phone';
-      /** Additional options for configuring the phone factor. */
-      options?: {
-        /** The method passed in this field will be preferred over the others if available. */
-        preferredMethod?: 'sms' | 'voice' | 'both';
-      };
-    };
-type MultifactorProvider = 'none' | 'guardian' | 'google-authenticator' | 'duo' | 'any';
-interface DuoMultifactorProviderOptions {
-  /** This is the API hostname value from your Duo account. */
-  host: string;
-  /** This is the Client ID (previously Integration key) value from your Duo account. */
-  ikey: string;
-  /** This is the Client secret (previously Secret key) value from your Duo account. */
-  skey: string;
-  /** Use some attribute of the profile as the username in DuoSecurity. This is also useful if you already have your users enrolled in Duo. */
-  username?: string;
-}
-interface RequireMultifactorAuthOptions {
-  allowRememberBrowser?: boolean;
-  providerOptions?: DuoMultifactorProviderOptions;
-}
-interface ChallengeWithOptions {
-  additionalFactors?: FactorSelector[];
-}
-interface EnrollWithOptions {
-  additionalFactors?: EnrollmentFactorSelector[];
-}
-interface SessionRevocationOptions {
-  /** Default to false. If true, the system ends the session and keeps the refresh tokens. The application may continue to get access tokens for the duration of the refresh token lifetime. */
-  preserveRefreshTokens?: boolean;
-}
-type SAMLAttributeValue = string | number | boolean | Array<string | number | boolean> | null;
-interface ValidationAPI {
-  /**
-   * Throw an error when there is a validation error.
-   *
-   * @param errorCode A customer defined error code for the validation error.
-   *
-   * @param errorMessage A customer defined message for the validation error.
-   */
-  error(errorCode: string, errorMessage: string): PostLoginAPI;
-}
-interface Secrets {
-  [secretName: string]: string;
-}
-interface Configuration {}
-interface Event extends PostLoginV3Event {
   /**
    * @private Configuration values associated with this Action.
    */
